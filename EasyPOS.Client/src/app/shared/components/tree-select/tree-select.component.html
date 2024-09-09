@@ -1,0 +1,45 @@
+<div *ngIf="!hidden" class="cust-field">
+  <label class="label" *ngIf="label">
+    {{ label }}
+    <span class="required-star" *ngIf="required">*</span>
+  </label>
+  <p-treeSelect
+    [inputId]="inputId"
+    [placeholder]="placeholder"
+    [disabled]="disabled"
+    [autofocus]="autofocus"
+    [required]="required"
+    [options]="options"
+    [scrollHeight]="scrollHeight"
+    [metaKeySelection]="metaKeySelection"
+    [variant]="variant"
+    [display]="display"
+    [selectionMode]="selectionMode"
+    [tabindex]="tabindex"
+    [panelClass]="panelClass"
+    [panelStyle]="panelStyle"
+    [panelStyleClass]="panelStyleClass"
+    [containerStyle]="containerStyle"
+    [containerStyleClass]="containerStyleClass"
+    [labelStyle]="labelStyle"
+    [labelStyleClass]="labelStyleClass"
+    [overlayOptions]="overlayOptions"
+    [emptyMessage]="emptyMessage"
+    [appendTo]="appendTo"
+    [filter]="filter"
+    [filterBy]="filterBy"
+    [filterMode]="filterMode"
+    [filterPlaceholder]="filterPlaceholder"
+    [filterInputAutoFocus]="filterInputAutoFocus"
+    [propagateSelectionDown]="propagateSelectionDown"
+    [propagateSelectionUp]="propagateSelectionUp"
+    [showClear]="showClear"
+    [resetFilterOnHide]="resetFilterOnHide"
+    [loading]="loading"
+    [(ngModel)]="value"
+    (onNodeSelect)="onNodeSelect($event)"
+    (onNodeUnselect)="onNodeUnselect($event)"
+    (onFocus)="onFocus($event)"
+    (onBlur)="onBlur($event)"
+  ></p-treeSelect>
+</div>

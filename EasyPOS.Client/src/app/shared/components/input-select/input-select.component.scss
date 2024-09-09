@@ -1,0 +1,21 @@
+// ::ng-deep{
+//   app-input-select.ng-invalid.ng-touched :host>div:focus {
+//     border: 1px solid #f19ea6;
+//   }
+//   app-input-select.ng-invalid.ng-touched :host>div:focus {
+//     box-shadow: none;
+//   }
+
+  
+// }
+
+::ng-deep app-input-select.ng-invalid.ng-touched .p-dropdown {
+  border: 1px solid #f19ea6 !important;
+  box-shadow: none;
+}
+
+::ng-deep app-input-select .p-dropdown {
+  width: 100%; 
+  box-sizing: border-box;
+}
+

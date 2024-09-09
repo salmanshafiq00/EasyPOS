@@ -1,0 +1,23 @@
+.input-file{
+  .file-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .file-item {
+    display: flex;
+    align-items: center;
+    margin-top: 0.5rem;
+  }
+  
+  .file-size {
+    font-weight: bold;
+  }
+}
+
+:host ::ng-deep .p-fileupload .p-messages {
+  display: none !important;
+}
+
+

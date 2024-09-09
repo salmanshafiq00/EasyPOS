@@ -1,0 +1,21 @@
+<div *ngIf="!hidden" class="cust-field">
+  <label class="label" *ngIf="label">
+    {{ label }}
+    <span class="required-star" *ngIf="required">*</span>
+  </label>
+  <p-calendar
+    [(ngModel)]="value"
+    [placeholder]="placeholder"
+    [disabled]="disabled"
+    [readonlyInput]="readonlyInput"
+    [showIcon]="showIcon"
+    [showOnFocus]="showOnFocus"
+    [iconDisplay]="iconDisplay"
+    [inputStyle]="inputStyle"
+    [view]="view"
+    [dateFormat]="dateFormat"
+    appendTo="body"
+    (ngModelChange)="onInputChange($event)"
+    (onBlur)="onBlurEvent()"
+  ></p-calendar>
+</div>

@@ -1,0 +1,14 @@
+::ng-deep {
+  app-input-currency.ng-invalid.ng-touched input {
+    border: 1px solid #f19ea6;
+  }
+
+  app-input-currency.ng-invalid.ng-touched input:focus {
+    box-shadow: none;
+  }
+
+  .digit-right .p-inputnumber-input {
+    width: 1%;
+    text-align: right;
+  }
+}

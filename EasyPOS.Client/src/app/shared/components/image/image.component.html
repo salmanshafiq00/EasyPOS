@@ -1,0 +1,25 @@
+<span *ngIf="!hide" class="image-container">
+  <p-image 
+    [src]="src" 
+    [alt]="alt" 
+    [width]="width"
+    [height]="height"
+    [imageClass]="imageClass"
+    [imageStyle]="imageStyle"
+    [styleClass]="(circle ? 'circle-image': '') + ' ' + (border ? 'circle-image-border': '') +' ' + styleClass"
+    [style]="style"
+    [srcSet]="srcSet"
+    [sizes]="sizes"
+    [previewImageSrc]="previewImageSrc"
+    [previewImageSrcSet]="previewImageSrcSet"
+    [previewImageSizes]="previewImageSizes"
+    [loading]="loading"
+    [appendTo]="appendTo"
+    [preview]="preview"
+    [showTransitionOptions]="showTransitionOptions"
+    [hideTransitionOptions]="hideTransitionOptions"
+    (onShow)="showImage($event)"
+    (onHide)="hideImage($event)"
+    (onImageError)="imageImage($event)"
+ />
+</span>

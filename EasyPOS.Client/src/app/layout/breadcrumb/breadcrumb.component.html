@@ -1,0 +1,17 @@
+<p-breadcrumb class="max-w-full" [model]="breadcrumbs">
+  <ng-template pTemplate="item" let-item>
+    <ng-container *ngIf="item?.route; else elseBlock">
+      <a [routerLink]="item?.route" class="p-menuitem-link">
+        <!-- <span class="bread-icon" [ngClass]="[item.icon ? item.icon : '', 'text-color']"></span> -->
+        <span class="bread-icon" [ngClass]="[item.icon ? item.icon : '', 'text-primary']"></span>
+        <span class="text-primary font-semibold">{{ item?.label }}</span>
+      </a>
+    </ng-container>
+    <ng-template #elseBlock>
+      <!-- <a [href]="item.url"> -->
+        <span class="bread-icon" [ngClass]="[item.icon ? item.icon : '', 'text-color']"></span> 
+        <span class="text-color">{{ item?.label }}</span>
+      <!-- </a> -->
+    </ng-template>
+  </ng-template>
+</p-breadcrumb>

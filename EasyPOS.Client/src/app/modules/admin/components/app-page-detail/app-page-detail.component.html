@@ -1,0 +1,372 @@
+<div class="col-12">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+    <div class="p-fluid p-formgrid grid">
+      <div class="field col-12 md:col-6">
+        <app-input-text label="Component Name" formControlName="componentName" [required]="true" />
+        <app-validator-msg [control]="f['componentName']"></app-validator-msg>
+      </div>
+      <div class="field col-12 md:col-6">
+        <app-input-text label="Title" formControlName="title" [required]="true" />
+        <app-validator-msg [control]="f['title']"></app-validator-msg>
+      </div>
+      <div class="field col-12 md:col-6">
+        <app-input-text label="Sub Title" formControlName="subTitle" [required]="false" />
+      </div>
+    </div>
+
+    <div class="grid col-12">
+      <app-button icon="pi pi-sliders-h" severity="" label="Design" (onClick)="showSelectedView('design')" />
+      <app-button icon="pi pi-hashtag" severity="help" label="JSON" (onClick)="showSelectedView('json')" />
+    </div>
+    <!-- Design -->
+    <ng-container *ngIf="activeView === 'design'">
+          <!-- Page Toolbar Actions -->
+    <div class="grid m-1">
+      <div class="col-12 group">
+        <div class="div-caption">
+          <span>Actions</span>
+          <div (click)="addAppPageAction()" class="field-plus">
+            <i class="pi pi-plus"></i> Action
+          </div>
+        </div>
+
+        <div formArrayName="toolbarActions" class=" drop-column" *ngFor="let field of toolbarActions.controls; let i = index" pDroppable (onDrop)="drop($event, i, toolbarActions)"  >
+          <div [formGroupName]="i" class="col-12 group-row" pDraggable (onDragStart)="dragStart($event, i, toolbarActions)" (onDragEnd)="dragEnd($event)"  >
+            <div class="div-caption">
+              Action Item
+              <a class="expand-field" *ngIf="!showPropertyStatus(field)" (click)="showProperty(field, true)">
+                <i class="pi pi-chevron-down"></i>
+              </a>
+              <a class="collapse-field" *ngIf="showPropertyStatus(field)" (click)="showProperty(field, false)">
+                <i class="pi pi-chevron-up"></i>
+              </a>
+              <a class="remove-field" (click)="removeAppPageAction(i)">
+                <i class="pi pi-trash"></i>
+              </a>
+            </div>
+            <!-- Show initially -->
+            <div class="grid mt-2" *ngIf="!showPropertyStatus(field)">
+              <div class="col-4">
+                <span>Name: {{ field.value.actionName }}</span>
+              </div>
+              <div class="col-4">
+                <span>Caption: {{ field.value.caption }}</span>
+              </div>
+              <div class="col-4">
+                <span>Permissions: {{ field.value.permissions }}</span>
+              </div>
+            </div>
+            <!-- Show when click on down chevron icon -->
+            <div class="grid mt-2" *ngIf="showPropertyStatus(field)">
+              <div class="field col-4">
+                <app-input-text formControlName="actionName" label="Action Name" [required]="true" />
+              </div>
+              <div class="field col-4">
+                <app-input-text formControlName="caption" label="Caption" [required]="false" />
+              </div>
+              <div class="field col-4">
+                <label for="icon">Icon</label>
+                <p-dropdown [options]="primengIcons" optionLabel="label" optionValue="value" formControlName="icon"
+                  [filter]="true" filterBy="label" [showClear]="true" appendTo="body" class="icon-drop"
+                  placeholder="Select One">
+                  <ng-template let-selectedOption pTemplate="selectedItem">
+                    <div class="flex align-items-center gap-2">
+                      <i [ngClass]="selectedOption?.value"></i>
+                      <div> {{ selectedOption?.label }}</div>
+                    </div>
+                  </ng-template>
+                  <ng-template let-option pTemplate="item">
+                    <div class="p-d-flex p-ai-center gap-2">
+                      <i [ngClass]="option.value"></i>
+                      <span class="p-ml-2"> {{ option.label }}</span>
+                    </div>
+                  </ng-template>
+                </p-dropdown>
+              </div>
+              <div class="field col-4">
+                <label for="severity">Severity</label>
+                <p-dropdown [options]="severitySelectList" optionLabel="name" optionValue="id"
+                  formControlName="severity" [filter]="true" filterBy="name" [showClear]="true" appendTo="body"
+                  class="icon-drop" placeholder="Select One">
+                  <ng-template let-selectedOption pTemplate="selectedItem">
+                    <div class="p-d-flex p-ai-center gap-2">
+                        <app-button [label]="selectedOption.name" [severity]="selectedOption.id" size="small" class="severity-drop-btn" />
+                    </div>
+                  </ng-template>
+                  <ng-template let-option pTemplate="item">
+                    <div class="p-d-flex p-ai-center gap-2">
+                      <app-button [label]="option.name" [severity]="option.id" size="small" class="btn-drop" />
+                    </div>
+                  </ng-template>
+                </p-dropdown>
+              </div>
+              <div class="field col-4">
+                <app-input-select [options]="actionTypeSelectList" formControlName="actionType" label="Action Type" />
+              </div>
+              <div class="field col-4">
+                <app-input-text formControlName="permissions" label="Permission" />
+              </div>
+              <div class="field col-4">
+                <app-input-text formControlName="navigationUrl" label="Navigation Url" placeholder="e.g. /admin/users" />
+              </div>
+              <div class="field col-4">
+                <app-input-text formControlName="params" label="Params" placeholder="e.g. id, name" />
+              </div>
+              <div class="field col-4">
+                <app-input-select [options]="alignSelectList" formControlName="position" label="Position" />
+              </div>
+              <div class="field col-4">
+                <app-input-number formControlName="sortOrder" label="Sort Order" [textRight]="true" [showButtons]="true" buttonLayout="horizontal"
+                  [min]="0" />
+              </div>
+              <div class="field col-4 md:mt-5">
+                <app-input-switch formControlName="isVisible" label="Visible" />
+              </div>
+              <div class="field col-4 md:mt-5">
+                <app-input-switch formControlName="showCaption" label="Show Caption" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Page Toolbar Actions -->
+
+    <!-- Page Data Row Actions -->
+    <div class="grid m-1">
+      <div class="col-12 group">
+        <div class="div-caption">
+          <span>Row Actions</span>
+          <div (click)="addRowAction()" class="field-plus">
+            <i class="pi pi-plus"></i> Row Action
+          </div>
+        </div>
+        <div class="grid ">
+          <div class="field col-4 md:mt-4">
+            <app-input-switch formControlName="showRowActionCol" label="Row Action" />
+          </div>
+          <div class="field col-4">
+            <app-input-select [options]="gridFilterTypeSelectList" formControlName="gridFilterType" label="Grid Filter" />
+          </div>
+          <div class="field col-4">
+            <app-input-select [options]="actionTypeSelectList" formControlName="rowActionType" label="Row Action Type" />
+          </div>
+          <div class="field col-4 md:mt-4">
+            <app-input-switch formControlName="showSelectCheckbox" label="SelectCheckbox" />
+          </div>
+        </div>
+        <div formArrayName="rowActions" *ngFor="let field of rowActions.controls; let i = index" pDroppable (onDrop)="drop($event, i, rowActions)">
+          <div [formGroupName]="i" class="col-12 group-row" pDraggable (onDragStart)="dragStart($event, i, rowActions)" (onDragEnd)="dragEnd($event)">
+            <div class="div-caption">
+              Action Items
+              <a class="expand-field" *ngIf="!showPropertyStatus(field)" (click)="showProperty(field, true)">
+                <i class="pi pi-chevron-down"></i>
+              </a>
+              <a class="collapse-field" *ngIf="showPropertyStatus(field)" (click)="showProperty(field, false)">
+                <i class="pi pi-chevron-up"></i>
+              </a>
+              <a class="remove-field" (click)="removeRowAction(i)">
+                <i class="pi pi-trash"></i>
+              </a>
+            </div>
+            <!-- Show initially -->
+            <div class="grid mt-2" *ngIf="!showPropertyStatus(field)">
+              <div class="col-4">
+                <span>Name: {{ field.value.actionName }}</span>
+              </div>
+              <div class="col-4">
+                <span>Caption: {{ field.value.caption }}</span>
+              </div>
+              <div class="col-4">
+                <span>Permissions: {{ field.value.permissions }}</span>
+              </div>
+            </div>
+            <!-- Show when click on down chevron icon -->
+            <div class="grid mt-2" *ngIf="showPropertyStatus(field)">
+              <div class="field col-4">
+                <app-input-text formControlName="actionName" label="Action Name" [required]="true" />
+              </div>
+              <div class="field col-4">
+                <app-input-text formControlName="caption" label="Caption" [required]="false" />
+              </div>
+              <div class="field col-4">
+                <label for="icon">Icon</label>
+                <p-dropdown [options]="primengIcons" optionLabel="label" optionValue="value" formControlName="icon"
+                  [filter]="true" filterBy="label" [showClear]="true" appendTo="body" class="icon-drop"
+                  placeholder="Select One">
+                  <ng-template let-selectedOption pTemplate="selectedItem">
+                    <div class="flex align-items-center gap-2">
+                      <i [ngClass]="selectedOption?.value"></i>
+                      <div> {{ selectedOption?.label }}</div>
+                    </div>
+                  </ng-template>
+                  <ng-template let-option pTemplate="item">
+                    <div class="p-d-flex p-ai-center gap-2">
+                      <i [ngClass]="option.value"></i>
+                      <span class="p-ml-2"> {{ option.label }}</span>
+                    </div>
+                  </ng-template>
+                </p-dropdown>
+              </div>
+              <div class="field col-4">
+                <label for="severity">Severity</label>
+                <p-dropdown [options]="severitySelectList" optionLabel="name" optionValue="id"
+                  formControlName="severity" [filter]="true" filterBy="name" [showClear]="true" appendTo="body"
+                  class="icon-drop" placeholder="Select One">
+                  <ng-template let-selectedOption pTemplate="selectedItem">
+                    <div class="p-d-flex p-ai-center gap-2">
+                      <app-button [label]="selectedOption.name" [severity]="selectedOption.id" size="small" class="severity-drop-btn" />
+                    </div>
+                  </ng-template>
+                  <ng-template let-option pTemplate="item">
+                    <div class="p-d-flex p-ai-center gap-2">
+                      <app-button [label]="option.name" [severity]="option.id" size="small" class="btn-drop" />
+
+                    </div>
+                  </ng-template>
+                </p-dropdown>
+              </div>
+              <div class="field col-4">
+                <app-input-text formControlName="permissions" label="Permissions" />
+              </div>
+              <div class="field col-4">
+                <app-input-text formControlName="navigationUrl" label="Navigation Url" placeholder="e.g. /admin/users" />
+              </div>
+              <div class="field col-4">
+                <app-input-text formControlName="params" label="Params" placeholder="e.g. id, name" />
+              </div>
+              <div class="field col-4">
+                <app-input-number formControlName="sortOrder" label="Sort Order" [textRight]="true" [showButtons]="true" buttonLayout="horizontal"
+                  [min]="0" />
+              </div>
+              <div class="field col-4 md:mt-5">
+                <app-input-switch formControlName="isVisible" label="Visible" />
+              </div>
+              <div class="field col-4 md:mt-5">
+                <app-input-switch formControlName="showCaption" label="Show Caption" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Page Data Row Actions -->
+
+    <!-- Page Data Field -->
+    <div class="grid m-1">
+      <div class="col-12 group">
+        <div class="div-caption">
+          <span>List Page Fields</span>
+          <div (click)="addAppPageField()" class="field-plus">
+            <i class="pi pi-plus"></i> Field
+          </div>
+        </div>
+
+        <div formArrayName="appPageFields" *ngFor="let field of appPageFields.controls; let i = index"  pDroppable (onDrop)="drop($event, i, appPageFields)">
+          <div [formGroupName]="i" class="col-12 group-row" pDraggable (onDragStart)="dragStart($event, i, appPageFields)" (onDragEnd)="dragEnd($event)">
+            <div class="div-caption">
+              Field
+              <a class="expand-field" *ngIf="!showPropertyStatus(field)" (click)="showProperty(field, true)">
+                <i class="pi pi-chevron-down"></i>
+              </a>
+              <a class="collapse-field" *ngIf="showPropertyStatus(field)" (click)="showProperty(field, false)">
+                <i class="pi pi-chevron-up"></i>
+              </a>
+              <a class="remove-field" (click)="removeAppPageField(i)">
+                <i class="pi pi-trash"></i>
+              </a>
+            </div>
+            <!-- Show initially -->
+            <div class="grid mt-2" *ngIf="!showPropertyStatus(field)">
+              <div class="col-4">
+                <span>Name: {{ field.value.field }}</span>
+              </div>
+              <div class="col-4">
+                <span>Caption: {{ field.value.header }}</span>
+              </div>
+              <div class="col-4">
+                <span>Field Type: {{ field.value.fieldType }}</span>
+              </div>
+            </div>
+            <!-- Show when click on down chevron icon -->
+            <div class="grid mt-2" *ngIf="showPropertyStatus(field)">
+              <div class="field col-4">
+                <app-input-text formControlName="field" label="Field Name" [required]="true" />
+              </div>
+              <div class="field col-4">
+                <app-input-text formControlName="header" label="Caption" [required]="true" />
+              </div>
+              <div class="field col-4">
+                <app-input-select [options]="fieldTypeSelectList" formControlName="fieldType" label="Field Type" />
+              </div>
+              <div class="field col-4">
+                <app-input-text formControlName="dbField" label="Db Field" [required]="true" />
+              </div>
+              <div class="field col-4">
+                <app-input-select [options]="alignSelectList" formControlName="textAlign" label="Text Align" />
+              </div>
+              <div class="field col-4">
+                <app-input-number formControlName="sortOrder" label="Sort Order" [textRight]="true" [showButtons]="true" buttonLayout="horizontal"
+                  [min]="0" />
+              </div>
+              <div class="field col-4">
+                <app-input-text formControlName="format" label="Format" [required]="false" />
+              </div>
+              <div class="field col-4">
+                <app-input-select [options]="filterSelectList" formControlName="filterType" label="Filter Type" />
+              </div>
+              <div class="field col-4">
+                <app-input-text formControlName="dsName" label="DS Name" />
+              </div>
+              <div class="field col-4">
+                <app-input-text formControlName="linkBaseUrl" label="Link Base Url" />
+              </div>
+              <div class="field col-4">
+                <app-input-text formControlName="linkValueFieldName" label="Link Value Field Name" />
+              </div>
+              <div class="field col-4">
+                <app-input-text formControlName="bgColor" label="Background Color" />
+              </div>
+              <div class="field col-4">
+                <app-input-switch formControlName="isVisible" label="Visible" />
+              </div>
+              <div class="field col-4">
+                <app-input-switch formControlName="isActive" label="Active" />
+              </div>
+              <div class="field col-4">
+                <app-input-switch formControlName="isSortable" label="Allow Sort" />
+              </div>
+              <div class="field col-4">
+                <app-input-switch formControlName="isFilterable" label="Allow Filter" />
+              </div>
+              <div class="field col-4">
+                <app-input-switch formControlName="isGlobalFilterable" label="Global Filter" />
+              </div>
+              <div class="field col-4">
+                <app-input-switch formControlName="enableLink" label="Enable Link" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Page Data Field -->
+    </ng-container>
+    <!-- JSON -->
+    <ng-container *ngIf="activeView === 'json'">
+      <div class="grid tarea">
+        <app-input-textarea [(ngModel)]="pageLayoutJson" [ngModelOptions]="{standalone: true}" (onblur)="onJsonChange()" height="500px" width="400px"  />
+        <div *ngIf="jsonError" class="error">{{ jsonError }}</div>
+      </div>
+    </ng-container>
+
+
+
+    <div class="mt-3 p-dialog-footer">
+      <app-button label="Cancel" type="button" icon="pi pi-times" [text]="true" severity="warning"
+        (onClick)="cancel()" />
+      <app-button label="Save" type="submit" icon="pi pi-check" [text]="true" />
+
+    </div>
+  </form>
+</div>

@@ -1,0 +1,18 @@
+::ng-deep {
+  app-input-number.ng-invalid.ng-touched input {
+    border: 1px solid #f19ea6;
+  }
+
+  app-input-number.ng-invalid.ng-touched input:focus {
+    box-shadow: none;
+  }
+  
+  app-input-number p-inputnumber input {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .digit-right .p-inputnumber-input {
+    text-align: right;
+  }
+}

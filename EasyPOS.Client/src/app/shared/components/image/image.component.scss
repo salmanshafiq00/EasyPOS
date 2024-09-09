@@ -1,0 +1,31 @@
+.image-container {
+  display: inline-block; 
+}
+
+::ng-deep{
+
+  .image-container .circle-image img:not(.p-image-preview) {
+    border-radius: 50%; 
+    object-fit: cover; 
+  }
+
+  .image-container .circle-image button.p-image-preview-indicator {
+    border-radius: 50%; 
+    object-fit: cover; 
+  }
+
+  .image-container .circle-image-border  {
+    border: 2px solid #304562;
+    padding: 4px;
+    object-fit: cover; 
+  }
+
+  .image-container .circle-image.circle-image-border  {
+    border-radius: 50%; 
+  }
+
+  .image-container .circle-image-border button.p-image-preview-indicator {
+    margin-left: 4px;
+    margin-top: 4px;
+  }
+}

@@ -1,0 +1,41 @@
+<app-toast />
+<div class="card">
+    <p-tabMenu [model]="items" [scrollable]="true" [activeItem]="activeItem"  (activeItemChange)="onActiveItemChange($event)">
+        <ng-template pTemplate="item" let-item>
+            <ng-container *ngIf="item.route; else elseBlock">
+                <a [routerLink]="item.route" class="p-menuitem-link">
+                    <span [class]="item.icon"></span>
+                    <span class="ml-2">
+                        {{ item.label }}
+                    </span>
+                </a>
+            </ng-container>
+            <ng-template #elseBlock>
+                <a [href]="item.url" class="p-menuitem-link">
+                    <span [class]="item.icon"></span>
+                    <span class="ml-2">
+                        {{ item.label }}
+                    </span>
+                </a>
+            </ng-template>
+        </ng-template>
+    </p-tabMenu>
+    <div *ngIf="activeItem?.label === 'About'">
+        <ng-container *ngTemplateOutlet="about"></ng-container>
+    </div>
+    <div *ngIf="activeItem?.label === 'Change Password'">
+        <ng-container *ngTemplateOutlet="changePassword"></ng-container>
+    </div>
+    <div *ngIf="activeItem?.label === 'Change Photo'">
+        <ng-container *ngTemplateOutlet="changePhoto"></ng-container>
+    </div>
+</div>
+<ng-template #about>
+    <user-user-basic />
+</ng-template>
+<ng-template #changePassword>
+    <user-change-password />
+</ng-template>
+<ng-template #changePhoto>
+    <user-change-profile-photo />
+</ng-template>

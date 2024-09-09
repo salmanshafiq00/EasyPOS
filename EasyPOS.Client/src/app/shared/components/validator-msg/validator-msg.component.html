@@ -1,0 +1,5 @@
+<div *ngFor="let errorKey of errorKeys" [ngClass]="styleClass">
+  <small class="validation-msg" *ngIf="hasError(errorKey) && isTouched()">
+    {{ getErrorMessage(errorKey, control?.errors?.[errorKey]) }}
+  </small>
+</div>

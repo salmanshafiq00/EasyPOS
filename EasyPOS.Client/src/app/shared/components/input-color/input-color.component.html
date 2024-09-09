@@ -1,0 +1,16 @@
+<div *ngIf="!hidden" class="cust-field" [ngClass]="{'left-label': isLeftPosition, 'top-label': !isLeftPosition}">
+    <label class="label" *ngIf="label">{{ label }} <span class="required-star" *ngIf="required">*</span></label>
+    <p-colorPicker  
+     [ngClass]="{'left-pos': isLeftPosition, 'top-pos': !isLeftPosition}"
+      [disabled]="disabled" 
+      [autofocus]="autofocus"
+      variant="filled"
+      [inputId]="inputId"
+      [format]="format"
+      [appendTo]="appendTo"
+      [inline]="inline"
+      (onChange)="onInputChange($event)"
+      (blur)="onBlurEvent()"
+      [(ngModel)]="value"
+    />
+  </div>

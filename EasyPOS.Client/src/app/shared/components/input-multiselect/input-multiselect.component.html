@@ -1,0 +1,33 @@
+<div *ngIf="!hidden" class="cust-field cust-multi">
+  <label class="label" *ngIf="label">
+    {{ label }}
+    <span class="required-star" *ngIf="required">*</span>
+  </label>
+  <p-multiSelect 
+      [ngClass]="{'showAllItems': showAllItems}"
+      [placeholder]="placeholder"
+      [disabled]="disabled"
+      [readonly]="readonly"
+      [autofocus]="autofocus"
+      [required]="required"
+      [options]="options"
+      [showClear]="showClear"
+      [filter]="filter"
+      [filterBy]="filterBy"
+      [optionValue]="optionValue"
+      [optionLabel]="optionLabel"
+      [display]="display"
+      [selectionLimit]="selectionLimit"
+      [maxSelectedLabels]="maxSelectedLabels"
+      [name]="name"
+      [scrollHeight]="scrollHeight"
+      [selectedItemsLabel]="selectedItemsLabel"
+      [displaySelectedLabel]="displaySelectedLabel"
+      [appendTo]="appendTo"
+      [tooltip]="tooltip"
+      [tooltipPosition]="tooltipPosition"
+      [(ngModel)]="value"
+      (onChange)="onInputChange($event)"
+      (onBlur)="onBlurEvent()"
+/>
+</div>

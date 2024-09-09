@@ -1,0 +1,101 @@
+<div class="layout-topbar">
+    <a class="layout-topbar-logo" routerLink="">
+        <img src="assets/layout/images/{{layoutService.config().colorScheme === 'light' ? 'logo-dark' : 'logo-white'}}.svg"
+            alt="logo">
+        <span>SFS</span>
+    </a>
+
+    <button #menubutton class="p-link layout-menu-button layout-topbar-button" (click)="layoutService.onMenuToggle()">
+        <i class="pi pi-bars"></i>
+    </button>
+
+    <button #topbarmenubutton class="p-link layout-topbar-menu-button layout-topbar-button"
+        (click)="layoutService.showProfileSidebar()">
+        <i class="pi pi-ellipsis-v"></i>
+    </button>
+
+    <div #topbarmenu class="layout-topbar-menu md:gap-2"
+        [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}">
+        <button class="p-link layout-topbar-button">
+            <i class="pi pi-calendar"></i>
+            <span>Calendar</span>
+        </button>
+        <!-- <button class="p-link layout-topbar-button" (click)="notifPanel.toggle($event)"> -->
+        <button class="p-link layout-topbar-button" (click)="toggleNotifPanel($event)">
+            <i class="pi pi-bell"></i>
+            <label class="unseen-msg-badge" *ngIf="unseenMsgCount > 0">{{unseenMsgCount}}</label>
+            <span>Notification</span>
+        </button>
+        <p-overlayPanel #notifPanel styleClass="notify-panel">
+            <div class="flex flex-column gap-2 w-25rem">
+                <div>
+                    <span class="font-medium text-900 block mb-2">Notifications</span>
+                    <div class="notifications-container">
+                        <ul class="list-none p-0 m-0 flex flex-column gap-2">
+                            <li *ngFor="let notification of notifications" class="flex align-items-center gap-2">
+                                <img [src]="'https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png' "
+                                    style="width: 32px" />
+                                <div>
+                                    <span class="font-medium">{{ notification.title }}</span>
+                                    <div class="text-sm text-color-secondary">{{ notification.description }}</div>
+                                </div>
+                                <div class="flex align-items-center gap-2 text-color-secondary ml-auto text-sm">
+                                    <span>{{ notification.created }}</span>
+                                    <i class="pi pi-angle-down"></i>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </p-overlayPanel>
+        <button class="p-link layout-topbar-button user-avatar-btn" (click)="profilePanel.toggle($event)">
+            <img [src]="userPhotoUrl" class="user-avatar" />
+            <span>Profile</span>
+        </button>
+        <p-overlayPanel #profilePanel styleClass="profile-panel">
+            <div class=" menu-drawer p-menu">
+                <ul role="menu" class="p-menu-list p-reset">
+                    <li  class="p-menuitem">
+                        <div class="p-menuitem-content">
+                            <a pRipple routerLink="/admin/user-profile" (click)="profilePanel.hide()"  class="p-menuitem-link">
+                                <span class="pi pi-user"></span>
+                                <span class="ml-2">Profile</span>
+                            </a>
+                        </div>
+                    </li>
+                    <li class="p-menuitem">
+                        <div class="p-menuitem-content">
+                            <a pRipple  (click)="logout()" class="p-menuitem-link">
+                                <span class="pi pi-sign-out"></span>
+                                <span class="ml-2">Logout</span>
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </p-overlayPanel>
+        <!-- <button class="p-link layout-topbar-button" [routerLink]="'/documentation'">
+            <i class="pi pi-cog"></i>
+            <span>Settings</span>
+        </button> -->
+    </div>
+</div>
+
+<p-toast key="notification" [showTransformOptions]="'translateY(100%)'" [showTransitionOptions]="'1000ms'"
+    [hideTransitionOptions]="'1000ms'" [showTransformOptions]="'translateX(100%)'">
+    <ng-template let-message pTemplate="message">
+        <div class="flex flex-column align-items-start" style="flex: 1">
+            <div class="flex align-items-center gap-2">
+                <img [src]="'https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png' "
+                    style="width: 32px" />
+                <span class="font-bold text-900">
+                    Amy Elsner
+                </span>
+            </div>
+            <div class="font-medium text-lg my-3 text-900">
+                {{ message.summary }}
+            </div>
+        </div>
+    </ng-template>
+</p-toast>

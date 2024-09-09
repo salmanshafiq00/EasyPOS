@@ -1,0 +1,66 @@
+<div class="ml-3 mt-3">
+    <app-image [src]="photoUrl" [preview]="true" [circle]="true" [border]="true" styleClass="test" width="100" height="100" />
+</div>
+
+<div *ngIf="isEditing; else viewProfile">
+    <ng-container [ngTemplateOutlet]="editProfile"></ng-container>
+</div>
+
+<ng-template #viewProfile>
+    <div>
+        <div class="ml-3 mt-3">
+            <h3>{{item?.firstName}} {{item?.lastName}}</h3>
+        </div>
+        <div class="ml-3 mt-3">
+            <span class="text-primary text-lg">Username: </span> <span class="text-lg"> {{item?.username}} </span>
+        </div>
+        <div class="ml-3 mt-3">
+            <span class="text-primary text-lg">Email: </span> <span class="text-lg"> {{item?.email}} </span>
+        </div>
+        <div class="ml-3 mt-3">
+            <span class="text-primary text-lg">Roles:</span>  <span class="text-lg"> {{item?.assignedRoles}} </span>
+        </div>
+        <div class="ml-3 mt-3">
+            <span class="text-primary text-lg">Phone:</span>  <span class="text-lg"> {{item?.phoneNumber}} </span>
+        </div>
+        
+        <div class="ml-3 mt-5">
+            <app-button label="Edit Profile" icon="pi pi-pen-to-square" (onClick)="onEditProfile()" />
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #editProfile>
+    <div class="col-12">
+        <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+            <div class="p-fluid p-formgrid grid">
+                <div class="field col-12 md:col-6">
+                    <app-input-text label="First Name" formControlName="firstName" [required]="true"
+                        [readonly]="false" />
+                    <app-validator-msg [control]="f['firstName']" />
+                </div>
+                <div class="field col-12 md:col-6">
+                    <app-input-text label="Last Name" formControlName="lastName" [required]="true" [readonly]="false" />
+                    <app-validator-msg [control]="f['lastName']" />
+                </div>
+                <div class="field col-12 md:col-6">
+                    <app-input-text label="Email" formControlName="email" [required]="true" [readonly]="false" />
+                    <app-validator-msg [control]="f['email']" />
+                </div>
+                <div class="field col-12 md:col-6">
+                    <app-input-text label="User Name" formControlName="username" [required]="true" [disabled]="true" />
+                    <app-validator-msg [control]="f['username']" />
+                </div>
+                <div class="field col-12 md:col-6">
+                    <app-input-text label="Phone Number" formControlName="phoneNumber" 
+                        [readonly]="false" />
+                    <app-validator-msg [control]="f['phoneNumber']" />
+                </div>
+            </div>
+            <div class="mt-3 p-dialog-footer">
+                <app-button label="Save" type="submit" [raised]="true" [outlined]="true" icon="pi pi-check" [text]="true" [disabled]="form.invalid" />
+                <app-button label="Cancel" type="button" [raised]="true" [outlined]="true" icon="pi pi-times" styleClass="ml-2" [text]="true" severity="warning" (onClick)="onCancel()" />
+            </div>
+        </form>
+      </div>
+</ng-template>

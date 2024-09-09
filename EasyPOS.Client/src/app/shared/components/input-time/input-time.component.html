@@ -1,0 +1,28 @@
+<div *ngIf="!hidden" class="cust-field">
+  <label class="label" *ngIf="label">
+    {{ label }}
+    <span class="required-star" *ngIf="required">*</span>
+  </label>
+  <p-calendar
+    [(ngModel)]="value"
+    [placeholder]="placeholder"
+    [disabled]="disabled"
+    [required]="required"
+    [readonlyInput]="readonlyInput"
+    [showIcon]="showIcon"
+    [showOnFocus]="showOnFocus"
+    [iconDisplay]="iconDisplay"
+    [timeOnly]="timeOnly"
+    [hourFormat]="hourFormat"
+    [showButtonBar]="showButtonBar"
+    [inputStyle]="inputStyle"
+    [showSeconds]="showSeconds"
+    [dataType]="'string'"
+    (ngModelChange)="onInputChange($event)"
+    (onBlur)="onBlurEvent()"
+  >
+  <ng-template pTemplate="inputicon" let-clickCallBack="clickCallBack">
+    <i class="pi pi-clock pointer-events-none" (click)="clickCallBack($event)"></i>
+</ng-template>
+</p-calendar>
+</div>

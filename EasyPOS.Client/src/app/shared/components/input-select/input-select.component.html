@@ -1,0 +1,27 @@
+<div *ngIf="!hidden" class="cust-field">
+  <label class="label" *ngIf="label">
+    {{ label }}
+    <span class="required-star" *ngIf="required">*</span>
+  </label>
+  <p-dropdown 
+      [inputId]="inputId"
+      [placeholder]="placeholder"
+      [disabled]="disabled"
+      [readonly]="readonly"
+      [autofocus]="autofocus"
+      [required]="required"
+      [options]="options"
+      [showClear]="showClear"
+      [editable]="editable"
+      [filter]="filter"
+      [filterBy]="filterBy"
+      [optionValue]="optionValue"
+      [optionLabel]="optionLabel"
+      [(ngModel)]="value"
+      (onChange)="onInputChange($event)"
+      (onBlur)="onBlurEvent()"
+/>
+</div>
+
+<!-- [checkmark]="checkmark" -->
+<!-- [variant]="variant" -->

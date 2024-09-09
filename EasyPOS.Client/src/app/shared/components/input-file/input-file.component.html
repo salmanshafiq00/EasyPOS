@@ -1,0 +1,38 @@
+<div [ngClass]="{'p-hidden': hidden}" class="cust-field input-file">
+  <label class="label" *ngIf="label">{{ label }} <span class="required-star" *ngIf="required">*</span></label>
+  <div class="flex gap-2">
+    <p-fileUpload 
+      #fileInput
+      [name]="name"
+      [accept]="accept"
+      [disabled]="disabled"
+      [multiple]="multiple"
+      [chooseLabel]="chooseLabel"
+      [chooseIcon]="chooseIcon"
+      [mode]="mode"
+      [fileLimit]="fileLimit"
+      [maxFileSize]="maxFileSize"
+      [customUpload]="customUpload"
+      [showCancelButton]="showCancelButton"
+      [invalidFileTypeMessageSummary]="invalidFileTypeMessageSummary"
+      [invalidFileSizeMessageSummary]="invalidFileSizeMessageSummary"
+      [invalidFileLimitMessageSummary]="invalidFileLimitMessageSummary"
+      (onSelect)="onFileUpload($event, fileInput)"
+  >
+</p-fileUpload>
+<p-button 
+  *ngIf="value.length > 0" 
+  [icon]="cancelIcon" 
+  [label]="cancelLabel"
+  [text]="cancelText"
+  severity="danger"
+  (click)="onClearFiles()" />
+  </div>
+<div *ngIf="showTemplate">
+  <ul *ngIf="showCancelButton && value.length > 0" class="file-list">
+      <li *ngFor="let file of value" class="file-item">
+          {{ file.name }} - <span class="file-size">{{ file.size }} bytes</span>
+      </li>
+  </ul>
+</div>
+</div>

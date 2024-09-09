@@ -1,0 +1,40 @@
+::ng-deep {
+  .p-datatable .p-datatable-header {
+    padding: .5rem 1rem;
+  }
+
+  .p-datatable .p-datatable-tbody>tr>td {
+    padding: .2rem .5rem;
+  }
+
+  .p-datatable .p-datatable-thead>tr>th {
+    padding: .5rem .5rem;
+  }
+
+  // .p-paginator {
+  //   margin-top: 1rem;
+  // }
+}
+
+::ng-deep{
+  .profile-panel.p-overlaypanel .p-overlaypanel-content {
+    padding: .2rem;
+  }
+
+  .menu-drawer.p-menu{
+    padding: 0;
+    background: none;
+    color: rgba(255, 255, 255, 0.87);
+    border: none;
+    width: 100%;
+    min-width: 10rem;
+  }
+
+  .menu-drawer ul li a{
+    padding: 0 0.75rem;
+  }
+
+  .menu-drawer ul li .p-menuitem-content{
+    padding: 0.5rem 0;
+  }
+}

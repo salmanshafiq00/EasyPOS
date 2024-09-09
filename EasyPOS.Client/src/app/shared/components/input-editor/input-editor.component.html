@@ -1,0 +1,12 @@
+<div *ngIf="!hidden" class="cust-field">
+  <label *ngIf="label" [for]="inputId" class="label">
+    {{ label }} <span class="required-star" *ngIf="required">*</span>
+  </label>
+  <editor
+    [apiKey]="apiKey"
+    [(ngModel)]="value"
+    [disabled]="disabled"
+    [init]="init"
+    [id]="inputId"
+  ></editor>
+</div>

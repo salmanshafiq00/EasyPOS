@@ -1,0 +1,43 @@
+<div [ngClass]="{'p-hidden': hidden}" class="cust-field input-file">
+  <app-toast key="file-toast" position="top-center" />
+    <p-fileUpload
+      #fileUpload
+      [name]="name"
+      [accept]="accept"
+      [multiple]="multiple"
+      [maxFileSize]="maxFileSize"
+      [fileLimit]="fileLimit"
+      [chooseLabel]="chooseLabel"
+      [chooseIcon]="chooseIcon"
+      [cancelLabel]="cancelLabel"
+      [cancelIcon]="cancelIcon"
+      [uploadLabel]="uploadLabel"
+      [uploadIcon]="uploadIcon"
+      [showCancelButton]="showCancelButton"
+      [showUploadButton]="showUploadButton"
+      [mode]="mode"
+      [customUpload]="customUpload"
+      [disabled]="disabled"
+      [style]="style"
+      [styleClass]="styleClass"
+      [previewWidth]="previewWidth"
+      [uploadStyleClass]="uploadStyleClass"
+      [cancelStyleClass]="cancelStyleClass"
+      [removeStyleClass]="removeStyleClass"
+      [chooseStyleClass]="chooseStyleClass"
+      (onProgress)="onProgress($event)"
+      (onError)="onError($event)"
+      (onSelect)="onSelect($event)"
+      (uploadHandler)="onUploadHandler($event)"
+    >
+      <ng-template pTemplate="content">
+        <ul *ngIf="uploadFiles.length">
+            <li *ngFor="let file of uploadFiles">
+                {{ file.name }} - {{ file.size }} bytes
+            </li>
+        </ul>
+        <!-- <p-progressBar [value]="progressValue" *ngIf="showProgress && progressValue > 0" [showValue]="false" /> -->
+        <app-progress-bar [value]="progressValue" *ngIf="showProgress && progressValue > 0" [showValue]="false" />
+    </ng-template>
+    </p-fileUpload>
+</div>

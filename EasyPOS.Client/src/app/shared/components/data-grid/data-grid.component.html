@@ -1,0 +1,540 @@
+<app-toast></app-toast>
+<app-confirm-dialog></app-confirm-dialog>
+
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-2  pb-6 sm:px-6">
+            <!-- <h5 class="mb-4 sm:m-0">{{pageTitle}}</h5>  -->
+            <p-toolbar styleClass="mb-3">
+                <ng-template pTemplate="left">
+                    <div >
+                        <ng-container *ngFor="let action of leftToolbarActions">
+                            <span>
+                            <app-button 
+                                *ngIf="permit.hasPermission(action.permissions) && action.actionType !== 'multi-select' "
+                                [id]="action.actionName + '_btn'"
+                                [label]="action.showCaption ? action.caption : null" 
+                                class="mr-2" 
+                                [size]="'small'"
+                                [icon]="action.icon"
+                                [severity]="action.severity"
+                                [outlined]="true"
+                                (onClick)="handleToolbarActions(action)" />
+                            </span>
+                            <span>
+                            <app-button 
+                                *ngIf="permit.hasPermission(action.permissions) && action.actionType === 'multi-select'"
+                                [id]="action.actionName + '_btn'"
+                                [label]="action.showCaption ? action.caption : null" 
+                                class="mr-2" 
+                                [size]="'small'"
+                                [icon]="action.icon"
+                                [severity]="action.severity"
+                                [outlined]="true"
+                                [disabled]="!selectedRows || !selectedRows.length"
+                                (onClick)="handleToolbarActions(action)" />
+                            </span>
+                            <span >
+                                <app-input-file-adv 
+                                    *ngIf="action.actionType === 'upload'"
+                                    mode="basic" 
+                                    [url]="action.navigationUrl" 
+                                    [chooseIcon]="action.icon" 
+                                    [chooseLabel]="action.caption" 
+                                    [uploadLabel]="action.caption" 
+                                    styleClass="p-button-sm"                                   
+                                />
+                            </span>
+                        </ng-container>                   
+                        <!-- <p-button 
+                            pRipple
+                            [raised]="true"
+                            severity="help" 
+                            label="Refresh" 
+                            icon="pi pi-sync" 
+                            class="mr-2" 
+                            styleClass="p-button-sm"
+                            [loading]="loading" 
+                            [disabled]="loading"
+                            (click)="refreshGrid()">
+                        </p-button> -->
+                    </div>
+                </ng-template>
+
+                <ng-template pTemplate="right">
+                    <ng-container *ngFor="let action of rightToolbarActions">
+                    <span>
+                        <app-button 
+                            *ngIf="permit.hasPermission(action.permissions) && action.actionType === 'button'"
+                            [id]="action.actionName + '_btn'"
+                            [label]="action.showCaption ? action.caption : null" 
+                            class="mr-2" 
+                            [size]="'small'"
+                            [icon]="action.icon"
+                            [severity]="action.severity"
+                            [outlined]="true"
+                            [tooltip]="action.caption"
+                            tooltipPos="bottom"
+                            (onClick)="handleToolbarActions(action)" 
+                        />
+                    </span>
+                    <span  pTooltip="Upload" tooltipPosition="bottom">
+                        <app-input-file-adv 
+                            *ngIf="action.actionType === 'upload'"
+                            mode="basic" 
+                            [url]="action.navigationUrl" 
+                            [chooseIcon]="action.icon" 
+                            [chooseLabel]="action.showCaption ? action.caption : null" 
+                            [uploadLabel]="action.showCaption ? action.caption : null" 
+                            styleClass="p-button-sm p-button-outlined mr-2" 
+                        />
+                    </span>
+                    </ng-container>
+                    <app-button
+                        *ngIf="permit.hasPermission('Permissions.AppPageSetting.Edit')"
+                        icon="pi pi-wrench" 
+                        [rounded]="true" 
+                        [outlined]="true" 
+                        size="small" 
+                        tooltip="Page Setting" 
+                        tooltipPos="bottom" 
+                        (onClick)="showPageSetting()" styleClass="ml-2" 
+                    />
+                </ng-template>
+            </p-toolbar>
+
+            <p-table #dt 
+                [value]="items" 
+                [columns]="dataFields" 
+                [rows]="rows"  
+                [responsiveLayout]="responsiveLayout" 
+                [globalFilterFields]="globalFilterFields" 
+                [paginator]="paginator" 
+                [rowsPerPageOptions]="rowsPerPageOptions" 
+                [showCurrentPageReport]="showCurrentPageReport" 
+                [currentPageReportTemplate]="currentPageReportTemplate" 
+                [totalRecords]="totalRecords"
+                [(selection)]="selectedRows"  
+                [selectionMode]="selectionMode" 
+                [rowHover]="rowHover" 
+                [dataKey]="dataKey"
+                [loading]="loading"
+                [filterDelay]="debounceTimeout"
+                [lazyLoadOnInit]="false"
+                [lazy]="lazyLoading"
+                [resizableColumns]="resizableColumns"
+                [columnResizeMode]="columnResizeMode" 
+                [styleClass]="styleClass"
+                (onLazyLoad)="loadData($event)">
+
+                <ng-template pTemplate="caption">
+                    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                        <h5 class="mb-2 sm:m-0">{{pageTitle}}</h5> 
+                        <span class="block md:mt-0 p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input 
+                                pInputText 
+                                #globalSearchInput 
+                                [pTooltip]="toolTipContent"
+                                tooltipPosition="top"
+                                type="text" 
+                                (input)="onSearchInput($event)" 
+                                (keyup.enter)="onSearchEnter($event)"
+                                placeholder="Global Search..."  
+                                class="w-10 sm:w-auto"/>
+                                <ng-template #toolTipContent>
+                                    <div class="flex align-items-center text-xs">
+                                        <span> {{globalfiltersTooltip}}</span>
+                                    </div>
+                                </ng-template>
+                            <p-button 
+                                label="Clear" 
+                                class="ml-3 hidden sm:inline" 
+                                [outlined]="true" 
+                                icon="pi pi-filter-slash" 
+                                (click)="clear()" />
+                            <p-button 
+                                class="ml-3 sm:hidden" 
+                                [outlined]="true" 
+                                icon="pi pi-filter-slash" 
+                                (click)="clear()" />
+                        </span>
+                    </div>
+                    <p-divider *ngIf="filterType === 'basic-top'" />
+                    <div *ngIf="filterType === 'basic-top'" class="flex flex-column flex-wrap sm:gap-3 sm:flex-row sm:justify-content-end mt-5">
+                        <ng-container  *ngFor="let col of dataFields">
+                            <span >
+                                <!-- FieldType.string -->
+                                <p-columnFilter 
+                                    type="text" 
+                                    *ngIf="col.isFilterable && col.fieldType === FieldType.string" 
+                                    [field]="col.field" 
+                                    [placeholder]="'Search by ' + col.header" 
+                                    [showClearButton]="false"  />
+    
+                                <!-- FieldType.select -->
+                                <p-columnFilter 
+                                    *ngIf="col.isFilterable && col.fieldType === FieldType.select" 
+                                    [field]="col.field" 
+                                    [showMenu]="false"
+                                    [matchMode]="FilterMatchModes.EQUALS"
+                                    [showMatchModes]="false"
+                                    [showOperator]="false"
+                                    [showAddButton]="false"
+                                    [showClearButton]="false"
+                                    [pTooltip]="col.header" 
+                                    tooltipPosition="top"
+                                    >
+                                    <ng-template 
+                                        pTemplate="filter" 
+                                        let-value let-filter="filterCallback">
+                                        <p-dropdown 
+                                            [(ngModel)]="dynamicDropdownValues[generateDropdownKey(col.field, 'select')]"
+                                            [options]="optionsDataSources[col?.dsName]" 
+                                            (onChange)="filter($event.value?.id)" 
+                                            placeholder="Select One"
+                                            [optionLabel]="'name'" 
+                                            appendTo="body"
+                                            [showClear]="true">
+                                                <ng-template let-option pTemplate="item">
+                                                    <p-tag 
+                                                        [value]="option.name" 
+                                                        [severity]="option.severity" />
+                                                </ng-template>
+                                        </p-dropdown>
+                                    </ng-template>
+                                </p-columnFilter>   
+    
+                                <!-- FieldType.multiSelect -->
+                                <p-columnFilter 
+                                    *ngIf="col.isFilterable && col.fieldType === FieldType.multiSelect" 
+                                    [field]="col.field" 
+                                    [showMenu]="false"
+                                    [matchMode]="FilterMatchModes.IN"
+                                    [showMatchModes]="false"
+                                    [showOperator]="false"
+                                    [showAddButton]="false"
+                                    [showClearButton]="false"
+                                    [pTooltip]="col.header" 
+                                    tooltipPosition="top"
+                                    >
+                                    <ng-template 
+                                        pTemplate="filter" 
+                                        let-value let-filter="filterCallback">
+                                        <p-multiSelect 
+                                            [(ngModel)]="dynamicDropdownValues[generateDropdownKey(col.field, 'multiSelect')]"
+                                            [options]="optionsDataSources[col?.dsName]" 
+                                            placeholder="Select Any" 
+                                            (onChange)="filter($event.value)" 
+                                            optionLabel="name"
+                                            appendTo="body"
+                                            [showClear]="true">
+                                                <ng-template let-option pTemplate="item">
+                                                    <div class="inline-block vertical-align-middle">
+                                                        <span class="ml-1 mt-1">{{ option.name }}</span>
+                                                    </div>
+                                                </ng-template>
+                                        </p-multiSelect>
+                                    </ng-template>
+                                </p-columnFilter>  
+    
+                                <!-- FieldType.date -->
+                                <p-columnFilter 
+                                    *ngIf="col.isFilterable && col.fieldType === FieldType.date"
+                                    type="date" 
+                                    [field]="col.field" 
+                                    display="menu">
+                                </p-columnFilter>
+                            </span>                                                   
+                        </ng-container>
+
+    
+                    </div>                    
+                </ng-template>
+
+                 <ng-template pTemplate="header" let-columns>
+                    <!-- Table Header With Basic Filter Start -->
+                    <tr *ngIf="filterType === 'basic' || filterType === 'basic-top'">
+                        <th style="width: 3rem" *ngIf="appPageLayout?.showSelectCheckbox && filterType === 'basic-top'">
+                            <p-tableHeaderCheckbox />
+                        </th>
+                        <ng-container *ngFor="let col of columns">
+                            <th [pSortableColumn]="col.isSortable ? col.field : ''" pResizableColumn >
+                                <p-sortIcon 
+                                    [hidden]="!col.isSortable" 
+                                    [field]="col.field">
+                                </p-sortIcon>
+                                {{col.header}}
+                            </th>
+                        </ng-container>
+                        <th *ngIf="appPageLayout?.showRowActionCol === true"></th>
+                    </tr>
+                    <tr *ngIf="filterType === 'basic'">
+                        <th style="width: 3rem" *ngIf="appPageLayout?.showSelectCheckbox">
+                            <p-tableHeaderCheckbox />
+                        </th>
+
+                        <ng-container  *ngFor="let col of columns">
+                            <th>
+                                <!-- FieldType.string -->
+                                <p-columnFilter 
+                                    type="text" 
+                                    *ngIf="col.isFilterable && col.fieldType === FieldType.string" 
+                                    [field]="col.field" 
+                                    [placeholder]="'Search by ' + col.header" 
+                                    [showClearButton]="false"  />
+
+                                <!-- FieldType.select -->
+                                <p-columnFilter 
+                                    *ngIf="col.isFilterable && col.fieldType === FieldType.select" 
+                                    [field]="col.field" 
+                                    [showMenu]="true"
+                                    [matchMode]="FilterMatchModes.EQUALS"
+                                    [showMatchModes]="false"
+                                    [showOperator]="false"
+                                    [showAddButton]="false"
+                                    [showClearButton]="false"
+                                    >
+                                    <ng-template 
+                                        pTemplate="filter" 
+                                        let-value let-filter="filterCallback">
+                                        <p-dropdown 
+                                            [(ngModel)]="dynamicDropdownValues[generateDropdownKey(col.field, 'select')]"
+                                            [options]="optionsDataSources[col?.dsName]" 
+                                            (onChange)="filter($event.value?.id)" 
+                                            placeholder="Select One"
+                                            [optionLabel]="'name'" 
+                                            appendTo="body"
+                                            [showClear]="true">
+                                                <ng-template let-option pTemplate="item">
+                                                    <p-tag 
+                                                        [value]="option.name" 
+                                                        [severity]="option.severity" />
+                                                </ng-template>
+                                        </p-dropdown>
+                                    </ng-template>
+                                </p-columnFilter>   
+
+                                <!-- FieldType.multiSelect -->
+                                <p-columnFilter 
+                                    *ngIf="col.isFilterable && col.fieldType === FieldType.multiSelect" 
+                                    [field]="col.field" 
+                                    [showMenu]="false"
+                                    [matchMode]="FilterMatchModes.IN"
+                                    [showMatchModes]="false"
+                                    [showOperator]="false"
+                                    [showAddButton]="false"
+                                    [showClearButton]="false"
+                                    >
+                                    <ng-template 
+                                        pTemplate="filter" 
+                                        let-value let-filter="filterCallback">
+                                        <p-multiSelect 
+                                            [(ngModel)]="dynamicDropdownValues[generateDropdownKey(col.field, 'multiSelect')]"
+                                            [options]="optionsDataSources[col?.dsName]" 
+                                            placeholder="Select Any" 
+                                            (onChange)="filter($event.value)" 
+                                            optionLabel="name"
+                                            appendTo="body"
+                                            [showClear]="true">
+                                                <ng-template let-option pTemplate="item">
+                                                    <div class="inline-block vertical-align-middle">
+                                                        <span class="ml-1 mt-1">{{ option.name }}</span>
+                                                    </div>
+                                                </ng-template>
+                                        </p-multiSelect>
+                                    </ng-template>
+                                </p-columnFilter>  
+
+                                <!-- FieldType.date -->
+                                <p-columnFilter 
+                                    *ngIf="col.isFilterable && col.fieldType === FieldType.date"
+                                    type="date" 
+                                    [field]="col.field" 
+                                    display="menu">
+                                </p-columnFilter>
+                            </th>                                                   
+                        </ng-container>
+                        <th *ngIf="appPageLayout?.showRowActionCol === true"></th>
+                    </tr>
+                    <!-- Table Header With Basic Filter End -->               
+
+                    <!-- Table Header With Advanced Filter Start -->
+                    <tr *ngIf="filterType === 'advanced'">
+                        <th style="width: 3rem" *ngIf="appPageLayout?.showSelectCheckbox">
+                            <p-tableHeaderCheckbox />
+                        </th>
+
+                        <ng-container *ngFor="let col of columns">
+                            <th [pSortableColumn]="col.isSortable ? col.field : ''" pResizableColumn >
+                            
+                            <!-- FieldType.string -->
+                            <p-columnFilter 
+                                type="text" 
+                                *ngIf="col.isFilterable && col.fieldType === FieldType.string" 
+                                [field]="col.field" 
+                                display="menu" 
+                                [showAddButton]="false" 
+                                [showClearButton]="true"  />
+
+                            <!-- FieldType.select -->
+                            <p-columnFilter 
+                                *ngIf="col.isFilterable && col.fieldType === FieldType.select" 
+                                [field]="col.field" 
+                                [showMenu]="true"
+                                [matchMode]="FilterMatchModes.EQUALS"
+                                display="menu"
+                                [showMatchModes]="false"
+                                [showOperator]="false"
+                                [showAddButton]="false"
+                                >
+                                <ng-template 
+                                    pTemplate="filter" 
+                                    let-value let-filter="filterCallback">
+                                    <p-dropdown 
+                                        [(ngModel)]="dynamicDropdownValues[generateDropdownKey(col.field, 'select')]"
+                                        [options]="optionsDataSources[col?.dsName]" 
+                                        (onChange)="filter($event.value?.id)" 
+                                        placeholder="Select One"
+                                        [optionLabel]="'name'" 
+                                        [showClear]="true">
+                                            <ng-template let-option pTemplate="item">
+                                                <p-tag 
+                                                    [value]="option.name" 
+                                                    [severity]="option.severity" />
+                                            </ng-template>
+                                    </p-dropdown>
+                                </ng-template>
+                            </p-columnFilter>   
+
+                            <!-- FieldType.multiSelect -->
+                            <p-columnFilter 
+                                *ngIf="col.isFilterable && col.fieldType === FieldType.multiSelect" 
+                                [field]="col.field" 
+                                [showMenu]="true"
+                                [matchMode]="FilterMatchModes.IN"
+                                display="menu"
+                                [showMatchModes]="false"
+                                [showOperator]="false"
+                                [showAddButton]="false"
+                                >
+                                <ng-template 
+                                    pTemplate="filter" 
+                                    let-value let-filter="filterCallback">
+                                    <p-multiSelect 
+                                        [(ngModel)]="dynamicDropdownValues[generateDropdownKey(col.field, 'multiSelect')]"
+                                        [options]="optionsDataSources[col?.dsName]" 
+                                        placeholder="Select Any" 
+                                        (onChange)="filter($event.value)" 
+                                        optionLabel="name"
+                                        [showClear]="true">
+                                            <ng-template let-option pTemplate="item">
+                                                <div class="inline-block vertical-align-middle">
+                                                    <span class="ml-1 mt-1">{{ option.name }}</span>
+                                                </div>
+                                            </ng-template>
+                                    </p-multiSelect>
+                                </ng-template>
+                            </p-columnFilter>  
+
+                            <!-- FieldType.date -->
+                            <p-columnFilter 
+                                *ngIf="col.isFilterable && col.fieldType === FieldType.date"
+                                type="date" 
+                                [field]="col.field" 
+                                display="menu">
+                            </p-columnFilter>
+                                                                               
+                            {{col.header}}
+
+                            <p-sortIcon 
+                                [hidden]="!col.isSortable" 
+                                [field]="col.field">
+                            </p-sortIcon>
+                        </th>
+                        </ng-container>
+                        <th *ngIf="appPageLayout?.showRowActionCol === true"></th>
+                    </tr>
+                     <!-- Table Header With Advanced Filter End -->                
+                </ng-template>
+
+                <!-- Table Body Start -->
+                <ng-template pTemplate="body" let-items let-columns="columns">
+                    <tr >
+                        <td *ngIf="appPageLayout?.showSelectCheckbox">
+                            <p-tableCheckbox [value]="items" />
+                        </td>
+                        <ng-container *ngFor="let col of columns">
+                            <td *ngIf="col.fieldType !== FieldType.date">
+                                {{items[col.field]}}
+                            </td>
+                            <td *ngIf="col.fieldType === FieldType.date">
+                                {{items[col.field] | date: 'dd/MM/yyyy'}}
+                            </td>
+                        </ng-container>
+                        <td *ngIf="appPageLayout?.showRowActionCol === true">
+                            <div class="flex" *ngIf="appPageLayout?.rowActionType === 'button'">
+                                <ng-container *ngFor="let action of rowActions">
+                                    <app-button 
+                                        *ngIf="permit.hasPermission(action.permissions)"
+                                        [icon]="action.icon" 
+                                        [severity]="action.severity" 
+                                        [rounded]="true" 
+                                        [label]="action.caption"
+                                        [showLabel]="action.showCaption"
+                                        [outlined]="true"
+                                        size="small" 
+                                        class=" mr-2" 
+                                        (onClick)="handleRowAction(action, items)" />
+                                </ng-container>
+                            </div>
+                            <div *ngIf="appPageLayout?.rowActionType === 'dropdown'">
+                                <app-button styleClass="p-link layout-topbar-button" size="small" [rounded]="true" [outlined]="true" icon="pi pi-ellipsis-v" (onClick)="profilePanel.toggle($event)" />
+                                <p-overlayPanel #profilePanel styleClass="profile-panel">
+                                    <div class=" menu-drawer p-menu">
+                                        <ul role="menu" class="p-menu-list p-reset">
+                                            <ng-container *ngFor="let action of rowActions">
+                                                <li  class="p-menuitem">
+                                                    <div class="p-menuitem-content" *ngIf="action.navigationUrl" (click)="handleRowRouterLinkAction(action.navigationUrl, items, action.params)">
+                                                        <a class="p-menuitem-link">
+                                                            <span [class]="action.icon"></span>
+                                                            <span class="ml-2">{{action.caption}}</span>
+                                                        </a>
+                                                    </div>
+                                                    <div class="p-menuitem-content" *ngIf="!action.navigationUrl" (click)="handleRowAction(action, items)">
+                                                        <a pRipple  class="p-menuitem-link">
+                                                            <span [class]="action.icon"></span>
+                                                            <span class="ml-2">{{action.caption}}</span>
+                                                        </a>
+                                                    </div>
+                                                </li>
+                                            </ng-container>
+                                        </ul>
+                                    </div>
+                                </p-overlayPanel>
+                            </div>
+                        </td>
+
+                        <!-- <td style="width:14%; min-width: 10rem;"><span class="p-column-title">Status</span>
+                            <span [class]="'status-badge status-' + (item.statusName.toLowerCase())">{{item.statusName}}</span>
+                        </td>  -->
+                    </tr>
+                </ng-template>
+                <!-- Table Body End -->
+
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="100%">
+                            <div class="p-datatable-emptymessage text-center"><i class="pi pi-box"></i> No data found</div>
+                        </td>
+                    </tr>
+                </ng-template>
+
+            </p-table>
+        </div>
+    </div>
+</div>
+
+
+
+

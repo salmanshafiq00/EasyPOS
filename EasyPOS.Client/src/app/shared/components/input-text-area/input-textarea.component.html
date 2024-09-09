@@ -1,0 +1,25 @@
+<div *ngIf="!hidden" class="textarea-container cust-field">
+  <label class="label" *ngIf="label">{{ label }} <span class="required-star" *ngIf="required">*</span></label>
+  <textarea 
+    pInputTextarea 
+    [(ngModel)]="value"
+    [placeholder]="placeholder"
+    [disabled]="disabled" 
+    [readonly]="readonly" 
+    [autofocus]="autofocus"
+    [rows]="rows"
+    [cols]="cols"
+    variant="filled"
+    [autoResize]="autoResize"
+    [attr.maxlength]="max"
+    [style.width]="width"
+    [style.height]="height"
+    (input)="onInputChange($event)"
+    (change)="onInputChange($event)"
+    (blur)="onBlurEvent()"
+  ></textarea>
+  <div *ngIf="showCharLength" class="char-counter">
+    {{ value?.length }} / {{ max }}
+  </div>
+</div>
+

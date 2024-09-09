@@ -1,0 +1,12 @@
+:host.ng-invalid.ng-touched input {
+  border: 1px solid #f19ea6;
+}
+
+:host.ng-invalid.ng-touched input:focus{
+  box-shadow: none;
+}
+
+.cust-field input {
+  width: 100%; 
+  box-sizing: border-box; 
+}

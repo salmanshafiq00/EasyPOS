@@ -1,0 +1,14 @@
+<div *ngIf="!hidden" class="cust-field" [ngClass]="{'left-label': isLeftPosition, 'top-label': !isLeftPosition}">
+  <label class="label" *ngIf="label">{{ label }}</label>
+  <p-inputSwitch
+    [ngClass]="{'left-pos': isLeftPosition, 'top-pos': !isLeftPosition}"
+    [disabled]="disabled"
+    [readonly]="readonly"
+    [autofocus]="autofocus"
+    [(ngModel)]="value"
+    [trueValue]="trueValue"
+    [falseValue]="falseValue"
+    (onChange)="onInputChange($event)"
+    (onBlur)="onBlurEvent()"
+  ></p-inputSwitch>
+</div>

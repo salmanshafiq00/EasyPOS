@@ -1,0 +1,98 @@
+<div class="col-12">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+    <div class="p-fluid p-formgrid grid">
+      <div class="field col-12 md:col-6">
+          <app-input-text 
+            label="Label" 
+            formControlName="label" 
+            [required]="true"
+            [readonly]="false" />
+          <app-validator-msg [control]="f['label']" />
+      </div>
+      <div class="field col-12 md:col-6">
+          <app-input-text 
+            label="RouterLink" 
+            formControlName="routerLink" 
+            [required]="true"
+            [readonly]="false" />
+          <app-validator-msg [control]="f['routerLink']" />
+      </div>
+      <div class="field col-12 md:col-6">
+        <app-tree-select
+            label="Parent Name"
+            [required]="true"
+            inputId="parentId"
+            formControlName="parentId"
+            selectionMode="single"
+            getset="key"
+            [options]="optionsDataSources['parentTreeSelectList']"
+        />
+
+      </div>
+
+      <div class="field col-12 md:col-6">
+        <app-input-select
+          label="Menu Type"
+          formControlName="menuTypeId"
+          [options]="optionsDataSources['menuTypeSelectList']"
+          [required]="true" />
+     </div>
+
+      <div class="field col-12 md:col-6">
+        <label for="icon">Icon</label>
+        <p-dropdown [options]="primengIcons"
+                    optionLabel="label"
+                    optionValue="value"
+                    formControlName="icon"
+                    [filter]="true"
+                    filterBy="label"
+                    [showClear]="true"
+                    appendTo="body"
+                    placeholder="Select One">
+          <ng-template let-selectedOption pTemplate="selectedItem">
+            <div class="flex align-items-center gap-2">
+              <i [ngClass]="selectedOption?.value"></i>
+              <div> {{ selectedOption?.label }}</div>
+            </div>
+          </ng-template>
+          <ng-template let-option pTemplate="item">
+            <div class="p-d-flex p-ai-center gap-2">
+              <i [ngClass]="option.value"></i>
+              <span class="p-ml-2"> {{ option.label }}</span>
+            </div>
+          </ng-template>
+        </p-dropdown>
+      </div>
+      
+      <div class="field col-12 md:col-6 md:flex align-items-center md:mt-4">
+        <app-input-switch label="Active" formControlName="isActive" />
+      </div>
+      <div class="field col-12 md:col-6 md:flex align-items-center md:mt-4">
+        <app-input-switch label="Visible" formControlName="visible" />
+      </div>
+      <div class="field col-12 md:col-6">
+        <app-input-number 
+            label="Order No" 
+            formControlName="orderNo"
+            [min]="0" 
+            [required]="true" />
+          <app-validator-msg [control]="f['orderNo']" />
+      </div>
+      <div class="field col-12 md:col-6">
+        <app-input-textarea 
+          label="Description" 
+          formControlName="description" 
+          [required]="false"
+          [max]="200"
+          [showCharLength]="true" />
+        <app-validator-msg [control]="f['description']" />
+
+      </div>
+    </div>
+    <div class="mt-3 p-dialog-footer">
+        <app-button label="Cancel" type="button" icon="pi pi-times" [text]="true" severity="warning"
+          (onClick)="cancel()" />
+        <app-button label="Save" type="submit" icon="pi pi-check" [text]="true" [disabled]="form.invalid" />
+    </div>
+  </form>
+</div>

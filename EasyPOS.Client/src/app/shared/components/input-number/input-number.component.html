@@ -1,0 +1,31 @@
+<div *ngIf="!hidden" class="cust-field">
+  <label class="label" *ngIf="label">
+    {{ label }}
+    <span class="required-star" *ngIf="required">*</span>
+  </label>
+  <p-inputNumber
+      [ngClass]="{'digit-right': textRight}"
+      [inputId]="inputId"
+      [placeholder]="placeholder"
+      [disabled]="disabled"
+      [readonly]="readonly"
+      [autofocus]="autofocus"
+      [min]="min"
+      [max]="max"
+      [locale]="locale"
+      [prefix]="prefix"
+      [suffix]="suffix"
+      [useGrouping]="useGrouping"
+      [showButtons]="showButtons"
+      [buttonLayout]="buttonLayout"
+      [step]="step"
+      [decrementButtonClass]="decrementButtonClass"
+      [incrementButtonClass]="incrementButtonClass"
+      [incrementButtonIcon]="incrementButtonIcon"
+      [decrementButtonIcon]="decrementButtonIcon"
+      [(ngModel)]="value"
+      (ngModelChange)="onInputChange($event)"
+      (onBlur)="onBlurEvent()"
+  >
+  </p-inputNumber>
+</div>

@@ -1,0 +1,70 @@
+.unseen-msg-badge{
+  color: var(--pink-500);
+    position: relative;
+    left: -5px;
+    top: -10px;
+    font-weight: 700;
+}
+
+.user-avatar-btn{
+  border: 1px solid var(--primary-color);
+}
+
+.user-avatar{
+  object-fit: cover;
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+}
+
+::ng-deep .notify-panel.p-overlaypanel {
+  max-height: 450px;
+  overflow-y: auto;
+}
+
+::ng-deep .notify-panel.p-overlaypanel .p-overlaypanel-content {
+  padding: .5rem;
+}
+
+::ng-deep .p-toast .p-toast-message.p-toast-message-info{
+  background-color: #55a8ff;
+}
+
+.notifications-container {
+  > ul {
+    padding: .5rem 0rem;
+
+    > li {
+      padding: .2rem 1rem;
+      border-radius: 4px;
+      transition: background-color 0.3s ease, padding 0.3s ease;
+      // transition: background-color 0.2s ease-in-out, padding 0.2s ease-in-out;
+
+      &:hover {
+        background-color: #4e5153;
+        padding: 0.2rem 1rem;
+      }
+    }
+  }
+}
+
+::ng-deep .profile-panel.p-overlaypanel .p-overlaypanel-content {
+  padding: .2rem;
+}
+
+::ng-deep .menu-drawer.p-menu{
+  padding: 0;
+  background: none;
+  color: rgba(255, 255, 255, 0.87);
+  border: none;
+  width: 100%;
+  min-width: 10rem;
+}
+
+::ng-deep .menu-drawer ul li a{
+  padding: 0 0.75rem;
+}
+
+::ng-deep .menu-drawer ul li .p-menuitem-content{
+  padding: 0.5rem 0;
+}

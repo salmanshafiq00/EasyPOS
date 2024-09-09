@@ -1,0 +1,94 @@
+.new-line{
+  margin-top: 15px;
+  border: solid 1px  #36349c;
+  padding: 10px;
+  min-height:50px;
+}
+
+.group{
+  margin-top: 1rem;
+  border: solid 1px  #84349c;
+  padding: 1rem;
+}
+.group-row{
+  margin-top: 1.5rem;
+  border: solid 1px  #28f5fc;
+  padding: 1rem;
+
+}
+
+.field{
+  margin-bottom: 0px;
+}
+
+.field-border{
+  margin-top: 15px;
+  border: solid 1px  #379c34;
+  padding: 1rem;
+}
+
+.div-caption{
+  width:fit-content;
+  margin-top:-25px;
+  margin-left:5px;
+  padding: 0px 5px;
+  background:#2a323d;
+}
+
+.field-plus{
+  display: inline;
+  cursor: pointer;
+  margin-left: .7rem;
+  color: rgb(86, 173, 255)
+}
+
+.field-plus:hover{
+  cursor: pointer;
+}
+
+.expand-field, .collapse-field, .remove-field{
+  color: rgb(86, 173, 255);
+  margin-left: 1rem;
+  cursor: pointer;
+}
+
+.col-4 {
+  padding: .5rem;
+
+}
+
+::ng-deep{
+  p-dropdown.icon-drop > div {
+    width: 100%; 
+  }
+  .severity-drop-btn button {
+    padding: 0rem 1rem;
+  }
+  .btn-drop button{
+    padding: 0rem 1rem;
+  }
+}
+
+
+:host ::ng-deep {
+  .drop-column {
+      border: 1px solid transparent;
+      transition: border-color .2s;
+  
+      &.p-draggable-enter {
+          border-color: var(--primary-color); 
+      }
+  }
+
+  [pDraggable] {
+      cursor: move;
+  }
+}
+
+.tarea{
+  margin-left: .1rem;
+  margin-top: 1rem;
+}
+
+
+

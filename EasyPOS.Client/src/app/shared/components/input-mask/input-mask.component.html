@@ -1,0 +1,29 @@
+<div *ngIf="!hidden" class="cust-field">
+  <label class="label" *ngIf="label" [for]="inputId">
+    {{ label }}
+    <span *ngIf="required" class="required-star">*</span>
+  </label>
+  <p-inputMask
+    [id]="inputId"
+    [type]="type"
+    [placeholder]="placeholder"
+    [disabled]="disabled"
+    [readonly]="readonly"
+    [autofocus]="autofocus"
+    [mask]="mask"
+    [slotChar]="slotChar"
+    [autoClear]="autoClear"
+    [style]="style"
+    [class]="styleClass"
+    [size]="size"
+    [maxlength]="maxlength"
+    [title]="title"
+    [unmask]="unmask"
+    [name]="name"
+    [autocomplete]="autocomplete"
+
+    (onKeydown)="onInputChange($event)"
+    (onBlur)="onBlurEvent()"
+    [(ngModel)]="value"
+  ></p-inputMask>
+</div>

@@ -1,0 +1,7 @@
+:host ::ng-deep .cust-multi{
+  .showAllItems .p-multiselect .p-multiselect-label{
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem
+  }
+}

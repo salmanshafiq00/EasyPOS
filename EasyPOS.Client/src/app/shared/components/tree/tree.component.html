@@ -1,0 +1,37 @@
+<div *ngIf="!hidden" class="cust-field">
+  <label class="label" *ngIf="label">
+    {{ label }}
+    <span class="required-star" *ngIf="required">*</span>
+  </label>
+  <p-tree
+    [value]="options"
+    [selectionMode]="selectionMode"
+    [loadingMode]="loadingMode"
+    [selection]="selection"
+    [style]="style"
+    [styleClass]="styleClass"
+    [contextMenu]="contextMenu"
+    [layout]="layout"
+    [metaKeySelection]="metaKeySelection"
+    [propagateSelectionUp]="propagateSelectionUp"
+    [propagateSelectionDown]="propagateSelectionDown"
+    [loading]="loading"
+    [loadingIcon]="loadingIcon"
+    [emptyMessage]="emptyMessage"
+    [validateDrop]="validateDrop"
+    [filter]="filter"
+    [filterBy]="filterBy"
+    [filterMode]="filterMode"
+    [filterPlaceholder]="filterPlaceholder"
+    [filteredNodes]="filteredNodes"
+    [filterLocale]="filterLocale"
+    [scrollHeight]="scrollHeight"
+    [lazy]="lazy"
+    [virtualScroll]="virtualScroll"
+    [virtualScrollItemSize]="virtualScrollItemSize"
+    [virtualScrollOptions]="virtualScrollOptions"
+    [indentation]="indentation"
+    [trackBy]="trackBy"
+    (selectionChange)="onSelectionChange($event)"
+  ></p-tree>
+</div>
