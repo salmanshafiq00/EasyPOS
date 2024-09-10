@@ -1,6 +1,8 @@
 using EasyPOS.Application;
 using EasyPOS.Application.Common.Abstractions;
 using EasyPOS.Infrastructure;
+using EasyPOS.Infrastructure.Persistence;
+using EasyPOS.Infrastructure.Identity;
 using EasyPOS.Infrastructure.Communications;
 using EasyPOS.WebApi;
 using EasyPOS.WebApi.Extensions;
@@ -21,7 +23,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy(Allow_Origin_Policy, builder =>
     {
-        builder.WithOrigins("http://localhost:4200", "https://localhost:4200")
+        builder.WithOrigins("http://localhost:7105", "https://localhost:7105")
                .AllowAnyHeader()
                .AllowAnyMethod()
                .AllowCredentials();

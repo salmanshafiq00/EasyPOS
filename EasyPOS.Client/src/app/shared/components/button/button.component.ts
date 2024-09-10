@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
+type SeverityType = 'success' | 'info' | 'warning' | 'primary' | 'help' | 'danger' | 'secondary' | 'contrast' | null;
+
 @Component({
   selector: 'app-button',
   templateUrl: './button.component.html',
@@ -19,7 +21,7 @@ export class ButtonComponent {
   @Input() rounded: boolean = false;
   @Input() text: boolean = false;
   @Input() plain: boolean = false;
-  @Input() severity: 'success' | 'info' | 'warning' | 'primary' | 'help' | 'danger' | 'secondary' | 'contrast' | string | null = 'primary';
+  @Input() severity: string = 'primary';
   @Input() outlined: boolean = false;
   @Input() link: boolean = false;
   @Input() tabindex: number | null = null;
@@ -35,6 +37,10 @@ export class ButtonComponent {
   @Output() onClick = new EventEmitter<MouseEvent>();
   @Output() onFocus = new EventEmitter<FocusEvent>();
   @Output() onBlur = new EventEmitter<FocusEvent>();
+
+  get asSeverity(): SeverityType {
+    return this.severity as SeverityType;
+  }  
 
   handleClick(event: MouseEvent) {
     this.onClick.emit(event);

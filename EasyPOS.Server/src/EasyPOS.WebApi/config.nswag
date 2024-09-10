@@ -76,7 +76,7 @@
       "templateDirectory": null,
       "serviceHost": null,
       "serviceSchemes": null,
-      "output": "../../../../Angular/Custom-Templates/sakai/src/app/modules/generated-clients/api-service.ts",
+      "output": "../../../EasyPOS.Client/src/app/modules/generated-clients/api-service.ts",
       "newLineBehavior": "Auto"
     }
   }
