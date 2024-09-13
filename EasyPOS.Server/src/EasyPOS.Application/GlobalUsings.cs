@@ -12,4 +12,4 @@ global using EasyPOS.Application.Common.Abstractions.Messaging;
 global using EasyPOS.Application.Common.Abstractions;
 global using EasyPOS.Application.Common.Extensions;
 global using System.Text.Json.Serialization;
-
+global using EasyPOS.Application.Common.Abstractions.Caching;

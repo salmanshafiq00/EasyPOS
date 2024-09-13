@@ -465,11 +465,14 @@
                             <p-tableCheckbox [value]="items" />
                         </td>
                         <ng-container *ngFor="let col of columns">
-                            <td *ngIf="col.fieldType !== FieldType.date">
+                            <td *ngIf="col.fieldType !== FieldType.date && col.fieldType !== FieldType.image">
                                 {{items[col.field]}}
                             </td>
                             <td *ngIf="col.fieldType === FieldType.date">
                                 {{items[col.field] | date: 'dd/MM/yyyy'}}
+                            </td>
+                            <td *ngIf="col.fieldType === FieldType.image">
+                                <app-image *ngIf="items[col.field]" [src]="baseUrl + items[col.field]" [preview]="false" [circle]="false" [border]="false" width="50" height="50" />
                             </td>
                         </ng-container>
                         <td *ngIf="appPageLayout?.showRowActionCol === true">

@@ -401,7 +401,8 @@ export class AppPageDetailComponent implements OnInit {
     { 'id': 'datetime', 'name': 'Date Time' },
     { 'id': 'daterange', 'name': 'Date Range' },
     { 'id': 'time', 'name': 'Time' },
-    { 'id': 'number', 'name': 'Number' }
+    { 'id': 'number', 'name': 'Number' },
+    { 'id': 'image', 'name': 'Image' }
   ];
 
   alignSelectList = [

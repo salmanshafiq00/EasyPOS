@@ -2,6 +2,8 @@
 
 public static class SelectListSqls
 {
+    #region Common
+
     public const string GetLookupSelectListSql = """
         SELECT Id, Name 
         FROM dbo.Lookups l
@@ -41,6 +43,9 @@ public static class SelectListSqls
         ORDER BY ld.Name
         """;
 
+    #endregion
+
+
     public const string GetRoleSelectListSql = """
         SELECT Id, Name 
         FROM [identity].Roles r
@@ -54,4 +59,25 @@ public static class SelectListSqls
         WHERE 1 = 1
         ORDER BY Label
         """;
+
+    #region Products
+
+    public const string GetCategorySelectListSql = """
+        SELECT Id, Name 
+        FROM dbo.Categories c
+        WHERE 1 = 1
+        ORDER BY Name
+        """;
+
+
+    public const string GetCategoryParentSelectListSql = """
+        SELECT Distinct c.Id, c.Name 
+        FROM dbo.Categories c
+        INNER JOIN dbo.Categories c2 ON c2.CategoryId = c.Id
+        WHERE 1 = 1
+        ORDER BY c.Name
+        """;
+
+
+    #endregion
 }

@@ -8,3 +8,4 @@ global using EasyPOS.Application.Common.Constants.CommonSqlConstants;
 global using EasyPOS.Application.Common.DapperQueries;
 global using EasyPOS.WebApi.Extensions;
 global using Microsoft.AspNetCore.Mvc;
+global using EasyPOS.Application.Common.Enums;

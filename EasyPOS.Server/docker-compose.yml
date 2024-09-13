@@ -15,9 +15,9 @@ services:
     networks:
       - easypos-network
     depends_on:
+      - easypos.db
       - easypos.redis
       - easypos.seq
-      - easypos.db
 
   easypos.db:
     image: mcr.microsoft.com/mssql/server:2022-latest

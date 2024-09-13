@@ -1,19 +1,12 @@
-﻿using EasyPOS.Application.Features.Admin.AppMenus.Queries;
-using EasyPOS.Application.Features.Admin.AppNotifications.Queries;
-using EasyPOS.Application.Features.Common.Queries;
-using EasyPOS.Application.Common.Abstractions;
-using EasyPOS.Application.Common.Abstractions.Caching;
+﻿using EasyPOS.Application.Common.Abstractions;
 using EasyPOS.Application.Common.Abstractions.Identity;
-using EasyPOS.Application.Common.Constants.CommonSqlConstants;
-using EasyPOS.Application.Common.DapperQueries;
 using EasyPOS.Application.Common.Extensions;
 using EasyPOS.Application.Common.Models;
+using EasyPOS.Application.Features.Admin.AppNotifications.Queries;
+using EasyPOS.Application.Features.Common.Queries;
 using EasyPOS.Application.Features.Lookups.Commands;
 using EasyPOS.Application.Features.Lookups.Queries;
-using EasyPOS.Domain.Shared;
 using EasyPOS.Infrastructure.Communications;
-using EasyPOS.WebApi.Extensions;
-using EasyPOS.WebApi.Infrastructure;
 using Microsoft.AspNetCore.SignalR;
 
 namespace EasyPOS.WebApi.Endpoints;
@@ -92,20 +85,7 @@ public sealed class Lookups : EndpointGroupBase
             Key: CacheKeys.Lookup_All_SelectList,
             AllowCacheList: false)
         );
-
         result?.Value?.OptionsDataSources.Add("parentSelectList", parentSelectList.Value);
-        result?.Value?.OptionsDataSources.Add("subjectSelectList", GetSubjectList());
-        result?.Value?.OptionsDataSources.Add("subjectRadioSelectList", GetSubjectList());
-        result?.Value?.OptionsDataSources.Add("multiParentSelectList", parentSelectList.Value);
-
-        var appMenuTreeList = await sender.Send(new GetAppMenuTreeSelectList());
-        result?.Value.OptionsDataSources.Add("appMenuTreeList", appMenuTreeList.Value);
-        result?.Value.OptionsDataSources.Add("singleMenuTreeList", appMenuTreeList.Value);
-
-        var parentTreeSelectList = await sender.Send(new GetAppMenuTreeSelectList());
-        result?.Value?.OptionsDataSources.Add("treeSelectMenuseSelectList", parentTreeSelectList.Value);
-        result?.Value?.OptionsDataSources.Add("treeSelectSingleMenuSelectList", parentTreeSelectList.Value);
-
         return TypedResults.Ok(result.Value);
     }
 
@@ -114,7 +94,7 @@ public sealed class Lookups : EndpointGroupBase
         var result = await sender.Send(command);
 
         return result.Match(
-            onSuccess: () => Results.CreatedAtRoute(nameof(Get), new { id = result.Value }),
+            onSuccess: () => Results.CreatedAtRoute("GetLookup", new { id = result.Value }),
             onFailure: result.ToProblemDetails);
     }
 

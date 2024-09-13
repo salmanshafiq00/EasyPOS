@@ -1,8 +1,4 @@
-﻿using EasyPOS.Application.Common.Abstractions;
-using EasyPOS.Application.Common.Abstractions.Caching;
-using EasyPOS.Application.Common.Abstractions.Messaging;
-using EasyPOS.Application.Common.Constants;
-using EasyPOS.Domain.Shared;
+﻿using EasyPOS.Application.Common.Constants;
 
 namespace EasyPOS.Application.Features.Admin.AppMenus.Commands;
 

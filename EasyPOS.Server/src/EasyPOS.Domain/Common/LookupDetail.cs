@@ -1,6 +1,4 @@
-﻿using EasyPOS.Domain.Abstractions;
-
-namespace EasyPOS.Domain.Common;
+﻿namespace EasyPOS.Domain.Common;
 
 public class LookupDetail : BaseAuditableEntity
 {

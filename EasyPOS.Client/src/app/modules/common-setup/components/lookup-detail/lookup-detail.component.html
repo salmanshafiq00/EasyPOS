@@ -17,175 +17,24 @@
                     [readonly]="false" />
                     <app-validator-msg [control]="f['name']"></app-validator-msg>
             </div>
-            <div class="field col-12 md:col-6 md:flex align-items-center md:mt-4">
-                    <app-input-switch label="Status" formControlName="status" />
-            </div>
-            <div class="field col-12 md:col-6 d-flex ">
-                <app-input-date label="Created Date" formControlName="createdDate" [required]="true" />
-            </div>
-            <div class="field col-12 md:col-6">
-                <app-input-date label="Created DateTime" formControlName="created" [showTime]="true" />
-            </div>
-            <div class="field col-12 md:col-6">
-                <app-input-time label="Created Time" formControlName="createdTime" [required]="true" />
-                <app-validator-msg [control]="f['createdTime']"></app-validator-msg>
-            </div>
-            <div class="field col-12 md:col-6">
-                <app-input-year label="Created Year" formControlName="createdYear" />
-            </div>
-            <div class="field col-12 md:col-6">
-                <app-input-textarea 
-                    label="Description" 
-                    formControlName="description" 
-                    [required]="true"
-                    [max]="5"
-                    [autoResize]="true"
-                    [showCharLength]="true" />
-            </div>
-            <div class="field col-12 md:col-6">
-                <app-input-decimal
-                    label="Balance"
-                    formControlName="balance"
-                    [textRight]="true"
-                    [showButtons]="false"
-                    [required]="true" />
-                    <app-validator-msg [control]="f['balance']"></app-validator-msg>
-            </div>
-            <div class="field col-12 md:col-6">
-                <app-input-number
-                    label="Round"
-                    formControlName="round"
-                    [showButtons]="true"
-                    [required]="true" />
-            </div>
-            <div class="field col-12 md:col-6">
-                <app-input-currency
-                    label="Tk"
-                    formControlName="tk"
-                    [showButtons]="false"
-                    [required]="true" />
-            </div>
-            <div class="field col-12 md:col-6">
-                <app-input-checkbox
-                    label="Select Subject"
-                    formControlName="subjects"
-                    [options]="optionsDataSources['subjectSelectList']"
-                    [column]="true"
-                    [required]="true" />
-            </div>
-
-            <div class="field col-12 md:col-6">
-                <app-input-radio
-                    label="Choose Subject"
-                    formControlName="subjectRadio"
-                    [options]="optionsDataSources['subjectRadioSelectList']"
-                    [required]="true" />
-            </div>
-
             <div class="field col-12 md:col-6">
                 <app-input-select
                     label="Select Parent"
                     formControlName="parentId"
                     [options]="optionsDataSources['parentSelectList']"
-                    [required]="true" />
-            </div>
-            <div class="field col-12 md:col-6">
-                <app-input-multiselect
-                    label="Select Multi Parent"
-                    formControlName="multiParent"
-                    [options]="optionsDataSources['multiParentSelectList']"
-                    [required]="true" />
+                    [required]="false" />
             </div>
             <div class="field col-12 md:col-6 md:flex align-items-center md:mt-4">
-                <app-input-color
-                    label="Choose Color"
-                    formControlName="color"
-                    [required]="true" />
+                <app-input-switch label="Status" formControlName="status" />
             </div>
             <div class="field col-12 md:col-6">
-                <app-input-file
-                    label="Upload Files"
-                    formControlName="uploadFile"
-                    mode="basic"
-                    accept="image/jpeg"
-                    [fileLimit]="2"
-                    [required]="true" />
-            </div>
-            <div class="field col-12 md:col-6">
-                <app-input-mask
-                    label="Phone Number"
-                    placeholder="Enter phone number"
-                    [required]="true"
-                    [mask]="'(880) 99999-99999'"
-                    formControlName="phoneNo"
-                />
-
-            </div>
-            <div class="field col-12 md:col-6">
-                <app-input-password
-                    label="Password"
-                    placeholder="Enter Password"
-                    [required]="true"
-                    formControlName="pass"
-                />
-
-            </div>
-            <div class="field col-12 md:col-12">
-                <app-input-editor
-                    label="Description"
-                    [required]="true"
-                    [height]="300"
-                    inputId="descriptionEditor"
-                    formControlName="descEdit"
-                />
-
-            </div>
-            <div class="field col-12 md:col-12">
-                <app-tree
-                    label="Multiple Tree"
-                    [required]="true"
-                    inputId="menuId"
-                    formControlName="menus"
-                    getset="key"
-                    [options]="optionsDataSources['appMenuTreeList']"
-                />
-
-            </div>
-            <div class="field col-12 md:col-12">
-                <app-tree
-                    label="Single Tree"
-                    [required]="true"
-                    inputId="menuId"
-                    formControlName="singleMenu"
-                    getset="key"
-                    selectionMode="single"
-                    [options]="optionsDataSources['singleMenuTreeList']"
-                />
-
-            </div>
-            <div class="field col-12 md:col-12">
-                <app-tree-select
-                    label="Multiple Tree Select"
-                    [required]="true"
-                    inputId="treeSelectId"
-                    formControlName="treeSelectMenus"
-                    selectionMode="multiple"
-                    getset="key"
-                    [options]="optionsDataSources['treeSelectMenuseSelectList']"
-                />
-
-            </div>
-            <div class="field col-12 md:col-12">
-                <app-tree-select
-                    label="Single Tree Select"
-                    [required]="true"
-                    inputId="treeSelectId"
-                    formControlName="treeSelectSingleMenu"
-                    selectionMode="single"
-                    getset="key"
-                    [options]="optionsDataSources['treeSelectSingleMenuSelectList']"
-                />
-
+                <app-input-textarea 
+                    label="Description" 
+                    formControlName="description" 
+                    [required]="false"
+                    [max]="5"
+                    [autoResize]="true"
+                    [showCharLength]="true" />
             </div>
         </div>
         <div class="mt-3 p-dialog-footer">

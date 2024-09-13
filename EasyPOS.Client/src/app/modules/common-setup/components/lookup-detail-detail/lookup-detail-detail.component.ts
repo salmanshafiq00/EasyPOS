@@ -25,7 +25,7 @@ export class LookupDetailDetailComponent extends BaseDetailComponent {
       name: ['', Validators.required],
       code: ['', Validators.required],
       description: [''],
-      status: [false],
+      status: [true],
       parentId: [null],
       lookupId: [null],
     });

@@ -2,7 +2,7 @@
 
 public static class LookupDevCode
 {
-    public const int District = 101;
+    public const int MenuType = 101;
 }
 
 /// <summary>

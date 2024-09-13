@@ -1,13 +1,7 @@
-﻿using EasyPOS.Application.Features.Common.Queries;
-using EasyPOS.Application.Common.Abstractions.Caching;
-using EasyPOS.Application.Common.Constants.CommonSqlConstants;
-using EasyPOS.Application.Common.DapperQueries;
-using EasyPOS.Application.Common.Extensions;
+﻿using EasyPOS.Application.Common.Extensions;
 using EasyPOS.Application.Features.Admin.AppMenus.Commands;
 using EasyPOS.Application.Features.Admin.AppMenus.Queries;
-using EasyPOS.Domain.Shared;
-using EasyPOS.WebApi.Extensions;
-using EasyPOS.WebApi.Infrastructure;
+using EasyPOS.Application.Features.Common.Queries;
 
 namespace EasyPOS.WebApi.Endpoints.Admin;
 
@@ -41,6 +35,11 @@ public class AppMenus : EndpointGroupBase
             .Produces(StatusCodes.Status204NoContent)
             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest);
 
+        group.MapPut("Delete/{id}", Delete)
+            .WithName("DeleteMenu")
+            .Produces(StatusCodes.Status204NoContent)
+            .Produces<ProblemDetails>(StatusCodes.Status400BadRequest);
+
     }
 
     public async Task<IResult> GetAll(ISender sender, [FromBody] GetAppMenuListQuery query)
@@ -71,7 +70,7 @@ public class AppMenus : EndpointGroupBase
 
         var menuTypeSelectList = await sender.Send(new GetSelectListQuery(
         Sql: SelectListSqls.GetLookupDetailSelectListByDevCodeSql,
-        Parameters: new { DevCode = 101 },
+        Parameters: new { DevCode = LookupDevCode.MenuType },
         Key: CacheKeys.LookupDetail_All_SelectList,
         AllowCacheList: false));
         result?.Value?.OptionsDataSources.Add("menuTypeSelectList", menuTypeSelectList.Value);
@@ -94,6 +93,14 @@ public class AppMenus : EndpointGroupBase
     {
         var result = await sender.Send(command);
 
+        return result.Match(
+             onSuccess: () => Results.NoContent(),
+             onFailure: result.ToProblemDetails);
+    }
+
+    public async Task<IResult> Delete(ISender sender, [FromRoute] Guid id)
+    {
+        var result = await sender.Send(new DeleteAppMenuCommand(id));
         return result.Match(
              onSuccess: () => Results.NoContent(),
              onFailure: result.ToProblemDetails);

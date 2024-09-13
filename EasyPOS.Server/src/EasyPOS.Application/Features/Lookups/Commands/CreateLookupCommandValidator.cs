@@ -13,8 +13,8 @@ public class CreateLookupCommandValidator : AbstractValidator<CreateLookupComman
         RuleFor(v => v.Code)
             .NotEmpty()
             .MaximumLength(10)
-            .MinimumLength(4)
-              .WithMessage("'{PropertyName}' must be 4 - 10 characters.");
+            .MinimumLength(3)
+              .WithMessage("'{PropertyName}' must be 3 - 10 characters.");
 
         RuleFor(v => v.Code)
             .MustAsync(BeUniqueCode)

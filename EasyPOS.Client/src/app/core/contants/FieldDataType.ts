@@ -6,4 +6,5 @@ export class FieldType{
   static readonly date: string = "date";
   static readonly dateTime: string = "datetime";
   static readonly dateRange: string = "dateRange";
+  static readonly image: string = "image";
 }

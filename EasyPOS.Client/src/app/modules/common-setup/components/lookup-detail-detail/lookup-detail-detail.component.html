@@ -21,32 +21,9 @@
         <app-input-switch label="Status" formControlName="status" />
       </div>
       <div class="field col-12 md:col-6">
-        <app-input-textarea label="Description" formControlName="description" [required]="true" [max]="200"
+        <app-input-textarea label="Description" formControlName="description" [required]="false" [max]="200"
           [showCharLength]="true" />
       </div>
-    </div>
-
-
-    <div class="card flex justify-content-center">
-      <p-fileUpload 
-          name="files[]" 
-          url="https://www.primefaces.org/cdn/api/upload.php"         
-          [multiple]="true" 
-          [auto]="false"
-          (onUpload)="onUpload($event)" 
-          (onProgress)="onProgress($event)"
-          accept="image/*" 
-          maxFileSize="1000000">
-              <ng-template pTemplate="content">
-                  <ul *ngIf="uploadedFiles.length">
-                      <li *ngFor="let file of uploadedFiles">
-                          {{ file.name }} - {{ file.size }} bytes
-                      </li>
-                  </ul>
-              </ng-template>
-      </p-fileUpload>
-
-      <p-progressBar [value]="progressValue" />
     </div>
 
 

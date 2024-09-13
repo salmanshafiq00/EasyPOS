@@ -1,5 +1,4 @@
 import { Component, Inject } from '@angular/core';
-import { Validators } from '@angular/forms';
 import { CreateLookupCommand, LookupsClient } from 'src/app/modules/generated-clients/api-service';
 import { BaseDetailComponent } from 'src/app/shared/components/base-detail/base-detail.component';
 import { ENTITY_CLIENT } from 'src/app/shared/injection-tokens/tokens';
@@ -18,12 +17,7 @@ export class LookupDetailComponent extends BaseDetailComponent {
 
   override save() {
     let createCommand = new CreateLookupCommand();
-    const selectedSubjects = this.form.get('subjects')?.value?.map(x => x.id) || [];
-    const selectedRadioSubjects = this.form.get('subjectRadio')?.value?.id;
-    createCommand = { ...this.form.value, createdDate: '2023-06-06', subjects: selectedSubjects, subjectRadio:  selectedRadioSubjects}
-
-    console.log(createCommand);
-
+    createCommand = { ...this.form.value}
     this.entityClient.create(createCommand).subscribe({
       next: () => {
         this.toast.created()
@@ -40,30 +34,11 @@ export class LookupDetailComponent extends BaseDetailComponent {
   override initializeFormGroup() {
     this.form = this.fb.group({
       id: [''],
-      name: ['', Validators.required],
-      code: ['codes', [Validators.required]],
-      description: ['', Validators.required],
-      status: [false],
-      parentId: [null, Validators.required],
-      createdDate: [null, Validators.required],
-      createdTime: [null, Validators.required],
-      created: [null, Validators.required],
-      createdYear: [null],
-      balance: [null, Validators.required],
-      round: [null, Validators.required],
-      tk: [null, Validators.required],
-      subjects: [null, Validators.required],
-      subjectRadio: [null, Validators.required],
-      multiParent: [null, Validators.required],
-      color: [null, Validators.required],
-      uploadFile: [null, Validators.required],
-      phoneNo: [null, Validators.required],
-      pass: [null, Validators.required],
-      descEdit: [null, Validators.required],
-      menus: [[], Validators.required],
-      singleMenu: [null, Validators.required],
-      treeSelectMenus: [[], Validators.required],
-      treeSelectSingleMenu: [null, Validators.required]
+      name: [''],
+      code: [''],
+      description: [''],
+      status: [true],
+      parentId: [null],
     });
   }
 

@@ -132,4 +132,22 @@ public static class Permissions
 
     #endregion
 
+
+    #region Products
+    public static class Categories
+    {
+        public const string View = "Permissions.Categories.View";
+        public const string Create = "Permissions.Categories.Create";
+        public const string Edit = "Permissions.Categories.Edit";
+        public const string Delete = "Permissions.Categories.Delete";
+    }
+
+    public static class Products
+    {
+        public const string View = "Permissions.Products.View";
+        public const string Create = "Permissions.Products.Create";
+        public const string Edit = "Permissions.Products.Edit";
+        public const string Delete = "Permissions.Products.Delete";
+    }
+    #endregion
 }

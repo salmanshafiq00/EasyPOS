@@ -15,7 +15,8 @@ const routes: Routes = [
             { path: 'blocks', loadChildren: () => import('./demo/components/primeblocks/primeblocks.module').then(m => m.PrimeBlocksModule) },
             { path: 'pages', loadChildren: () => import('./demo/components/pages/pages.module').then(m => m.PagesModule) },
             { path: 'setup', loadChildren: () => import('./modules/common-setup/common-setup.module').then(m => m.CommonSetupModule), canActivateChild: [AuthGuard] },
-            { path: 'admin', loadChildren: () => import('./modules/admin/admin.module').then(m => m.AdminModule), canActivateChild: [AuthGuard] }
+            { path: 'admin', loadChildren: () => import('./modules/admin/admin.module').then(m => m.AdminModule), canActivateChild: [AuthGuard] },
+            { path: 'product', loadChildren: () => import('./modules/products/products.module').then(m => m.ProductsModule), canActivateChild: [AuthGuard] }
         ]
     },
     { path: 'auth', loadChildren: () => import('./modules/auth/auth.module').then(m => m.AuthModule) },

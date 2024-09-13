@@ -23,4 +23,11 @@ public static class CacheKeys
     public const string AppNotification = nameof(AppNotification);
 
     #endregion
+
+    #region Products
+    public const string Category = nameof(Category);
+    public const string Category_All_SelectList = nameof(Category_All_SelectList);
+    public const string Product = nameof(Product);
+    public const string Product_All_SelectList = nameof(Product_All_SelectList);
+    #endregion
 }

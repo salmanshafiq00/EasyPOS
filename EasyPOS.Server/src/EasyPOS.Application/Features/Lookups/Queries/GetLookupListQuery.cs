@@ -1,9 +1,5 @@
-﻿using EasyPOS.Domain.Shared;
-using static EasyPOS.Application.Common.DapperQueries.SqlConstants;
+﻿using static EasyPOS.Application.Common.DapperQueries.SqlConstants;
 using static EasyPOS.Application.Common.Security.Permissions;
-using EasyPOS.Application.Common.Abstractions;
-using EasyPOS.Application.Common.DapperQueries;
-using EasyPOS.Application.Common.Abstractions.Messaging;
 
 namespace EasyPOS.Application.Features.Lookups.Queries;
 

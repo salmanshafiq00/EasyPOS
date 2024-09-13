@@ -13,6 +13,8 @@ import { AppDataGridModel } from '../../models/app-data-grid.model';
 import { AppPageDetailComponent } from 'src/app/modules/admin/components/app-page-detail/app-page-detail.component';
 import { PermissionService } from 'src/app/core/auth/services/permission.service';
 import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
+
 
 @Component({
   selector: 'app-data-grid',
@@ -21,6 +23,7 @@ import { Router } from '@angular/router';
   providers: [ToastService, BackoffService, ConfirmDialogService, DatePipe, AppPagesClient]
 })
 export class DataGridComponent implements OnInit, OnDestroy {
+ baseUrl = environment.API_BASE_URL;
 
   // Page Layout Settings Start Start
   isPagelayoutFound: boolean = true;
@@ -472,11 +475,9 @@ export class DataGridComponent implements OnInit, OnDestroy {
   }
 
   delete(item: any) {
-
     this.confirmDialogService.confirm(`Do you want to delete this?`).subscribe((confirmed) => {
       if (confirmed) {
         this.deleteItem(item.id);
-        this.toast.created()
       }
     });
   }

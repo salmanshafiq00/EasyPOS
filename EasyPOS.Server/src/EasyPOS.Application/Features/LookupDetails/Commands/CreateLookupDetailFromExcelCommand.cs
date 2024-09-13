@@ -1,10 +1,5 @@
 ﻿using ClosedXML.Excel;
-using EasyPOS.Application.Common.Abstractions;
-using EasyPOS.Application.Common.Abstractions.Caching;
-using EasyPOS.Application.Common.Abstractions.Messaging;
-using EasyPOS.Application.Common.Extensions;
 using EasyPOS.Domain.Common;
-using EasyPOS.Domain.Shared;
 using Microsoft.AspNetCore.Http;
 
 namespace EasyPOS.Application.Features.LookupDetails.Commands;
