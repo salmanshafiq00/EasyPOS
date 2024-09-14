@@ -1,9 +1,4 @@
-﻿using EasyPOS.Application.Common.Abstractions;
-using EasyPOS.Application.Common.Abstractions.Messaging;
-using EasyPOS.Application.Common.Models;
-using EasyPOS.Domain.Shared;
-
-namespace EasyPOS.Application.Features.Common.Queries;
+﻿namespace EasyPOS.Application.Features.Common.Queries;
 
 public record GetSelectListQuery(
     string Sql,

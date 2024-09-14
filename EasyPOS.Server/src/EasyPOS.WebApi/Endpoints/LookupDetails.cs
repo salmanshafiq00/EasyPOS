@@ -60,11 +60,17 @@ public class LookupDetails : EndpointGroupBase
             var parentSelectList = await sender.Send(new GetSelectListQuery(
                 Sql: SelectListSqls.GetLookupDetailParentSelectListSql,
                 Parameters: new { },
-                Key: CacheKeys.Lookup_All_SelectList,
-                AllowCacheList: false)
+                Key: CacheKeys.LookupDetail_All_SelectList,
+                AllowCacheList: true)
             );
-
+            var lookupSelectList = await sender.Send(new GetSelectListQuery(
+                Sql: SelectListSqls.GetLookupSelectListSql,
+                Parameters: new { },
+                Key: CacheKeys.Lookup_All_SelectList,
+                AllowCacheList: true)
+            );
             result.Value.OptionsDataSources.Add("parentSelectList", parentSelectList.Value);
+            result.Value.OptionsDataSources.Add("lookupSelectList", lookupSelectList.Value);
             result.Value.OptionsDataSources.Add("statusSelectList", UtilityExtensions.GetActiveInactiveSelectList());
         }
         return TypedResults.Ok(result.Value);

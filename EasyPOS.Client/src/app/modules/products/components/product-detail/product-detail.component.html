@@ -4,101 +4,101 @@
 
       <!-- Code Input -->
       <div class="field col-12 md:col-6">
-        <app-input-text label="Code" formControlName="code" [required]="true" [readonly]="false"></app-input-text>
-        <app-validator-msg [control]="f['code']"></app-validator-msg>
+        <app-input-text label="Code" formControlName="code" [required]="true" [readonly]="false" />
+        <app-validator-msg [control]="f['code']" />
       </div>
 
       <!-- Name Input -->
       <div class="field col-12 md:col-6">
-        <app-input-text label="Name" formControlName="name" [required]="true" [readonly]="false"></app-input-text>
-        <app-validator-msg [control]="f['name']"></app-validator-msg>
+        <app-input-text label="Name" formControlName="name" [required]="true" [readonly]="false" />
+        <app-validator-msg [control]="f['name']" />
       </div>
 
       <!-- Category Input Select -->
       <div class="field col-12 md:col-6">
-        <app-input-select label="Category" formControlName="categoryId" [options]="optionsDataSources?.['categorySelectList']" [required]="true"></app-input-select>
+        <app-input-select label="Category" formControlName="categoryId" [options]="optionsDataSources?.['categorySelectList']" [required]="true" />
       </div>
 
       <!-- Product Type Input Select -->
       <div class="field col-12 md:col-6">
-        <app-input-select label="Product Type" formControlName="productTypeId" [options]="optionsDataSources?.['productTypeSelectList']" [required]="true"></app-input-select>
+        <app-input-select label="Product Type" formControlName="productTypeId" [options]="optionsDataSources?.['productTypeSelectList']" [required]="true" />
       </div>
 
       <!-- Brand Input Select -->
       <div class="field col-12 md:col-6">
-        <app-input-select label="Brand" formControlName="brandId" [options]="optionsDataSources?.['brandSelectList']" [required]="false"></app-input-select>
+        <app-input-select label="Brand" formControlName="brandId" [options]="optionsDataSources?.['brandSelectList']" [required]="false" />
       </div>
 
       <!-- SKU Input -->
       <div class="field col-12 md:col-6">
-        <app-input-text label="SKU" formControlName="sku" [required]="false"></app-input-text>
+        <app-input-text label="SKU" formControlName="sku" [required]="false" />
       </div>
 
       <!-- Cost Price Input Currency -->
       <div class="field col-12 md:col-6">
-        <app-input-currency label="Cost Price" formControlName="costPrice" [required]="false"></app-input-currency>
+        <app-input-currency label="Cost Price" formControlName="costPrice" [required]="false" />
       </div>
 
       <!-- Price Input Currency -->
       <div class="field col-12 md:col-6">
-        <app-input-currency label="Price" formControlName="price" [required]="true"></app-input-currency>
+        <app-input-currency label="Price" formControlName="price" [required]="true" />
       </div>
 
       <!-- Wholesale Price Input Currency -->
       <div class="field col-12 md:col-6">
-        <app-input-currency label="Wholesale Price" formControlName="wholesalePrice" [required]="false"></app-input-currency>
+        <app-input-currency label="Wholesale Price" formControlName="wholesalePrice" [required]="false" />
       </div>
 
       <!-- Unit Input -->
       <div class="field col-12 md:col-6">
-        <app-input-text label="Unit" formControlName="unit" [required]="false"></app-input-text>
+        <app-input-text label="Unit" formControlName="unit" [required]="false" />
       </div>
 
       <!-- Sale Unit Input -->
       <div class="field col-12 md:col-6">
-        <app-input-text label="Sale Unit" formControlName="saleUnit" [required]="false"></app-input-text>
+        <app-input-text label="Sale Unit" formControlName="saleUnit" [required]="false" />
       </div>
 
       <!-- Purchase Unit Input -->
       <div class="field col-12 md:col-6">
-        <app-input-text label="Purchase Unit" formControlName="purchaseUnit" [required]="false"></app-input-text>
+        <app-input-select label="Purchase Unit" formControlName="purchaseUnit" [options]="optionsDataSources?.['productUnitSelectList']" [required]="false" />
       </div>
 
       <!-- Alert Quantity Input -->
       <div class="field col-12 md:col-6">
-        <app-input-text label="Alert Quantity" formControlName="alertQuantity" [required]="false"></app-input-text>
+        <app-input-text label="Alert Quantity" formControlName="alertQuantity" [required]="false" />
       </div>
 
       <!-- Bar Code Type Input -->
       <div class="field col-12 md:col-6">
-        <app-input-text label="Bar Code Type" formControlName="barCodeType" [required]="false"></app-input-text>
+        <app-input-text label="Bar Code Type" formControlName="barCodeType" [required]="false" />
       </div>
 
       <!-- QR Code Type Input -->
       <div class="field col-12 md:col-6">
-        <app-input-text label="QR Code Type" formControlName="qrCodeType" [required]="false"></app-input-text>
+        <app-input-text label="QR Code Type" formControlName="qrCodeType" [required]="false" />
       </div>
 
       <!-- Description Textarea -->
       <div class="field col-12">
-        <app-input-textarea label="Description" formControlName="description" [required]="false" [max]="200" [showCharLength]="true"></app-input-textarea>
+        <app-input-textarea label="Description" formControlName="description" [required]="false" [max]="200" [showCharLength]="true" />
       </div>
 
       <!-- Parent Select -->
       <div class="field col-12 md:col-6">
-        <app-input-select label="Parent" formControlName="parentId" [options]="optionsDataSources?.['parentSelectList']" [required]="false"></app-input-select>
+        <app-input-select label="Parent" formControlName="parentId" [options]="optionsDataSources?.['parentSelectList']" [required]="false" />
       </div>
     </div>
 
     <!-- File Upload -->
     <div class="mt-3">
-      <app-input-file-adv [maxFileSize]="100000000" mode="basic" location="images" (fileUrlsChange)="onFileUpload($event)"></app-input-file-adv>
+      <app-input-file-adv [maxFileSize]="100000000" mode="basic" location="images" (fileUrlsChange)="onFileUpload($event)" />
     </div>
 
     <!-- Form Actions -->
     <div class="mt-3 p-dialog-footer">
-      <app-button label="Cancel" type="button" icon="pi pi-times" [text]="true" severity="warning" (onClick)="cancel()"></app-button>
-      <app-button label="Save" type="submit" icon="pi pi-check" [text]="true" [disabled]="form.invalid"></app-button>
+      <app-button label="Cancel" type="button" icon="pi pi-times" [text]="true" severity="warning" (onClick)="cancel()" />
+      <app-button label="Save" type="submit" icon="pi pi-check" [text]="true" [disabled]="form.invalid" />
     </div>
   </form>
 </div>

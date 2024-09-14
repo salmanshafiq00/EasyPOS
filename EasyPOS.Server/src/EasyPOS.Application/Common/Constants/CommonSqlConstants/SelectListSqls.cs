@@ -73,7 +73,7 @@ public static class SelectListSqls
     public const string GetCategoryParentSelectListSql = """
         SELECT Distinct c.Id, c.Name 
         FROM dbo.Categories c
-        INNER JOIN dbo.Categories c2 ON c2.CategoryId = c.Id
+        INNER JOIN dbo.Categories c2 ON c2.ParentId = c.Id
         WHERE 1 = 1
         ORDER BY c.Name
         """;

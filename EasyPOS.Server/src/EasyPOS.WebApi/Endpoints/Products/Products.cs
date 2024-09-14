@@ -69,35 +69,35 @@ public class Products : EndpointGroupBase
         var productTypeSelectList = await sender.Send(new GetSelectListQuery(
             Sql: SelectListSqls.GetLookupDetailSelectListByDevCodeSql,
             Parameters: new { DevCode = LookupDevCode.ProductType },
-            Key: CacheKeys.Product_All_SelectList,
+            Key: $"{CacheKeys.LookupDetail}_{LookupDevCode.ProductType}",
             AllowCacheList: true)
         );
 
         var barcodeSymbolSelectList = await sender.Send(new GetSelectListQuery(
             Sql: SelectListSqls.GetLookupDetailSelectListByDevCodeSql,
             Parameters: new { DevCode = LookupDevCode.BarCodeSymbol },
-            Key: CacheKeys.Product_All_SelectList,
+            Key: $"{CacheKeys.LookupDetail}_{LookupDevCode.BarCodeSymbol}",
             AllowCacheList: true)
         );
 
         var brandSelectList = await sender.Send(new GetSelectListQuery(
             Sql: SelectListSqls.GetLookupDetailSelectListByDevCodeSql,
             Parameters: new { DevCode = LookupDevCode.Brand },
-            Key: CacheKeys.Product_All_SelectList,
+            Key: $"{CacheKeys.LookupDetail}_{LookupDevCode.Brand}",
             AllowCacheList: true)
         );
 
         var categorySelectList = await sender.Send(new GetSelectListQuery(
             Sql: SelectListSqls.GetCategorySelectListSql,
             Parameters: new { },
-            Key: CacheKeys.Product_All_SelectList,
+            Key: CacheKeys.Category_All_SelectList,
             AllowCacheList: true)
         );
 
         var productUnitSelectList = await sender.Send(new GetSelectListQuery(
             Sql: SelectListSqls.GetLookupDetailSelectListByDevCodeSql,
             Parameters: new { DevCode = LookupDevCode.ProductUnit },
-            Key: CacheKeys.Product_All_SelectList,
+            Key: $"{CacheKeys.LookupDetail}_{LookupDevCode.ProductUnit}", 
             AllowCacheList: true)
         );
 
