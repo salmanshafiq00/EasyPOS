@@ -6,6 +6,7 @@
         <div class="card px-2  pb-6 sm:px-6">
             <!-- <h5 class="mb-4 sm:m-0">{{pageTitle}}</h5>  -->
             <p-toolbar styleClass="mb-3">
+                <!-- pTemplate="left" -->
                 <ng-template pTemplate="left">
                     <div >
                         <ng-container *ngFor="let action of leftToolbarActions">
@@ -60,7 +61,7 @@
                         </p-button> -->
                     </div>
                 </ng-template>
-
+                <!-- pTemplate="right" -->
                 <ng-template pTemplate="right">
                     <ng-container *ngFor="let action of rightToolbarActions">
                     <span>
@@ -167,14 +168,14 @@
                                 <!-- FieldType.string -->
                                 <p-columnFilter 
                                     type="text" 
-                                    *ngIf="col.isFilterable && col.fieldType === FieldType.string" 
+                                    *ngIf="col.isFilterable && col.filterType === FilterType.string" 
                                     [field]="col.field" 
                                     [placeholder]="'Search by ' + col.header" 
                                     [showClearButton]="false"  />
     
                                 <!-- FieldType.select -->
                                 <p-columnFilter 
-                                    *ngIf="col.isFilterable && col.fieldType === FieldType.select" 
+                                    *ngIf="col.isFilterable && col.filterType === FilterType.select" 
                                     [field]="col.field" 
                                     [showMenu]="false"
                                     [matchMode]="FilterMatchModes.EQUALS"
@@ -191,7 +192,8 @@
                                         <p-dropdown 
                                             [(ngModel)]="dynamicDropdownValues[generateDropdownKey(col.field, 'select')]"
                                             [options]="optionsDataSources[col?.dsName]" 
-                                            (onChange)="filter($event.value?.id)" 
+                                            (onChange)="filter($event.value?.id)"
+                                            [checkmark]="false" 
                                             placeholder="Select One"
                                             [optionLabel]="'name'" 
                                             appendTo="body"
@@ -207,7 +209,7 @@
     
                                 <!-- FieldType.multiSelect -->
                                 <p-columnFilter 
-                                    *ngIf="col.isFilterable && col.fieldType === FieldType.multiSelect" 
+                                    *ngIf="col.isFilterable && col.filterType === FilterType.multiSelect" 
                                     [field]="col.field" 
                                     [showMenu]="false"
                                     [matchMode]="FilterMatchModes.IN"
@@ -240,7 +242,7 @@
     
                                 <!-- FieldType.date -->
                                 <p-columnFilter 
-                                    *ngIf="col.isFilterable && col.fieldType === FieldType.date"
+                                    *ngIf="col.isFilterable && col.filterType === FilterType.date"
                                     type="date" 
                                     [field]="col.field" 
                                     display="menu">
@@ -279,14 +281,14 @@
                                 <!-- FieldType.string -->
                                 <p-columnFilter 
                                     type="text" 
-                                    *ngIf="col.isFilterable && col.fieldType === FieldType.string" 
+                                    *ngIf="col.isFilterable && col.filterType === FilterType.string" 
                                     [field]="col.field" 
                                     [placeholder]="'Search by ' + col.header" 
                                     [showClearButton]="false"  />
 
                                 <!-- FieldType.select -->
                                 <p-columnFilter 
-                                    *ngIf="col.isFilterable && col.fieldType === FieldType.select" 
+                                    *ngIf="col.isFilterable && col.filterType === FilterType.select" 
                                     [field]="col.field" 
                                     [showMenu]="true"
                                     [matchMode]="FilterMatchModes.EQUALS"
@@ -317,7 +319,7 @@
 
                                 <!-- FieldType.multiSelect -->
                                 <p-columnFilter 
-                                    *ngIf="col.isFilterable && col.fieldType === FieldType.multiSelect" 
+                                    *ngIf="col.isFilterable && col.filterType === FilterType.multiSelect" 
                                     [field]="col.field" 
                                     [showMenu]="false"
                                     [matchMode]="FilterMatchModes.IN"
@@ -348,7 +350,7 @@
 
                                 <!-- FieldType.date -->
                                 <p-columnFilter 
-                                    *ngIf="col.isFilterable && col.fieldType === FieldType.date"
+                                    *ngIf="col.isFilterable && col.filterType === FilterType.date"
                                     type="date" 
                                     [field]="col.field" 
                                     display="menu">
@@ -371,7 +373,7 @@
                             <!-- FieldType.string -->
                             <p-columnFilter 
                                 type="text" 
-                                *ngIf="col.isFilterable && col.fieldType === FieldType.string" 
+                                *ngIf="col.isFilterable && col.filterType === FilterType.string" 
                                 [field]="col.field" 
                                 display="menu" 
                                 [showAddButton]="false" 
@@ -379,7 +381,7 @@
 
                             <!-- FieldType.select -->
                             <p-columnFilter 
-                                *ngIf="col.isFilterable && col.fieldType === FieldType.select" 
+                                *ngIf="col.isFilterable && col.filterType === FilterType.select" 
                                 [field]="col.field" 
                                 [showMenu]="true"
                                 [matchMode]="FilterMatchModes.EQUALS"
@@ -409,7 +411,7 @@
 
                             <!-- FieldType.multiSelect -->
                             <p-columnFilter 
-                                *ngIf="col.isFilterable && col.fieldType === FieldType.multiSelect" 
+                                *ngIf="col.isFilterable && col.filterType === FilterType.multiSelect" 
                                 [field]="col.field" 
                                 [showMenu]="true"
                                 [matchMode]="FilterMatchModes.IN"
@@ -439,7 +441,7 @@
 
                             <!-- FieldType.date -->
                             <p-columnFilter 
-                                *ngIf="col.isFilterable && col.fieldType === FieldType.date"
+                                *ngIf="col.isFilterable && col.filterType === FilterType.date"
                                 type="date" 
                                 [field]="col.field" 
                                 display="menu">

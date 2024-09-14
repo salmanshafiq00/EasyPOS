@@ -2,7 +2,20 @@
 
 public static class Constants
 {
-    public static class TField
+    public static class TFieldType
+    {
+        public const string TString = "string";
+        public const string TBool = "bool";
+        public const string TSelect = "select";
+        public const string TMultiSelect = "multiselect";
+        public const string TDate = "date";
+        public const string TDateTime = "datetime";
+        public const string TDateRange = "daterange";
+        public const string TNumber = "number";
+        public const string TTime = "time";
+    }
+
+    public static class TFilterType
     {
         public const string TString = "string";
         public const string TBool = "bool";

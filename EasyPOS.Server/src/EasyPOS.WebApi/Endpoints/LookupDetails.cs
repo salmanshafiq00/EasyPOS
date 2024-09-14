@@ -67,7 +67,7 @@ public class LookupDetails : EndpointGroupBase
                 Sql: SelectListSqls.GetLookupSelectListSql,
                 Parameters: new { },
                 Key: CacheKeys.Lookup_All_SelectList,
-                AllowCacheList: true)
+                AllowCacheList: false)
             );
             result.Value.OptionsDataSources.Add("parentSelectList", parentSelectList.Value);
             result.Value.OptionsDataSources.Add("lookupSelectList", lookupSelectList.Value);

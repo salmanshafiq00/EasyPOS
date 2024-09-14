@@ -2,7 +2,7 @@ import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, 
 import { FilterMatchMode, FilterMetadata, FilterService } from 'primeng/api';
 import { Table, TableLazyLoadEvent } from 'primeng/table';
 import { timer } from 'rxjs';
-import { FieldType } from 'src/app/core/contants/FieldDataType';
+import { FieldType, FilterType } from 'src/app/core/contants/FieldDataType';
 import { AppPageActionModel, AppPageFieldModel, AppPageModel, AppPagesClient, DataFilterModel, GlobalFilterFieldModel } from 'src/app/modules/generated-clients/api-service';
 import { BackoffService } from '../../services/backoff.service';
 import { ToastService } from '../../services/toast.service';
@@ -40,6 +40,7 @@ export class DataGridComponent implements OnInit, OnDestroy {
   // Page Layout Settings Start End
 
   FieldType = FieldType;
+  FilterType = FilterType;
   FilterMatchModes = FilterMatchMode;
   emptyGuid = '00000000-0000-0000-0000-000000000000';
   // Table Settings //
@@ -115,7 +116,7 @@ export class DataGridComponent implements OnInit, OnDestroy {
   @Output() selectedRowsChange = new EventEmitter<any[]>();
 
   get hasSelectOrDateType(): boolean {
-    return this.dataFields.some(col => col.fieldType === FieldType.select || col.fieldType === FieldType.multiSelect);
+    return this.dataFields.some(col => col.fieldType === FilterType.select || col.fieldType === FilterType.multiSelect);
   }
 
 
@@ -244,6 +245,7 @@ export class DataGridComponent implements OnInit, OnDestroy {
       this.filters.push(new DataFilterModel({
         field: field.field,
         fieldType: field.fieldType,
+        filterType: field.filterType,
         dsName: field.dsName,
         dbField: field.dbField
       }));
@@ -392,7 +394,7 @@ export class DataGridComponent implements OnInit, OnDestroy {
           let isFirstFilterMetaData = true;
           for (const filter of filterMetadata) {
 
-            if (existingFilter && existingFilter.fieldType == FieldType.date) {
+            if (existingFilter && existingFilter.filterType == FilterType.date) {
               if (isFirstFilterMetaData) {
                 existingFilter.value = this.getTranformValue(existingFilter, filter);
                 existingFilter.matchMode = filter.matchMode || '';
@@ -402,6 +404,7 @@ export class DataGridComponent implements OnInit, OnDestroy {
                 const newFilter = new DataFilterModel();
                 newFilter.field = field;
                 newFilter.fieldType = existingFilter.fieldType;
+                newFilter.filterType = existingFilter.filterType;
                 newFilter.value = this.getTranformValue(existingFilter, filter);
                 newFilter.matchMode = filter.matchMode || '';
                 newFilter.operator = filter.operator || '';
@@ -451,16 +454,22 @@ export class DataGridComponent implements OnInit, OnDestroy {
   }
 
   private getTranformValue(filter: DataFilterModel, filterMetadata: FilterMetadata): string {
-    if (Array.isArray(filterMetadata.value)) {
+    if (filter.fieldType !== FieldType.number && Array.isArray(filterMetadata.value)) {
       return filterMetadata.value.map(item => `'${item.id}'`).join(', ');
+    } 
+    else if (filter.fieldType === FieldType.number && Array.isArray(filterMetadata.value)) {
+      return filterMetadata.value.map(item => `${item.id}`).join(', ');
     }
-    else if (filter.fieldType == FieldType.string) {
+    else if (filter.fieldType !== FieldType.number && filter.filterType == FilterType.select) {
+      return filterMetadata.value !== null ? `'${filterMetadata.value}'` : '';
+    } 
+    else if (filter.fieldType === FieldType.number && filter.filterType == FilterType.select) {
       return filterMetadata.value !== null ? filterMetadata.value.toString() : '';
     }
-    else if (filter.fieldType == FieldType.select) {
+    else if (filter.filterType == FilterType.string) {
       return filterMetadata.value !== null ? filterMetadata.value.toString() : '';
     }
-    else if (filter.fieldType == FieldType.date) {
+    else if (filter.filterType == FilterType.date) {
       return filterMetadata.value ? this.datePipe.transform(filterMetadata.value, 'yyyy/MM/dd') : '';
     }
     else {

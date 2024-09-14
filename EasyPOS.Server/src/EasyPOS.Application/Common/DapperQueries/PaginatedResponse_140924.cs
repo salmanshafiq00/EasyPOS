@@ -6,7 +6,7 @@ using static EasyPOS.Application.Common.DapperQueries.SqlConstants;
 
 namespace EasyPOS.Application.Common.DapperQueries;
 
-public class PaginatedResponse<TEntity>
+public class PaginatedResponse_140924<TEntity>
     where TEntity : class
 {
     [JsonInclude]
@@ -21,9 +21,9 @@ public class PaginatedResponse<TEntity>
     public Dictionary<string, object> OptionsDataSources { get; set; } = [];
 
 
-    public PaginatedResponse() { }
+    public PaginatedResponse_140924() { }
 
-    public PaginatedResponse(
+    public PaginatedResponse_140924(
         IReadOnlyCollection<TEntity> items,
         int count,
         int pageNumber,
@@ -35,7 +35,7 @@ public class PaginatedResponse<TEntity>
         Items = items;
     }
 
-    public static async Task<PaginatedResponse<TEntity>> CreateAsync(
+    public static async Task<PaginatedResponse_140924<TEntity>> CreateAsync(
          IDbConnection connection,
          string sql,
          DataGridModel gridModel,
@@ -45,7 +45,7 @@ public class PaginatedResponse<TEntity>
          string? having = null)
     {
         var logger = ServiceLocator.ServiceProvider
-            .GetRequiredService<ILogger<PaginatedResponse<TEntity>>>();
+            .GetRequiredService<ILogger<PaginatedResponse_140924<TEntity>>>();
 
         #region Filter (WHERE)
 
@@ -116,7 +116,7 @@ public class PaginatedResponse<TEntity>
 
         //SetFiltersToGridModel(gridModel, dataFields);
 
-        return new PaginatedResponse<TEntity>(
+        return new PaginatedResponse_140924<TEntity>(
             items.AsList(),
             count,
             gridModel.Offset / gridModel.PageSize + 1,
@@ -174,7 +174,7 @@ public class PaginatedResponse<TEntity>
                 globalFilter.Append(" OR ");
             }
 
-            if (field.FieldType == TFilterType.TDate)
+            if (field.FieldType == TFieldType.TDate)
             {
                 globalFilter.Append($"{S.CONV}(NVARCHAR(10), {field.DbField}, 103) {S.LIKE} @GlobalFilterValue");
             }
@@ -203,7 +203,7 @@ public class PaginatedResponse<TEntity>
         }
 
         StringBuilder filterBuilder = new();
-        bool isFirst = true;
+
         foreach (var filter in gridModel.Filters.Where(x => !string.IsNullOrEmpty(x.Value)))
         {
             string sqlOperator = string.IsNullOrEmpty(filter.Operator) ? $" {S.AND}" : filter.Operator.ToUpper();
@@ -214,7 +214,7 @@ public class PaginatedResponse<TEntity>
 
             string condition = string.Empty;
 
-            if (filter?.FilterType == TFilterType.TString)
+            if (filter?.FieldType == TFieldType.TString)
             {
                 condition = filter.MatchMode switch
                 {
@@ -227,7 +227,7 @@ public class PaginatedResponse<TEntity>
                     _ => throw new InvalidOperationException($"Unknown MatchMode: {filter.MatchMode}")
                 };
             }
-            else if (filter?.FilterType == TFilterType.TSelect)
+            else if (filter?.FieldType == TFieldType.TSelect)
             {
                 condition = filter.MatchMode switch
                 {
@@ -237,7 +237,7 @@ public class PaginatedResponse<TEntity>
                 };
 
             }
-            else if (filter?.FilterType == TFilterType.TMultiSelect)
+            else if (filter?.FieldType == TFieldType.TMultiSelect)
             {
                 condition = filter.MatchMode switch
                 {
@@ -247,7 +247,7 @@ public class PaginatedResponse<TEntity>
                 };
 
             }
-            else if (filter?.FilterType == TFilterType.TDate)
+            else if (filter?.FieldType == TFieldType.TDate)
             {
                 condition = filter.MatchMode switch
                 {
@@ -263,27 +263,16 @@ public class PaginatedResponse<TEntity>
 
             if (!string.IsNullOrEmpty(condition))
             {
-                if (!isFirst)
-                {
-                    filterBuilder.AppendLine(); 
-                    filterBuilder.Append(sqlOperator);
-                }
-                else
-                {
-                    filterBuilder.Append(sqlOperator); 
-                    isFirst = false; 
-                }
-
-                filterBuilder.Append(' ');
+                filterBuilder.Append(sqlOperator);
+                filterBuilder.Append(" ");
                 filterBuilder.Append(condition);
             }
-
         }
 
         sql = filterBuilder.Length > 0
             ? $"""
                 {sql} 
-             {filterBuilder}
+                {filterBuilder.ToString()}
              """
             : sql;
     }

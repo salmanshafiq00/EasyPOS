@@ -411,12 +411,14 @@ export class AppPageDetailComponent implements OnInit {
     { 'id': 'right', 'name': 'Right' }
   ];
 
-  filterSelectList = [
-    { 'id': 'contains', 'name': 'Contains' },
-    { 'id': 'equal', 'name': 'Equal' },
+  filterTypeSelectList = [
+    { 'id': 'string', 'name': 'String' },
     { 'id': 'select', 'name': 'Select' },
-    { 'id': 'range', 'name': 'Range' },
-    { 'id': 'multi-select', 'name': 'Multi-Select' }
+    { 'id': 'multiselect', 'name': 'Multi-Select' },
+    { 'id': 'date', 'name': 'Date' },
+    { 'id': 'datetime', 'name': 'Date Time' },
+    { 'id': 'daterange', 'name': 'Date Range' },
+    { 'id': 'time', 'name': 'Time' },
   ];
 
   actionButtonsPositionSelectList = [

@@ -4429,6 +4429,7 @@ export class DataFilterModel implements IDataFilterModel {
     field?: string;
     fieldType?: string;
     value?: string;
+    filterType?: string;
     matchMode?: string;
     operator?: string;
     dsName?: string;
@@ -4448,6 +4449,7 @@ export class DataFilterModel implements IDataFilterModel {
             this.field = _data["field"];
             this.fieldType = _data["fieldType"];
             this.value = _data["value"];
+            this.filterType = _data["filterType"];
             this.matchMode = _data["matchMode"];
             this.operator = _data["operator"];
             this.dsName = _data["dsName"];
@@ -4467,6 +4469,7 @@ export class DataFilterModel implements IDataFilterModel {
         data["field"] = this.field;
         data["fieldType"] = this.fieldType;
         data["value"] = this.value;
+        data["filterType"] = this.filterType;
         data["matchMode"] = this.matchMode;
         data["operator"] = this.operator;
         data["dsName"] = this.dsName;
@@ -4479,6 +4482,7 @@ export interface IDataFilterModel {
     field?: string;
     fieldType?: string;
     value?: string;
+    filterType?: string;
     matchMode?: string;
     operator?: string;
     dsName?: string;
