@@ -90,6 +90,28 @@ public static class SelectListSqls
         ORDER BY c.Name
         """;
 
+    public const string GetWarehouseSelectListSql = """
+        SELECT Id, Name 
+        FROM dbo.Warehouses c
+        WHERE 1 = 1
+        ORDER BY Name
+        """;
 
+
+    #endregion
+
+    #region Stakeholders
+    public const string GetCustomerSelectListSql = """
+        SELECT Id, Name 
+        FROM dbo.Customers c
+        WHERE 1 = 1
+        ORDER BY Name
+        """;
+    public const string GetSupplierSelectListSql = """
+        SELECT Id, Name 
+        FROM dbo.Suppliers c
+        WHERE 1 = 1
+        ORDER BY Name
+        """;
     #endregion
 }

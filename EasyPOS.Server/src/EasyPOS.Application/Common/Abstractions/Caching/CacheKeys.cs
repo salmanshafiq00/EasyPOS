@@ -30,5 +30,15 @@ public static class CacheKeys
     public const string Category_All_SelectList = nameof(Category_All_SelectList);
     public const string Product = nameof(Product);
     public const string Product_All_SelectList = nameof(Product_All_SelectList);
+    public const string Warehouse = nameof(Warehouse);
+    public const string Warehouse_All_SelectList = nameof(Warehouse_All_SelectList);
+    #endregion
+
+    #region Stakeholders
+    public const string Customer = nameof(Customer);
+    public const string Customer_All_SelectList = nameof(Customer_All_SelectList);
+    public const string Supplier = nameof(Supplier);
+    public const string Supplier_All_SelectList = nameof(Supplier_All_SelectList);
+
     #endregion
 }

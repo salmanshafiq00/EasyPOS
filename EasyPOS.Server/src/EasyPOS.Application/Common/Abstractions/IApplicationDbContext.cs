@@ -1,6 +1,7 @@
 ﻿using EasyPOS.Domain.Admin;
 using EasyPOS.Domain.Common;
 using EasyPOS.Domain.Products;
+using EasyPOS.Domain.Stakeholders;
 
 namespace EasyPOS.Application.Common.Abstractions;
 
@@ -27,6 +28,13 @@ public interface IApplicationDbContext
 
     DbSet<Category> Categories { get; }
     DbSet<Product> Products { get; }
+    DbSet<Warehouse> Warehouses { get; }
+
+    #endregion
+
+    #region Stakeholders
+    DbSet<Customer> Customers { get; }
+    DbSet<Supplier> Suppliers { get; }
 
     #endregion
 

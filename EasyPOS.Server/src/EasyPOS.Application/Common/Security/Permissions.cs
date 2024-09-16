@@ -149,5 +149,32 @@ public static class Permissions
         public const string Edit = "Permissions.Products.Edit";
         public const string Delete = "Permissions.Products.Delete";
     }
+
+    public static class Warehouses
+    {
+        public const string View = "Permissions.Warehouses.View";
+        public const string Create = "Permissions.Warehouses.Create";
+        public const string Edit = "Permissions.Warehouses.Edit";
+        public const string Delete = "Permissions.Warehouses.Delete";
+    }
+    #endregion
+
+    #region Stakeholders
+    public static class Customers
+    {
+        public const string View = "Permissions.Customers.View";
+        public const string Create = "Permissions.Customers.Create";
+        public const string Edit = "Permissions.Customers.Edit";
+        public const string Delete = "Permissions.Customers.Delete";
+    }
+
+    public static class Suppliers
+    {
+        public const string View = "Permissions.Suppliers.View";
+        public const string Create = "Permissions.Suppliers.Create";
+        public const string Edit = "Permissions.Suppliers.Edit";
+        public const string Delete = "Permissions.Suppliers.Delete";
+    }
+
     #endregion
 }

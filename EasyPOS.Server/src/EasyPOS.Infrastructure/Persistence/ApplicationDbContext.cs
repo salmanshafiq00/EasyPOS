@@ -3,6 +3,7 @@ using EasyPOS.Application.Common.Abstractions;
 using EasyPOS.Domain.Admin;
 using EasyPOS.Domain.Common;
 using EasyPOS.Domain.Products;
+using EasyPOS.Domain.Stakeholders;
 using Microsoft.EntityFrameworkCore;
 
 namespace EasyPOS.Infrastructure.Persistence;
@@ -31,6 +32,13 @@ public sealed class ApplicationDbContext : DbContext, IApplicationDbContext
     #region Products
     public DbSet<Category> Categories => Set<Category>();
     public DbSet<Product> Products => Set<Product>();
+    public DbSet<Warehouse> Warehouses => Set<Warehouse>();
+
+    #endregion
+
+    #region Stakeholders
+    public DbSet<Customer> Customers => Set<Customer>();
+    public DbSet<Supplier> Suppliers => Set<Supplier>();
 
     #endregion
 
