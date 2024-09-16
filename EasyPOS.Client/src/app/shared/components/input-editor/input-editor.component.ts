@@ -44,8 +44,14 @@ export class InputEditorComponent implements ControlValueAccessor, Validator, On
   apiKey = 'pjk2c1pab50c3jmwcaeahfup499fqtua0avtqrj9dnfbs7c4';
 
 
-  defaultPlugins: string = 'anchor autolink charmap insertdatetime preview codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed linkchecker a11ychecker tinymcespellchecker permanentpen powerpaste advtable advcode editimage advtemplate ai mentions tinycomments tableofcontents footnotes mergetags autocorrect typography fullscreen inlinecss markdown autoresize';
-  defaultToolbar: string = 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | align lineheight | checklist numlist bullist indent outdent | removeformat | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | emoticons charmap';
+  // defaultPlugins: string = 'anchor autolink charmap insertdatetime preview codesample emoticons image link lists media searchreplace table visualblocks wordcount fullscreen autoresize checklist mediaembed casechange export formatpainter pageembed linkchecker a11ychecker tinymcespellchecker permanentpen powerpaste advtable advcode editimage advtemplate ai mentions tinycomments tableofcontents footnotes mergetags autocorrect typography inlinecss markdown';
+  // defaultToolbar: string = 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | align lineheight | checklist numlist bullist indent outdent | removeformat | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | emoticons charmap';
+
+  // defaultPlugins: string = 'anchor autolink charmap insertdatetime preview codesample emoticons image link lists media searchreplace table visualblocks wordcount fullscreen autoresize linkchecker code';
+  defaultPlugins: string = 'anchor autolink charmap insertdatetime preview codesample emoticons image link lists media searchreplace table visualblocks wordcount fullscreen autoresize linkchecker code accordion autosave directionality help importcss nonbreaking pagebreak quickbars save visualchars';
+
+  defaultToolbar: string = 'undo redo | bold italic underline | alignleft aligncenter alignright | numlist bullist outdent indent | link image media';
+  
 
   value: string = '';
   isInvalid: boolean = false;

@@ -5444,6 +5444,7 @@ export class ProductModel implements IProductModel {
     qrCodeType?: string | undefined;
     description?: string | undefined;
     isActive?: boolean;
+    photoUrls?: string[];
     optionsDataSources?: { [key: string]: any; };
 
     constructor(data?: IProductModel) {
@@ -5475,6 +5476,11 @@ export class ProductModel implements IProductModel {
             this.qrCodeType = _data["qrCodeType"];
             this.description = _data["description"];
             this.isActive = _data["isActive"];
+            if (Array.isArray(_data["photoUrls"])) {
+                this.photoUrls = [] as any;
+                for (let item of _data["photoUrls"])
+                    this.photoUrls!.push(item);
+            }
             if (_data["optionsDataSources"]) {
                 this.optionsDataSources = {} as any;
                 for (let key in _data["optionsDataSources"]) {
@@ -5512,6 +5518,11 @@ export class ProductModel implements IProductModel {
         data["qrCodeType"] = this.qrCodeType;
         data["description"] = this.description;
         data["isActive"] = this.isActive;
+        if (Array.isArray(this.photoUrls)) {
+            data["photoUrls"] = [];
+            for (let item of this.photoUrls)
+                data["photoUrls"].push(item);
+        }
         if (this.optionsDataSources) {
             data["optionsDataSources"] = {};
             for (let key in this.optionsDataSources) {
@@ -5542,6 +5553,7 @@ export interface IProductModel {
     qrCodeType?: string | undefined;
     description?: string | undefined;
     isActive?: boolean;
+    photoUrls?: string[];
     optionsDataSources?: { [key: string]: any; };
 }
 

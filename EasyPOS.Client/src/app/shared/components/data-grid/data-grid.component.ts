@@ -20,7 +20,7 @@ import { environment } from 'src/environments/environment';
   selector: 'app-data-grid',
   templateUrl: './data-grid.component.html',
   styleUrl: './data-grid.component.scss',
-  providers: [ToastService, BackoffService, ConfirmDialogService, DatePipe, AppPagesClient]
+  providers: [BackoffService, ConfirmDialogService, DatePipe, AppPagesClient]
 })
 export class DataGridComponent implements OnInit, OnDestroy {
  baseUrl = environment.API_BASE_URL;
@@ -292,7 +292,9 @@ export class DataGridComponent implements OnInit, OnDestroy {
 
   // handleAction(action: AppPageActionModel) {
   handleToolbarActions(action: AppPageActionModel) {
-    if (action.actionName === 'new') {
+    if (action.actionType === 'routerLink') {
+      this.router.navigate([action.navigationUrl])
+    } else if (action.actionName === 'new') {
       this.openDialog(this.emptyGuid)
     } else if (action.actionName === 'refresh') {
       this.refreshGrid();
@@ -302,6 +304,8 @@ export class DataGridComponent implements OnInit, OnDestroy {
       this.table.exportCSV();
     } else if (action.actionName === 'pdf') {
       this.exportPdf();
+    } else if (action.actionType === 'routerLink') {
+      this.router.navigate([action.navigationUrl])
     }
     // else if(action.actionType === 'multi-select') {
     //   this.handleToolbarAction.emit(action)
@@ -320,6 +324,7 @@ export class DataGridComponent implements OnInit, OnDestroy {
   // };
 
   handleRowAction(action: AppPageActionModel, item: any) {
+    console.log(action)
     if (action.actionName === 'edit') {
       this.edit(item)
     } else if (action.actionName === 'delete') {

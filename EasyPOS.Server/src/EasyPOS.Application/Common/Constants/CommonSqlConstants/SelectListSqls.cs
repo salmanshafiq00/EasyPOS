@@ -45,6 +45,7 @@ public static class SelectListSqls
 
     #endregion
 
+    #region Admin
 
     public const string GetRoleSelectListSql = """
         SELECT Id, Name 
@@ -59,6 +60,17 @@ public static class SelectListSqls
         WHERE 1 = 1
         ORDER BY Label
         """;
+
+    public const string GetParentAppMenuSelectListSql = """
+        SELECT DISTINCT m.Id, m.Label AS Name
+        FROM [dbo].AppMenus m
+        INNER JOIN [dbo].AppMenus m2 ON m2.ParentId = m.Id
+        WHERE 1 = 1
+        ORDER BY m.Label
+        """;
+
+    #endregion
+
 
     #region Products
 

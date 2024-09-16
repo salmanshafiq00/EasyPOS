@@ -49,6 +49,7 @@ services:
     environment:
       - ACCEPT_EULA=Y
     ports:
+      -  "5342:5341"
       -  "7104:80"
     networks:
       - easypos-network

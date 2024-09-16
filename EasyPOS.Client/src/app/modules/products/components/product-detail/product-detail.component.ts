@@ -1,7 +1,8 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ProductsClient } from 'src/app/modules/generated-clients/api-service';
-import { CustomDialogService } from 'src/app/shared/services/custom-dialog.service';
+import { NavigationStateService } from 'src/app/shared/services/navigation-state.service';
+import { NavigationService } from 'src/app/shared/services/navigation.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
 
 @Component({
@@ -22,21 +23,19 @@ export class ProductDetailComponent implements OnInit {
   }
 
   toast: ToastService = inject(ToastService);
-  customDialogService: CustomDialogService = inject(CustomDialogService)
   fb: FormBuilder = inject(FormBuilder);
   entityClient = inject(ProductsClient);
+  navigationService = inject(NavigationService);
+  navigationStateService = inject(NavigationStateService);
 
   constructor() {}
 
   ngOnInit() {
-    this.id = this.customDialogService.getConfigData();
+    // this.id = this.customDialogService.getConfigData();
     this.initializeFormGroup();
-    this.getById(this.id);
+    this.getById(this.id || this.emptyGuid);
   }
 
-  cancel() {
-    this.customDialogService.close(false);
-  }
 
   onSubmit() {
 
@@ -54,10 +53,13 @@ export class ProductDetailComponent implements OnInit {
 
   save() {
     const createCommand = { ...this.form.value };
+    console.log(createCommand)
     this.entityClient.create(createCommand).subscribe({
       next: () => {
         this.toast.created();
-        this.customDialogService.close(true);
+        // this.customDialogService.close(true);
+        this.navigationStateService.setState('created', true);
+        this.navigationService.navigateTo('/product/products')
       },
       error: (error) => {
         this.toast.showError(this.getErrorMessage(error));
@@ -70,7 +72,7 @@ export class ProductDetailComponent implements OnInit {
     this.entityClient.update(updateCommand).subscribe({
       next: () => {
         this.toast.updated();
-        this.customDialogService.close(true);
+        // this.customDialogService.close(true);
       },
       error: (error) => {
         this.toast.showError(this.getErrorMessage(error));
@@ -81,7 +83,9 @@ export class ProductDetailComponent implements OnInit {
   getById(id: string) {
     this.entityClient.get(id).subscribe({
       next: (res: any) => {
-        this.item = res;
+        if(id && id !== this.emptyGuid){
+           this.item = res;
+        }
         this.optionsDataSources = res.optionsDataSources;
         this.form.patchValue({
           ...this.item
@@ -106,18 +110,16 @@ export class ProductDetailComponent implements OnInit {
       brandId: [null],
       code: [''],
       sku: [''],
-      costPrice: [''],
-      price: [''],
-      wholesalePrice: [''],
-      unit: [''],
-      saleUnit: [''],
-      purchaseUnit: [''],
-      alertQuantity: [''],
-      barCodeType: [''],
-      qrCodeType: [''],
+      costPrice: [null],
+      price: [null],
+      wholesalePrice: [null],
+      unit: [null],
+      saleUnit: [null],
+      purchaseUnit: [null],
+      alertQuantity: [null],
+      barCodeType: [null],
       description: [''],
-      isActive: [false],
-      parentId: [null],             
+      isActive: [false],            
       photoUrl: ['']
     });
   }

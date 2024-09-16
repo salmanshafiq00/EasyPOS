@@ -15,8 +15,17 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
                 .WithMessage("'{PropertyName}' must be unique.")
                 .WithErrorCode("Unique");
 
+        RuleFor(x => x.ProductTypeId)
+            .NotEmpty();
+
+        RuleFor(x => x.CategoryId)
+            .NotEmpty();
+
+        RuleFor(x => x.Price)
+            .NotEmpty();
+
         RuleFor(v => v.Description)
-            .MaximumLength(1000)
+            .MaximumLength(2000)
             .WithMessage("{0} can not exceed max {1} chars.");
     }
 

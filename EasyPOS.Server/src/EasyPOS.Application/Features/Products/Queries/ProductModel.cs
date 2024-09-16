@@ -20,7 +20,7 @@ public record ProductModel
     public Guid? QRCodeType { get; set; }
     public string? Description { get; set; }
     public bool IsActive { get; set; }
-
+    public string[] PhotoUrls { get; set; } = [];
 
     public Dictionary<string, object> OptionsDataSources { get; set; } = [];
 

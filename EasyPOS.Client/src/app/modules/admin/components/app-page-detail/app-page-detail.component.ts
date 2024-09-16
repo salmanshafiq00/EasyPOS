@@ -395,8 +395,6 @@ export class AppPageDetailComponent implements OnInit {
 
   fieldTypeSelectList = [
     { 'id': 'string', 'name': 'String' },
-    { 'id': 'select', 'name': 'Select' },
-    { 'id': 'multiselect', 'name': 'Multi-Select' },
     { 'id': 'date', 'name': 'Date' },
     { 'id': 'datetime', 'name': 'Date Time' },
     { 'id': 'daterange', 'name': 'Date Range' },
@@ -437,8 +435,7 @@ export class AppPageDetailComponent implements OnInit {
     { 'id': 'multi-select', 'name': 'Multi-Select' },
     { 'id': 'dropdown', 'name': 'Dropdown' },
     { 'id': 'upload', 'name': 'Upload' },
-    { 'id': 'csv', 'name': 'CSV' },
-    { 'id': 'pdf', 'name': 'PDF' }
+    { 'id': 'routerLink', 'name': 'RouterLink' }
   ];
 
   severitySelectList = [

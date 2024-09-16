@@ -12,10 +12,11 @@ import { IconService } from './demo/service/icon.service';
 import { NodeService } from './demo/service/node.service';
 import { PhotoService } from './demo/service/photo.service';
 import { CoreModule } from './core/core.module';
+
 @NgModule({
     declarations: [
         AppComponent, 
-        NotfoundComponent
+        NotfoundComponent,
     ],
     imports: [
         AppRoutingModule, 
@@ -30,7 +31,7 @@ import { CoreModule } from './core/core.module';
         IconService,
         NodeService,
         PhotoService,
-        ProductService,
+        ProductService,   
     ],
     bootstrap: [AppComponent],
 })

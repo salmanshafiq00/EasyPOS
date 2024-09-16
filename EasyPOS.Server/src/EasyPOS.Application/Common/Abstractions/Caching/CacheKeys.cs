@@ -16,6 +16,7 @@ public static class CacheKeys
     public const string Role_All_SelectList = nameof(Role_All_SelectList);
     public const string AppMenu = nameof(AppMenu);
     public const string AppMenu_All_SelectList = nameof(AppMenu_All_SelectList);
+    public const string AppMenu_Parent_SelectList = nameof(AppMenu_Parent_SelectList);
     public const string AppMenu_Tree_SelectList = nameof(AppMenu_Tree_SelectList);
     public const string AppMenu_Sidebar_Tree_List = nameof(AppMenu_Sidebar_Tree_List);
     public const string AppPage = nameof(AppPage);

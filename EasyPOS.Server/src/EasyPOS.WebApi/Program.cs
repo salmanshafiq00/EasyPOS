@@ -112,7 +112,7 @@ app.UseHangfireDashboard(options: new DashboardOptions
     DarkModeEnabled = true,
 });
 
-app.UseBackgroundJobs();
+//app.UseBackgroundJobs();
 
 //app.MapRazorPages();
 

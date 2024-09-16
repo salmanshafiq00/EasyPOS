@@ -48,13 +48,13 @@ public class AppMenus : EndpointGroupBase
 
         if (!query.IsInitialLoaded)
         {
-            var roleSelectList = await sender.Send(new GetSelectListQuery(
-                Sql: SelectListSqls.GetAppMenuSelectListSql,
+            var parentSelectList = await sender.Send(new GetSelectListQuery(
+                Sql: SelectListSqls.GetParentAppMenuSelectListSql,
                 Parameters: new { },
-                Key: CacheKeys.AppMenu_All_SelectList,
+                Key: CacheKeys.AppMenu_Parent_SelectList,
                 AllowCacheList: false)
             );
-            result.Value.OptionsDataSources.Add("parentSelectList", roleSelectList.Value);
+            result.Value.OptionsDataSources.Add("parentSelectList", parentSelectList.Value);
             result.Value.OptionsDataSources.Add("statusSelectList", UtilityExtensions.GetActiveInactiveSelectList());
         }
 

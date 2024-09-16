@@ -1,4 +1,4 @@
-<app-toast></app-toast>
+<app-toast />
 <app-confirm-dialog></app-confirm-dialog>
 
 <div class="grid">
@@ -490,7 +490,7 @@
                                         [outlined]="true"
                                         size="small" 
                                         class=" mr-2" 
-                                        (onClick)="handleRowAction(action, items)" />
+                                        (onClick)="action.navigationUrl ? handleRowRouterLinkAction(action.navigationUrl, items, action.params) : handleRowAction(action, items)" />
                                 </ng-container>
                             </div>
                             <div *ngIf="appPageLayout?.rowActionType === 'dropdown'">
