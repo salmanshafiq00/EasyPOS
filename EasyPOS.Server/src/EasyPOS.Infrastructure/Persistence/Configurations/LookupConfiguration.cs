@@ -8,6 +8,12 @@ internal sealed class LookupConfiguration : IEntityTypeConfiguration<Lookup>
 {
     public void Configure(EntityTypeBuilder<Lookup> builder)
     {
+        builder.HasKey(x => x.Id);
+
+        builder.Property(e => e.Id)
+                .HasDefaultValueSql("NEWSEQUENTIALID()")
+                .ValueGeneratedOnAdd();
+
         builder.Property(t => t.Name)
             .HasMaxLength(200)
             .IsRequired();

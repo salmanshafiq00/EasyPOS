@@ -2,6 +2,7 @@
 
 public class PurchaseDetail: BaseEntity
 {
+    public Guid PurchaseId { get; set; }
     public Guid ProductId { get; set; }
     public int Quantity { get; set; }
     public string BatchNo { get; set; }

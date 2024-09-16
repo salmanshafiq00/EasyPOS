@@ -8,6 +8,12 @@ internal sealed class WarehouseConfiguration : IEntityTypeConfiguration<Warehous
 {
     public void Configure(EntityTypeBuilder<Warehouse> builder)
     {
+        builder.HasKey(x => x.Id);
+
+        builder.Property(e => e.Id)
+                .HasDefaultValueSql("NEWSEQUENTIALID()")
+                .ValueGeneratedOnAdd();
+
         builder.Property(p => p.Name)
             .HasMaxLength(250)
             .IsRequired();

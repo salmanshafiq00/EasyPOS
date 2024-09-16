@@ -8,6 +8,12 @@ internal sealed class SupplierConfiguration : IEntityTypeConfiguration<Supplier>
 {
     public void Configure(EntityTypeBuilder<Supplier> builder)
     {
+        builder.HasKey(x => x.Id);
+
+        builder.Property(e => e.Id)
+                .HasDefaultValueSql("NEWSEQUENTIALID()")
+                .ValueGeneratedOnAdd();
+
         builder.Property(p => p.Name)
             .HasMaxLength(250)
             .IsRequired();

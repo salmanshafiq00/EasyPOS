@@ -11,6 +11,10 @@ internal sealed class AppMenuConfiguration : IEntityTypeConfiguration<AppMenu>
     {
         builder.HasKey(x => x.Id);
 
+        builder.Property(e => e.Id)
+                .HasDefaultValueSql("NEWSEQUENTIALID()")
+                .ValueGeneratedOnAdd();
+
         builder.Property(t => t.Label)
             .HasMaxLength(200)
             .IsRequired();

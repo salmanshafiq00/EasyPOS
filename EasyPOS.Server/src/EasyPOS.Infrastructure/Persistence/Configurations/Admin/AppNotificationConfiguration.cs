@@ -10,6 +10,10 @@ internal sealed class AppNotificationConfiguration : IEntityTypeConfiguration<Ap
     {
         builder.HasKey(x => x.Id);
 
+        builder.Property(e => e.Id)
+                .HasDefaultValueSql("NEWSEQUENTIALID()")
+                .ValueGeneratedOnAdd();
+
         builder.Property(t => t.Title)
             .HasMaxLength(100)
             .IsRequired();
