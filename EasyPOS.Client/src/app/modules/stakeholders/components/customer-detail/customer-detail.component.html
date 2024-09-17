@@ -1,0 +1,44 @@
+<div class="col-12">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+    <div class="p-fluid p-formgrid grid">
+      <div class="field col-12 md:col-6">
+        <app-input-text label="Name" formControlName="name" [required]="false" [readonly]="false" />
+        <app-validator-msg [control]="f['name']"></app-validator-msg>
+      </div>
+      <div class="field col-12 md:col-6">
+        <app-input-text label="Email" formControlName="email" [required]="false" [readonly]="false" />
+        <app-validator-msg [control]="f['email']"></app-validator-msg>
+      </div>
+      <div class="field col-12 md:col-6">
+        <app-input-text label="Phone No." formControlName="phoneNo" [required]="false" [readonly]="false" />
+        <app-validator-msg [control]="f['phoneNo']"></app-validator-msg>
+      </div>
+      <div class="field col-12 md:col-6">
+        <app-input-text label="Mobile" formControlName="mobile" [required]="false" [readonly]="false" />
+        <app-validator-msg [control]="f['mobile']"></app-validator-msg>
+      </div>
+      <div class="field col-12 md:col-6">
+        <app-input-select label="Country" formControlName="countryId"
+          [options]="optionsDataSources?.['countrySelectList']" [required]="false" />
+      </div>
+      <div class="field col-12 md:col-6">
+        <app-input-text label="City" formControlName="city" [required]="false" [readonly]="false" />
+        <app-validator-msg [control]="f['city']"></app-validator-msg>
+      </div>
+      <div class="field col-12 md:col-6">
+        <app-input-text label="Address" formControlName="address" [required]="false" [readonly]="false" />
+        <app-validator-msg [control]="f['address']"></app-validator-msg>
+      </div>
+      <div class="field col-12 md:col-6">
+        <app-input-text label="Active" formControlName="isActive" [required]="false" [readonly]="false" />
+        <app-validator-msg [control]="f['isActive']"></app-validator-msg>
+      </div>
+    </div>
+
+    <div class="mt-3 p-dialog-footer">
+      <app-button label="Cancel" type="button" icon="pi pi-times" [text]="true" severity="warning"
+        (onClick)="cancel()" />
+      <app-button label="Save" type="submit" icon="pi pi-check" [text]="true" [disabled]="form.invalid" />
+    </div>
+  </form>
+</div>

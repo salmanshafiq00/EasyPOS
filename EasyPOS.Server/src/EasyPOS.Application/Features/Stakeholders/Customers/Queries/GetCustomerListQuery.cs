@@ -1,4 +1,6 @@
-﻿namespace EasyPOS.Application.Features.Customers.Queries;
+﻿using EasyPOS.Application.Features.Warehouses.Queries;
+
+namespace EasyPOS.Application.Features.Customers.Queries;
 
 [Authorize(Policy = Permissions.Customers.View)]
 public record GetCustomerListQuery
@@ -24,7 +26,8 @@ internal sealed class GetCustomerListQueryHandler(ISqlConnectionFactory sqlConne
                 t.Mobile AS {nameof(CustomerModel.Mobile)},
                 t.CountryId AS {nameof(CustomerModel.CountryId)},
                 t.City AS {nameof(CustomerModel.City)},
-                t.Address AS {nameof(CustomerModel.Address)}
+                t.Address AS {nameof(CustomerModel.Address)},
+                IIF(t.IsActive = 1, 'Active', 'Inactive') AS {nameof(CustomerModel.Active)}
             FROM dbo.Customers t
             """;
 

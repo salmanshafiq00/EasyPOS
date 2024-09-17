@@ -28,7 +28,8 @@ internal sealed class GetCustomerByIdQueryHandler(ISqlConnectionFactory sqlConne
                 t.Mobile AS {nameof(CustomerModel.Mobile)},
                 t.CountryId AS {nameof(CustomerModel.CountryId)},
                 t.City AS {nameof(CustomerModel.City)},
-                t.Address AS {nameof(CustomerModel.Address)}
+                t.Address AS {nameof(CustomerModel.Address)},
+                t.IsActive AS {nameof(CustomerModel.IsActive)}
             FROM dbo.Customers t
             WHERE t.Id = @Id
             """;

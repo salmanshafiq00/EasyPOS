@@ -12,6 +12,8 @@ public record CustomerModel
     public string? City { get; set; }
     public string? Address { get; set; }
     public decimal? PreviousDue { get; set; }
+    public bool IsActive { get; set; }
+    public string Active { get; set; }
     public Dictionary<string, object> OptionsDataSources { get; set; } = [];
 
 }

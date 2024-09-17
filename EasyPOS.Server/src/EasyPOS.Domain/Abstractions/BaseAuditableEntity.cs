@@ -1,6 +1,6 @@
 ﻿namespace EasyPOS.Domain.Abstractions;
 
-public abstract class BaseAuditableEntity : BaseEntity
+public abstract class BaseAuditableEntity : BaseEntity, IAuditableEntity
 {
     public DateTime Created { get; set; }
 

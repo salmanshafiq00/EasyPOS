@@ -10,4 +10,5 @@ public  class Supplier : BaseAuditableEntity
     public string? City { get; set; }
     public string? Address { get; set; }
     public decimal? OpeningBalance { get; set; }
+    public bool IsActive { get; set; }
 }

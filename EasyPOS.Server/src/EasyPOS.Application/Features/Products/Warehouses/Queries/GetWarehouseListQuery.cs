@@ -1,4 +1,7 @@
-﻿namespace EasyPOS.Application.Features.Warehouses.Queries;
+﻿using EasyPOS.Application.Features.Lookups.Queries;
+using static EasyPOS.Application.Common.DapperQueries.SqlConstants;
+
+namespace EasyPOS.Application.Features.Warehouses.Queries;
 
 [Authorize(Policy = Permissions.Warehouses.View)]
 public record GetWarehouseListQuery
@@ -24,7 +27,8 @@ internal sealed class GetWarehouseListQueryHandler(ISqlConnectionFactory sqlConn
                 t.Mobile AS {nameof(WarehouseModel.Mobile)},
                 t.CountryId AS {nameof(WarehouseModel.CountryId)},
                 t.City AS {nameof(WarehouseModel.City)},
-                t.Address AS {nameof(WarehouseModel.Address)}
+                t.Address AS {nameof(WarehouseModel.Address)},
+                IIF(t.IsActive = 1, 'Active', 'Inactive') AS {nameof(WarehouseModel.Active)}
             FROM dbo.Warehouses t
             """;
 

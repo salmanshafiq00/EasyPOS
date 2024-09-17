@@ -16,6 +16,7 @@ export abstract class BaseDetailComponent implements OnInit{
   form: FormGroup;
   id: string = '';
   item: any;
+  mapCreateResponse: boolean = false;
   public optionsDataSources = {};
 
   protected get f() {
@@ -83,7 +84,9 @@ export abstract class BaseDetailComponent implements OnInit{
   protected getById(id: string) {
     this.entityClient.get(id).subscribe({
       next: (res: any) => {
-        this.item = res;
+        if(!this.mapCreateResponse && id && id !== this.emptyGuid ){
+          this.item = res;
+        }
         this.optionsDataSources = res.optionsDataSources;
         this.form.patchValue({
           ...this.item

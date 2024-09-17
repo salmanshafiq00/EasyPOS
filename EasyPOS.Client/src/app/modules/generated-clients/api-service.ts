@@ -7098,6 +7098,8 @@ export class WarehouseModel implements IWarehouseModel {
     countryName?: string | undefined;
     city?: string | undefined;
     address?: string | undefined;
+    isActive?: boolean;
+    active?: string;
     optionsDataSources?: { [key: string]: any; };
 
     constructor(data?: IWarehouseModel) {
@@ -7120,6 +7122,8 @@ export class WarehouseModel implements IWarehouseModel {
             this.countryName = _data["countryName"];
             this.city = _data["city"];
             this.address = _data["address"];
+            this.isActive = _data["isActive"];
+            this.active = _data["active"];
             if (_data["optionsDataSources"]) {
                 this.optionsDataSources = {} as any;
                 for (let key in _data["optionsDataSources"]) {
@@ -7148,6 +7152,8 @@ export class WarehouseModel implements IWarehouseModel {
         data["countryName"] = this.countryName;
         data["city"] = this.city;
         data["address"] = this.address;
+        data["isActive"] = this.isActive;
+        data["active"] = this.active;
         if (this.optionsDataSources) {
             data["optionsDataSources"] = {};
             for (let key in this.optionsDataSources) {
@@ -7169,6 +7175,8 @@ export interface IWarehouseModel {
     countryName?: string | undefined;
     city?: string | undefined;
     address?: string | undefined;
+    isActive?: boolean;
+    active?: string;
     optionsDataSources?: { [key: string]: any; };
 }
 
@@ -7476,6 +7484,8 @@ export class CustomerModel implements ICustomerModel {
     city?: string | undefined;
     address?: string | undefined;
     previousDue?: number | undefined;
+    isActive?: boolean;
+    active?: string;
     optionsDataSources?: { [key: string]: any; };
 
     constructor(data?: ICustomerModel) {
@@ -7499,6 +7509,8 @@ export class CustomerModel implements ICustomerModel {
             this.city = _data["city"];
             this.address = _data["address"];
             this.previousDue = _data["previousDue"];
+            this.isActive = _data["isActive"];
+            this.active = _data["active"];
             if (_data["optionsDataSources"]) {
                 this.optionsDataSources = {} as any;
                 for (let key in _data["optionsDataSources"]) {
@@ -7528,6 +7540,8 @@ export class CustomerModel implements ICustomerModel {
         data["city"] = this.city;
         data["address"] = this.address;
         data["previousDue"] = this.previousDue;
+        data["isActive"] = this.isActive;
+        data["active"] = this.active;
         if (this.optionsDataSources) {
             data["optionsDataSources"] = {};
             for (let key in this.optionsDataSources) {
@@ -7550,6 +7564,8 @@ export interface ICustomerModel {
     city?: string | undefined;
     address?: string | undefined;
     previousDue?: number | undefined;
+    isActive?: boolean;
+    active?: string;
     optionsDataSources?: { [key: string]: any; };
 }
 
@@ -7809,6 +7825,8 @@ export class SupplierModel implements ISupplierModel {
     city?: string | undefined;
     address?: string | undefined;
     openingBalance?: number | undefined;
+    isActive?: boolean;
+    active?: string;
     optionsDataSources?: { [key: string]: any; };
 
     constructor(data?: ISupplierModel) {
@@ -7832,6 +7850,8 @@ export class SupplierModel implements ISupplierModel {
             this.city = _data["city"];
             this.address = _data["address"];
             this.openingBalance = _data["openingBalance"];
+            this.isActive = _data["isActive"];
+            this.active = _data["active"];
             if (_data["optionsDataSources"]) {
                 this.optionsDataSources = {} as any;
                 for (let key in _data["optionsDataSources"]) {
@@ -7861,6 +7881,8 @@ export class SupplierModel implements ISupplierModel {
         data["city"] = this.city;
         data["address"] = this.address;
         data["openingBalance"] = this.openingBalance;
+        data["isActive"] = this.isActive;
+        data["active"] = this.active;
         if (this.optionsDataSources) {
             data["optionsDataSources"] = {};
             for (let key in this.optionsDataSources) {
@@ -7883,6 +7905,8 @@ export interface ISupplierModel {
     city?: string | undefined;
     address?: string | undefined;
     openingBalance?: number | undefined;
+    isActive?: boolean;
+    active?: string;
     optionsDataSources?: { [key: string]: any; };
 }
 

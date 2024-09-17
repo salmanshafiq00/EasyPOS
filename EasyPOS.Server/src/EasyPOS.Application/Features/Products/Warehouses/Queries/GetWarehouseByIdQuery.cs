@@ -28,7 +28,8 @@ internal sealed class GetWarehouseByIdQueryHandler(ISqlConnectionFactory sqlConn
                 t.Mobile AS {nameof(WarehouseModel.Mobile)},
                 t.CountryId AS {nameof(WarehouseModel.CountryId)},
                 t.City AS {nameof(WarehouseModel.City)},
-                t.Address AS {nameof(WarehouseModel.Address)}
+                t.Address AS {nameof(WarehouseModel.Address)},
+                t.IsActive AS {nameof(WarehouseModel.IsActive)}
             FROM dbo.Warehouses t
             WHERE t.Id = @Id
             """;

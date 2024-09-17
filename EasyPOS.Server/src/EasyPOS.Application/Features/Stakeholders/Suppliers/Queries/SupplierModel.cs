@@ -12,6 +12,8 @@ public record SupplierModel
     public string? City { get; set; }
     public string? Address { get; set; }
     public decimal? OpeningBalance { get; set; }
+    public bool IsActive { get; set; }
+    public string Active { get; set; }
     public Dictionary<string, object> OptionsDataSources { get; set; } = [];
 
 }

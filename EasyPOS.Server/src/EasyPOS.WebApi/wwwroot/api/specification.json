@@ -4562,6 +4562,12 @@
             "type": "string",
             "nullable": true
           },
+          "isActive": {
+            "type": "boolean"
+          },
+          "active": {
+            "type": "string"
+          },
           "optionsDataSources": {
             "type": "object",
             "additionalProperties": {}
@@ -4770,6 +4776,12 @@
             "format": "decimal",
             "nullable": true
           },
+          "isActive": {
+            "type": "boolean"
+          },
+          "active": {
+            "type": "string"
+          },
           "optionsDataSources": {
             "type": "object",
             "additionalProperties": {}
@@ -4960,6 +4972,12 @@
             "type": "number",
             "format": "decimal",
             "nullable": true
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "active": {
+            "type": "string"
           },
           "optionsDataSources": {
             "type": "object",

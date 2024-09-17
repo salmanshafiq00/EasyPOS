@@ -28,7 +28,8 @@ internal sealed class GetSupplierByIdQueryHandler(ISqlConnectionFactory sqlConne
                 t.Mobile AS {nameof(SupplierModel.Mobile)},
                 t.CountryId AS {nameof(SupplierModel.CountryId)},
                 t.City AS {nameof(SupplierModel.City)},
-                t.Address AS {nameof(SupplierModel.Address)}
+                t.Address AS {nameof(SupplierModel.Address)},
+                t.IsActive AS {nameof(SupplierModel.IsActive)}
             FROM dbo.Suppliers t
             WHERE t.Id = @Id
             """;

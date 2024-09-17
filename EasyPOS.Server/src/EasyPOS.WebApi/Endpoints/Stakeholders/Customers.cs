@@ -1,6 +1,5 @@
 ﻿using EasyPOS.Application.Features.Customers.Commands;
 using EasyPOS.Application.Features.Customers.Queries;
-using EasyPOS.Application.Features.Common.Queries;
 
 namespace EasyPOS.WebApi.Endpoints;
 
