@@ -28,7 +28,9 @@ export class InputNumberComponent implements ControlValueAccessor, Validator {
   @Input() variant: 'outlined' | 'filled' = 'outlined';
   @Input() autofocus: boolean = false;
   @Input() inputId: string = '';
-  @Input() textRight: boolean = false;
+  // @Input() textRight: boolean = false;
+  // @Input() textCenter: boolean = false;
+  @Input() textAlign: string = 'left';
   @Input() min: number = null;
   @Input() max: number = null;
   @Input() locale?: string;

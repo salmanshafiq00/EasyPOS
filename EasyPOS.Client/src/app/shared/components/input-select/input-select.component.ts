@@ -1,4 +1,4 @@
-import { Component, Input, forwardRef } from '@angular/core';
+import { Component, EventEmitter, Input, Output, forwardRef } from '@angular/core';
 import { AbstractControl, ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator } from '@angular/forms';
 
 @Component({
@@ -36,6 +36,7 @@ export class InputSelectComponent implements ControlValueAccessor, Validator {
   @Input() filterBy: string = 'name';
   @Input() optionLabel: string = 'name';
   @Input() optionValue: string = 'id';
+  @Output() onChange: EventEmitter<any> = new EventEmitter<any>();
   // @Input() emptyMessage: string = 'No Data Found!';
 
   value: any = null;
@@ -65,6 +66,7 @@ export class InputSelectComponent implements ControlValueAccessor, Validator {
   onInputChange(event: any): void {
     this.value = event.value;
     this.onChangeFn(this.value);
+    this.onChange.emit(event.value);
   }
   
 

@@ -1,0 +1,125 @@
+<div class="card">
+  <h3>Add Purchase</h3>
+  <div class="col-12">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+      <div class="p-fluid p-formgrid grid">
+        <div class="field col-12 md:col-4">
+          <app-input-date label="Date" formControlName="purchaseDate" [required]="true" />
+        </div>
+
+        <div class="field col-12 md:col-4">
+          <app-input-text label="Reference No" formControlName="referenceNo" [required]="true" [readonly]="false" />
+          <app-validator-msg [control]="f['referenceNo']" />
+        </div>
+
+        <div class="field col-12 md:col-4">
+          <app-input-select label="Warehouse" formControlName="warehouseId"
+            [options]="optionsDataSources?.['warehousesSelectList']" [required]="true" />
+        </div>
+        <div class="field col-12 md:col-4">
+          <app-input-select label="Supplier" formControlName="supplierId"
+            [options]="optionsDataSources?.['suppliersSelectList']" [required]="true" />
+        </div>
+
+        <div class="field col-12 md:col-4">
+          <app-input-select label="Purchase Status" formControlName="purchaseStatusId"
+            [options]="optionsDataSources?.['purchaseStatusSelectList']" [required]="true" />
+        </div>
+
+        <div class="mt-3 field col-12 md:col-4">
+          <app-input-file-adv [maxFileSize]="100000000" mode="basic" location="images"
+            (fileUrlsChange)="onFileUpload($event)" />
+        </div>
+
+        <!-- product select  -->
+        <div class="col-12">
+          <app-input-select label="" (onChange)="onProductSelect($event)" [optionValue]="null"
+            [options]="optionsDataSources?.['productsSelectList']" [(ngModel)]="selectedProduct"  [ngModelOptions]="{standalone: true}" />
+        </div>
+        <!-- <div class="col-12">
+          <app-input-select 
+            label="Select Product" 
+            [(ngModel)]="selectedProduct" 
+            (onChange)="onProductSelect($event)" 
+            [options]="optionsDataSources?.['productsSelectList']" 
+          />
+        </div> -->
+        
+
+        <!-- Purchase Details Table -->
+        <div class="col-12">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Code</th>
+                <th>Quantity</th>
+                <th>Batch No</th>
+                <th>Net Unit Cost</th>
+                <th>Discount</th>
+                <th>Tax</th>
+                <th>SubTotal</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody  formArrayName="purchaseDetails" >
+              <tr *ngFor="let field of purchaseDetails.controls; let i = index" [formGroupName]="i">
+                <td>{{ field.get('name').value }}</td>
+                <td>{{ field.get('code').value }}</td>
+                <td>
+                  <app-input-number formControlName="quantity" (ngModelChange)="calculateSubTotal(i)" textAlign="center" />
+                </td>
+                <td>
+                  <app-input-text formControlName="batchNo"></app-input-text>
+                </td>
+                <td>
+                  <app-input-decimal formControlName="netUnitCost"
+                    (ngModelChange)="calculateSubTotal(i)" />
+                </td>
+                <td>
+                  <app-input-decimal formControlName="discount"
+                    (ngModelChange)="calculateSubTotal(i)" />
+                </td>
+                <td>
+                  <app-input-decimal formControlName="tax" (ngModelChange)="calculateSubTotal(i)" />
+                </td>
+                <td>{{ field.get('subTotal').value }}</td>
+                <td>
+                  <app-button type="button" severity="danger" icon="pi pi-trash" (click)="removeProductFromPurchaseDetails(i)" />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="field col-12 md:col-4">
+          <app-input-select label="orderTax" formControlName="orderTax"
+            [options]="optionsDataSources?.['orderTaxSelectList']" [required]="true" />
+        </div>
+
+        <div class="field col-12 md:col-4">
+          <app-input-decimal label="Discount" formControlName="discount" textAlign="right" [showButtons]="false" [required]="true" />
+          <app-validator-msg [control]="f['discount']" />
+        </div>
+
+        <div class="field col-12 md:col-4">
+          <app-input-decimal label="Shipping Cost" formControlName="shippingCost" textAlign="right"
+            [showButtons]="false" [required]="true" />
+          <app-validator-msg [control]="f['shippingCost']" />
+        </div>
+
+        <div class="field col-12">
+          <app-input-textarea label="Note" formControlName="note" [required]="true" [max]="5" [autoResize]="true"
+            [showCharLength]="true" />
+        </div>
+
+      </div>
+
+      <!-- Form Actions -->
+      <div class="mt-3 p-dialog-footer">
+        <!-- <app-button label="Cancel" type="button" icon="pi pi-times" [text]="true" severity="warning" [disabled]="form.invalid" (onClick)="cancel()" /> -->
+        <app-button label="Save" type="submit" icon="pi pi-check" [text]="true" />
+      </div>
+    </form>
+  </div>
+</div>

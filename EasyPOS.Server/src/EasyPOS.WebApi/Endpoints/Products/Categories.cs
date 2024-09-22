@@ -51,7 +51,7 @@ public class Categories : EndpointGroupBase
         if (!query.IsInitialLoaded)
         {
             var parentSelectList = await sender.Send(new GetSelectListQuery(
-                Sql: SelectListSqls.GetCategoryParentSelectListSql,
+                Sql: SelectListSqls.CategoryParentSelectListSql,
                 Parameters: new { },
                 Key: CacheKeys.Category_All_SelectList,
                 AllowCacheList: true)
@@ -67,7 +67,7 @@ public class Categories : EndpointGroupBase
         var result = await sender.Send(new GetCategoryByIdQuery(id));
 
         var parentSelectList = await sender.Send(new GetSelectListQuery(
-            Sql: SelectListSqls.GetCategorySelectListSql,
+            Sql: SelectListSqls.CategorySelectListSql,
             Parameters: new { },
             Key: CacheKeys.Category_All_SelectList,
             AllowCacheList: false));

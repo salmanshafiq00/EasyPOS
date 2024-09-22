@@ -2,6 +2,8 @@
 using EasyPOS.Domain.Common;
 using EasyPOS.Domain.Products;
 using EasyPOS.Domain.Stakeholders;
+using EasyPOS.Domain.Trades;
+using Unit = EasyPOS.Domain.Products.Unit;
 
 namespace EasyPOS.Application.Common.Abstractions;
 
@@ -29,12 +31,22 @@ public interface IApplicationDbContext
     DbSet<Category> Categories { get; }
     DbSet<Product> Products { get; }
     DbSet<Warehouse> Warehouses { get; }
+    DbSet<Brand> Brands { get; }
+    DbSet<Unit> Units { get; }
 
     #endregion
 
     #region Stakeholders
     DbSet<Customer> Customers { get; }
+    DbSet<CustomerGroup> CustomerGroups { get; }
     DbSet<Supplier> Suppliers { get; }
+
+    #endregion
+
+    #region Trades
+    DbSet<Purchase> Purchases { get; }
+    DbSet<Sale> Sales { get; }
+
 
     #endregion
 

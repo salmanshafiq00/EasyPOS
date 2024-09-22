@@ -30,7 +30,8 @@ export class InputDecimalComponent implements ControlValueAccessor, Validator {
   @Input() inputId: string = '';
   @Input() min: number = null;
   @Input() max: number = null;
-  @Input() textRight: boolean = false;
+  // @Input() textRight: boolean = false;
+  @Input() textAlign: string = 'left';
   @Input() minFractionDigits: number = 2;
   @Input() maxFractionDigits: number = 2;
   @Input() mode: string = 'decimal';

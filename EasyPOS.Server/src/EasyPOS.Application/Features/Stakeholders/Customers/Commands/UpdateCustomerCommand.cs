@@ -11,7 +11,8 @@ public record UpdateCustomerCommand(
     string? Mobile,
     Guid? CountryId,
     string? City,
-    string? Address) : ICacheInvalidatorCommand
+    string? Address,
+    bool IsActive) : ICacheInvalidatorCommand
 {
     public string CacheKey => CacheKeys.Customer;
 }

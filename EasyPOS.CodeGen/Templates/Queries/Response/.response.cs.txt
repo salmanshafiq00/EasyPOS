@@ -1,0 +1,9 @@
+﻿namespace {namespace};
+
+public record {itemname}Model
+{
+    public Guid Id { get; set; }
+    {dtoFieldDefinition}
+
+}
+

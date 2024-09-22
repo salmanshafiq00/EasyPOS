@@ -1,0 +1,21 @@
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
+namespace {namespace};
+
+    public class {itemname}DeletedEventHandler : INotificationHandler<{itemname}DeletedEvent>
+    {
+        private readonly ILogger<{itemname}DeletedEventHandler> _logger;
+
+        public {itemname}DeletedEventHandler(
+            ILogger<{itemname}DeletedEventHandler> logger
+            )
+        {
+            _logger = logger;
+        }
+        public Task Handle({itemname}DeletedEvent notification, CancellationToken cancellationToken)
+        {
+            _logger.LogInformation("Domain Event: {DomainEvent}", notification.GetType().FullName);
+            return Task.CompletedTask;
+        }
+    }

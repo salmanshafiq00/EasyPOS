@@ -11,7 +11,8 @@ public record UpdateWarehouseCommand(
     string? Mobile,
     Guid? CountryId,
     string? City,
-    string? Address) : ICacheInvalidatorCommand
+    string? Address,
+    bool IsActive) : ICacheInvalidatorCommand
 {
     public string CacheKey => CacheKeys.Warehouse;
 }

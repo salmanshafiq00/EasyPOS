@@ -74,7 +74,23 @@
         <div class="field col-12 md:col-4">
           <app-input-text label="Alert Quantity" formControlName="alertQuantity" [required]="false" />
         </div>
+
+        <div class="field col-12 md:col-4">
+          <app-input-select label="Tax Method" formControlName="taxMethod" [options]="taxMethods" [required]="false" />
+        </div>
+
+        <div class="field col-12 md:col-4">
+          <app-input-select label="Tax" formControlName="taxRate" [options]="taxMethods" [required]="false" />
+        </div>
         
+        <div class="field col-12 md:col-4">
+          <app-input-select label="Discount Type" formControlName="discountType" [options]="discountTypes" [required]="false" />
+        </div>
+
+        <div class="field col-12 md:col-4">
+          <app-input-currency label="Discount" formControlName="discount" [required]="false" />
+        </div>
+
         <!-- Description Textarea -->
         <div class="field col-12">
           <app-input-editor

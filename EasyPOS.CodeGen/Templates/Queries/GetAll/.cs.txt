@@ -1,0 +1,32 @@
+﻿namespace {namespace};
+
+[Authorize(Policy = Permissions.{nameofPlural}.View)]
+public record Get{nameofPlural}ListQuery(int PageNumber = 1, int PageSize = 10) 
+     : DataGridModel, ICacheableQuery<PaginatedResponse<{itemname}Model>>
+{
+    [JsonInclude]
+    public string CacheKey => $"{CacheKeys.{itemname}}_{PageNumber}_{PageSize}";
+     
+}
+
+internal sealed class Get{nameofPlural}QueryHandler(ISqlConnectionFactory sqlConnection) 
+     : IQueryHandler<Get{nameofPlural}ListQuery, PaginatedResponse<{itemname}Model>>
+{
+    public async Task<Result<PaginatedResponse<{itemname}Model>>> Handle(Get{nameofPlural}ListQuery request, CancellationToken cancellationToken)
+    {
+        var connection = sqlConnection.GetOpenConnection();
+
+        var sql = $"""
+            SELECT 
+                t.Id  AS {nameof({itemname}Model.Id)}, 
+                t.Name AS {nameof({itemname}Model.Name)}
+            FROM dbo.{nameofPlural} AS t
+            """;
+
+        return await PaginatedResponse<{itemname}lModel>
+            .CreateAsync(connection, sql, request);
+
+    }
+}
+
+

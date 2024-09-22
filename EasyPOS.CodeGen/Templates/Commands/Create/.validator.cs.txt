@@ -1,0 +1,14 @@
+﻿namespace {namespace};
+
+public class Create{itemname}CommandValidator : AbstractValidator<Create{itemname}Command>
+{
+    public Create{itemname}CommandValidator()
+    {
+
+        RuleFor(v => v.Name)
+             .MaximumLength(256)
+             .NotEmpty();
+
+    }
+}
+

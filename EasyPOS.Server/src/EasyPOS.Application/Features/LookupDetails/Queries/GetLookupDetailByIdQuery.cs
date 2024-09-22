@@ -1,9 +1,4 @@
-﻿using EasyPOS.Application.Common.Abstractions;
-using EasyPOS.Application.Common.Abstractions.Messaging;
-using EasyPOS.Application.Common.Extensions;
-using EasyPOS.Domain.Shared;
-
-namespace EasyPOS.Application.Features.LookupDetails.Queries;
+﻿namespace EasyPOS.Application.Features.LookupDetails.Queries;
 
 //[Authorize(Policy = Permissions.CommonSetup.LookupDetails.View)]
 public record GetLookupDetailByIdQuery(Guid Id) : ICacheableQuery<LookupDetailModel>

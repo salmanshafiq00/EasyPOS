@@ -1,0 +1,29 @@
+﻿using {applicaitonRootNs}.Common.Interfaces;
+
+namespace {namespace};
+
+public record Delete{itemname}Command(Guid Id): ICacheInvalidatorCommand
+{
+    public string CacheKey => CacheKeys.{itemname};
+}
+
+internal sealed class Delete{itemname}CommandHandler(
+    IApplicationDbContext dbContext) 
+    : ICommandHandler<Delete{itemname}Command>
+
+{
+    public async Task<Result> Handle(Delete{itemname}Command request, CancellationToken cancellationToken)
+    {
+        var entity = await _context.{nameofPlural}
+            .FindAsync(new object[] { request.Id }, cancellationToken);
+
+        if (entity is null) return Result.Failure(Error.NotFound(nameof(entity), ErrorMessages.EntityNotFound));
+
+        dbContext.{nameofPlural}.Remove(entity);
+
+        await dbContext.SaveChangesAsync(cancellationToken);
+
+        return Result.Success();
+    }
+
+}

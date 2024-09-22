@@ -1,17 +1,11 @@
-﻿using EasyPOS.Application.Common.Abstractions;
-using EasyPOS.Application.Common.Abstractions.Messaging;
-using EasyPOS.Application.Common.DapperQueries;
-using EasyPOS.Application.Common.Security;
-using EasyPOS.Domain.Shared;
-
-namespace EasyPOS.Application.Features.LookupDetails.Queries;
+﻿namespace EasyPOS.Application.Features.LookupDetails.Queries;
 
 [Authorize(Policy = Permissions.CommonSetup.LookupDetails.View)]
 public record GetLookupDetailListQuery
     : DataGridModel, ICacheableQuery<PaginatedResponse<LookupDetailModel>>
 {
     [JsonInclude]
-    public string CacheKey => $"LookupDetail_{PageNumber}_{PageSize}";
+    public string CacheKey => $"{CacheKeys.LookupDetail}_{PageNumber}_{PageSize}";
 }
 
 internal sealed class GetLookupDetailListQueryHandler(ISqlConnectionFactory sqlConnection)

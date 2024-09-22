@@ -1,0 +1,36 @@
+﻿using {applicaitonRootNs}.Common.Interfaces;
+
+namespace {namespace};
+
+public record Get{itemname}ByIdQuery(int Id) : ICacheableQuery<{itemname}Model>
+{
+    [JsonIgnore]
+    public string CacheKey => $"{CacheKeys.{itemname}}_{Id}";
+    [JsonIgnore]
+    public TimeSpan? Expiration => null;
+    public bool? AllowCache => true;
+}
+
+internal sealed class Get{itemname}ByIdQueryHandler(ISqlConnectionFactory sqlConnection)
+     : IQueryHandler<Get{itemname}ByIdQuery, {itemname}Model>
+{
+
+    public async Task<Result<{itemname}Model>> Handle(Get{itemname}ByIdQuery request, CancellationToken cancellationToken)
+    {
+        if (query.Id.IsNullOrEmpty())
+        {
+            return new {itemname}Model();
+        }
+        var connection = sqlConnection.GetOpenConnection();
+
+        var sql = $"""
+            SELECT 
+                t.Id  AS {nameof({itemname}Model.Id)}, 
+                t.Name AS {nameof({itemname}Model.Name)}
+            FROM dbo.{nameofPlural} AS t
+            """;
+
+        return await connection.QueryFirstOrDefaultAsync<{itemname}Model>(sql, new { query.Id });
+    }
+}
+

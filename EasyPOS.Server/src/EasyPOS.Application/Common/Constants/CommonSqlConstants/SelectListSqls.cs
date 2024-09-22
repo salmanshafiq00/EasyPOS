@@ -71,10 +71,9 @@ public static class SelectListSqls
 
     #endregion
 
-
     #region Products
 
-    public const string GetCategorySelectListSql = """
+    public const string CategorySelectListSql = """
         SELECT Id, Name 
         FROM dbo.Categories c
         WHERE 1 = 1
@@ -82,7 +81,7 @@ public static class SelectListSqls
         """;
 
 
-    public const string GetCategoryParentSelectListSql = """
+    public const string CategoryParentSelectListSql = """
         SELECT Distinct c.Id, c.Name 
         FROM dbo.Categories c
         INNER JOIN dbo.Categories c2 ON c2.ParentId = c.Id
@@ -90,9 +89,16 @@ public static class SelectListSqls
         ORDER BY c.Name
         """;
 
-    public const string GetWarehouseSelectListSql = """
+    public const string WarehouseSelectListSql = """
         SELECT Id, Name 
         FROM dbo.Warehouses c
+        WHERE 1 = 1
+        ORDER BY Name
+        """;
+
+    public const string ProductsSelectListSql = """
+        SELECT Id, Name 
+        FROM dbo.Products t
         WHERE 1 = 1
         ORDER BY Name
         """;

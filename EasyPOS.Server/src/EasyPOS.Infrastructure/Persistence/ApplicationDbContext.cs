@@ -4,6 +4,7 @@ using EasyPOS.Domain.Admin;
 using EasyPOS.Domain.Common;
 using EasyPOS.Domain.Products;
 using EasyPOS.Domain.Stakeholders;
+using EasyPOS.Domain.Trades;
 using Microsoft.EntityFrameworkCore;
 
 namespace EasyPOS.Infrastructure.Persistence;
@@ -33,13 +34,21 @@ public sealed class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<Category> Categories => Set<Category>();
     public DbSet<Product> Products => Set<Product>();
     public DbSet<Warehouse> Warehouses => Set<Warehouse>();
+    public DbSet<Brand> Brands => Set<Brand>();
+    public DbSet<Unit> Units => Set<Unit>();
 
     #endregion
 
     #region Stakeholders
     public DbSet<Customer> Customers => Set<Customer>();
+    public DbSet<CustomerGroup> CustomerGroups => Set<CustomerGroup>();
     public DbSet<Supplier> Suppliers => Set<Supplier>();
 
+    #endregion
+
+    #region Trades
+    public DbSet<Purchase> Purchases => Set<Purchase>();
+    public DbSet<Sale> Sales => Set<Sale>();
     #endregion
 
     protected override void OnModelCreating(ModelBuilder builder)

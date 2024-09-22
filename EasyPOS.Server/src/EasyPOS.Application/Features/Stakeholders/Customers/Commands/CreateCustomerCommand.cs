@@ -10,7 +10,8 @@ public record CreateCustomerCommand(
     string? Mobile,
     Guid? CountryId,
     string? City,
-    string? Address) : ICacheInvalidatorCommand<Guid>
+    string? Address,
+    bool IsActive) : ICacheInvalidatorCommand<Guid>
 {
     public string CacheKey => CacheKeys.Customer;
 }

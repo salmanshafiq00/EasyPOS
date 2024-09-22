@@ -391,7 +391,7 @@ namespace EasyPOS.Infrastructure.Persistence.Migrations
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
-                    b.Property<decimal>("Price")
+                    b.Property<decimal>("SalePrice")
                         .HasColumnType("decimal(18, 2)");
 
                     b.Property<Guid>("ProductTypeId")

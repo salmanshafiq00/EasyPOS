@@ -1,0 +1,21 @@
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
+namespace {namespace};
+
+public class {itemname}CreatedEventHandler : INotificationHandler<{itemname}CreatedEvent>
+{
+        private readonly ILogger<{itemname}CreatedEventHandler> _logger;
+
+        public {itemname}CreatedEventHandler(
+            ILogger<{itemname}CreatedEventHandler> logger
+            )
+        {
+            _logger = logger;
+        }
+        public Task Handle({itemname}CreatedEvent notification, CancellationToken cancellationToken)
+        {
+            _logger.LogInformation("Domain Event: {DomainEvent}", notification.GetType().FullName);
+            return Task.CompletedTask;
+        }
+}

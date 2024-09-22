@@ -51,7 +51,7 @@ public class Products : EndpointGroupBase
         if (!query.IsInitialLoaded)
         {
             var categorySelectList = await sender.Send(new GetSelectListQuery(
-                Sql: SelectListSqls.GetCategorySelectListSql,
+                Sql: SelectListSqls.CategorySelectListSql,
                 Parameters: new { },
                 Key: CacheKeys.Product_All_SelectList,
                 AllowCacheList: true)
@@ -88,7 +88,7 @@ public class Products : EndpointGroupBase
         );
 
         var categorySelectList = await sender.Send(new GetSelectListQuery(
-            Sql: SelectListSqls.GetCategorySelectListSql,
+            Sql: SelectListSqls.CategorySelectListSql,
             Parameters: new { },
             Key: CacheKeys.Category_All_SelectList,
             AllowCacheList: true)

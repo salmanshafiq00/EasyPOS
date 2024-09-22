@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ProductsClient } from 'src/app/modules/generated-clients/api-service';
+import { DiscountType, ProductsClient, TaxMethod } from 'src/app/modules/generated-clients/api-service';
 import { NavigationStateService } from 'src/app/shared/services/navigation-state.service';
 import { NavigationService } from 'src/app/shared/services/navigation.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
@@ -32,6 +32,8 @@ export class ProductDetailComponent implements OnInit {
 
   ngOnInit() {
     // this.id = this.customDialogService.getConfigData();
+    this.taxMethods = this.enumToArray(TaxMethod);
+    this.discountTypes = this.enumToArray(DiscountType);
     this.initializeFormGroup();
     this.getById(this.id || this.emptyGuid);
   }
@@ -118,6 +120,10 @@ export class ProductDetailComponent implements OnInit {
       purchaseUnit: [null],
       alertQuantity: [null],
       barCodeType: [null],
+      taxMethod: [TaxMethod.Exclusive],
+      taxRate: [null],
+      discountType: [DiscountType.Percentage],
+      discount: [null],
       description: [''],
       isActive: [false],            
       photoUrl: ['']
@@ -128,6 +134,14 @@ export class ProductDetailComponent implements OnInit {
     this.form.patchValue({
       photoUrl: fileUrls[0]
     })
+  }
+
+  taxMethods: { id: number, name: string }[] = [];
+  discountTypes: { id: number, name: string }[] = [];
+  enumToArray(enumObj: any): { id: number, name: string }[] {
+    return Object.keys(enumObj)
+      .filter(key => isNaN(Number(key)))
+      .map(key => ({ id: enumObj[key], name: key }));
   }
   
 }

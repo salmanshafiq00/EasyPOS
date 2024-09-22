@@ -1,0 +1,12 @@
+﻿using System.ComponentModel;
+
+namespace {namespace};
+
+[Description("{nameofPlural}")]
+public class {itemname}Dto
+{
+    [Description("Id")]
+    public int Id { get; set; }
+    {dtoFieldDefinition}
+}
+

@@ -29,9 +29,8 @@
         <app-input-text label="Address" formControlName="address" [required]="false" [readonly]="false" />
         <app-validator-msg [control]="f['address']"></app-validator-msg>
       </div>
-      <div class="field col-12 md:col-6">
-        <app-input-text label="Active" formControlName="isActive" [required]="false" [readonly]="false" />
-        <app-validator-msg [control]="f['isActive']"></app-validator-msg>
+      <div class="field col-12 md:col-6 md:flex align-items-center md:mt-4">
+        <app-input-switch label="Active" formControlName="isActive" />
       </div>
     </div>
 

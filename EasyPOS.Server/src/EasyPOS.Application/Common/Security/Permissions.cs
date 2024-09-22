@@ -132,7 +132,6 @@ public static class Permissions
 
     #endregion
 
-
     #region Products
     public static class Categories
     {
@@ -157,6 +156,22 @@ public static class Permissions
         public const string Edit = "Permissions.Warehouses.Edit";
         public const string Delete = "Permissions.Warehouses.Delete";
     }
+
+    public static class Brands
+    {
+        public const string View = "Permissions.Brands.View";
+        public const string Create = "Permissions.Brands.Create";
+        public const string Edit = "Permissions.Brands.Edit";
+        public const string Delete = "Permissions.Brands.Delete";
+    }
+
+    public static class Units
+    {
+        public const string View = "Permissions.Units.View";
+        public const string Create = "Permissions.Units.Create";
+        public const string Edit = "Permissions.Units.Edit";
+        public const string Delete = "Permissions.Units.Delete";
+    }
     #endregion
 
     #region Stakeholders
@@ -168,6 +183,14 @@ public static class Permissions
         public const string Delete = "Permissions.Customers.Delete";
     }
 
+    public static class CustomerGroups
+    {
+        public const string View = "Permissions.CustomerGroups.View";
+        public const string Create = "Permissions.CustomerGroups.Create";
+        public const string Edit = "Permissions.CustomerGroups.Edit";
+        public const string Delete = "Permissions.CustomerGroups.Delete";
+    }
+
     public static class Suppliers
     {
         public const string View = "Permissions.Suppliers.View";
@@ -176,5 +199,23 @@ public static class Permissions
         public const string Delete = "Permissions.Suppliers.Delete";
     }
 
+    #endregion
+
+    #region Trades
+    public static class Purchases
+    {
+        public const string View = "Permissions.Purchases.View";
+        public const string Create = "Permissions.Purchases.Create";
+        public const string Edit = "Permissions.Purchases.Edit";
+        public const string Delete = "Permissions.Purchases.Delete";
+    }
+
+    public static class Sales
+    {
+        public const string View = "Permissions.Sales.View";
+        public const string Create = "Permissions.Sales.Create";
+        public const string Edit = "Permissions.Sales.Edit";
+        public const string Delete = "Permissions.Sales.Delete";
+    }
     #endregion
 }
