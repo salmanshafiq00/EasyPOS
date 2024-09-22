@@ -159,6 +159,7 @@ internal static class TemplateMap
         var content = await reader.ReadToEndAsync();
         var nameofPlural = ProjectHelpers.Pluralize(name);
         var dtoFieldDefinition = CreateDtoFieldDefinition(classObject);
+        var recordFieldDefinition = CreateRecordFieldDefinition(classObject);
         var importFuncExpression = CreateImportFuncExpression(classObject);
         var templateFieldDefinition = CreateTemplateFieldDefinition(classObject);
         var exportFuncExpression = CreateExportFuncExpression(classObject);
@@ -170,6 +171,7 @@ internal static class TemplateMap
                         .Replace("{itemname}", name)
                         .Replace("{nameofPlural}", nameofPlural)
                         .Replace("{dtoFieldDefinition}", dtoFieldDefinition)
+                        .Replace("{recordFieldDefinition}", recordFieldDefinition)
                         .Replace("{fieldAssignmentDefinition}", fieldAssignmentDefinition)
                         .Replace("{importFuncExpression}", importFuncExpression)
                         .Replace("{templateFieldDefinition}", templateFieldDefinition)
@@ -269,6 +271,74 @@ internal static class TemplateMap
         }
         return output.ToString();
     }
+
+    private static string CreateRecordFieldDefinition(IntellisenseObject classObject)
+    {
+        var output = new StringBuilder();
+        foreach (var property in classObject.Properties.Where(x => x.Type.IsKnownType == true))
+        {
+            //output.Append($"    [Description(\"{SplitCamelCase(property.Name)}\")]\r\n");
+            if (property.Name == PRIMARYKEY)
+            {
+                output.Append($"    {property.Type.CodeName} {property.Name}, \r\n");
+            }
+            else
+            {
+                switch (property.Type.CodeName)
+                {
+                    case "string" when property.Name.Equals("Name", StringComparison.OrdinalIgnoreCase):
+                        output.Append($"    {property.Type.CodeName} {property.Name}, \r\n");
+                        break;
+                    case "string" when !property.Name.Equals("Name", StringComparison.OrdinalIgnoreCase) && !property.Type.IsArray && !property.Type.IsDictionary:
+                        output.Append($"    {property.Type.CodeName}? {property.Name}, \r\n");
+                        break;
+                    case "string" when !property.Name.Equals("Name", StringComparison.OrdinalIgnoreCase) && property.Type.IsArray:
+                        output.Append($"    HashSet<{property.Type.CodeName}>? {property.Name}, \r\n");
+                        break;
+                    case "System.DateTime?":
+                        output.Append($"    DateTime? {property.Name}, \r\n");
+                        break;
+                    case "System.DateTime":
+                        output.Append($"    DateTime {property.Name}, \r\n");
+                        break;
+                    case "System.Guid":
+                        output.Append($"    Guid {property.Name}, \r\n");
+                        break;
+                    case "System.Guid?":
+                        output.Append($"    Guid? {property.Name}, \r\n");
+                        break;
+                    case "decimal?":
+                    case "decimal":
+                    case "int?":
+                    case "int":
+                    case "double?":
+                    case "double":
+                        output.Append($"    {property.Type.CodeName} {property.Name}, \r\n");
+                        break;
+                    default:
+                        if (property.Type.CodeName.Any(x => x == '?'))
+                        {
+                            output.Append($"    {property.Type.CodeName} {property.Name}, \r\n");
+                        }
+                        else
+                        {
+                            if (property.Type.IsOptional)
+                            {
+                                output.Append($"    {property.Type.CodeName}? {property.Name}, \r\n");
+                            }
+                            else
+                            {
+                                output.Append($"    {property.Type.CodeName} {property.Name}, \r\n");
+                            }
+                        }
+                        break;
+                }
+
+            }
+        }
+        return output.ToString();
+    }
+
     private static string CreateImportFuncExpression(IntellisenseObject classObject)
     {
         var output = new StringBuilder();

@@ -116,7 +116,7 @@ public sealed class CodeGenPackage : AsyncPackage
                 //}
 
                 var configurations = new List<string>() {
-                         $"Data/Configurations/{name}Configuration.cs"
+                         $"Persistence/Configurations/{name}Configuration.cs"
                         };
                 foreach (var item in configurations)
                 {
@@ -130,6 +130,7 @@ public sealed class CodeGenPackage : AsyncPackage
                         $"{nameofPlural}/Commands/Create/Create{name}Command.cs",
                         $"{nameofPlural}/Commands/Create/Create{name}CommandValidator.cs",
                         $"{nameofPlural}/Commands/Delete/Delete{name}Command.cs",
+                        $"{nameofPlural}/Commands/Deletes/Delete{name}sCommand.cs",
                         //$"{nameofPlural}/Commands/Delete{name}CommandValidator.cs",
                         $"{nameofPlural}/Commands/Update/Update{name}Command.cs",
                         $"{nameofPlural}/Commands/Update/Update{name}CommandValidator.cs",
@@ -338,6 +339,10 @@ public sealed class CodeGenPackage : AsyncPackage
         {
             folderName = "Delete";
         }
+        if (file.Contains("Deletes"))
+        {
+            folderName = "Deletes";
+        }
         if (file.Contains("GetAll"))
         {
             folderName = "GetAll";
@@ -346,9 +351,9 @@ public sealed class CodeGenPackage : AsyncPackage
         {
             folderName = "GetById";
         }
-        if (file.Contains("Response"))
+        if (file.Contains("Model"))
         {
-            folderName = "Response";
+            folderName = "Model";
         }
         int indexOfFolderName = file.IndexOf(folderName);
         StringBuilder modifiedFile = new(file.Substring(0, indexOfFolderName));

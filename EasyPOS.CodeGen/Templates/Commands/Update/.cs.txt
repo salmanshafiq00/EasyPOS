@@ -1,8 +1,9 @@
 ﻿namespace {namespace};
 
-public record Update{itemname}Command(Guid Id): ICacheInvalidatorCommand
+public record Update{itemname}Command(
+    {recordFieldDefinition}
+    ): ICacheInvalidatorCommand
 {
-    {dtoFieldDefinition}
     public string CacheKey => CacheKeys.{itemname};
 }
 
