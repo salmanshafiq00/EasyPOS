@@ -133,7 +133,7 @@
     <Content Include="Templates\Queries\GetById\.cs.txt">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="Templates\Queries\Response\.response.cs.txt">
+    <Content Include="Templates\Queries\Model\.model.cs.txt">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="Templates\Specifications\AdvancedFilter.cs.txt">
