@@ -16,7 +16,7 @@ internal static class TemplateMap
     private static readonly List<string> _templateFiles = [];
     private const string _defaultExt = ".txt";
     private const string _templateDir = ".templates";
-    private const string _defaultNamespace = "Triangle.LMS";
+    private const string _defaultNamespace = "EasyPOS";
     static TemplateMap()
     {
         var folder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);

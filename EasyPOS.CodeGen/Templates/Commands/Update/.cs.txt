@@ -1,7 +1,4 @@
-﻿using {applicaitonRootNs}.Common.Interfaces;
-using {domainRootNs}.Entities;
-
-namespace {namespace};
+﻿namespace {namespace};
 
 public record Update{itemname}Command(Guid Id): ICacheInvalidatorCommand
 {

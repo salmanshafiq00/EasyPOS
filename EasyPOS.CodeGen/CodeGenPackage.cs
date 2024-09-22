@@ -27,10 +27,10 @@ namespace CodeGen;
 [Guid(PackageGuids.CodeGenString)]
 public sealed class CodeGenPackage : AsyncPackage
 {
-    public const string DOMAINPROJECT = "Domain";
-    public const string UIPROJECT = "Web";
-    public const string INFRASTRUCTUREPROJECT = "Infrastructure";
-    public const string APPLICATIONPROJECT = "Application";
+    public const string DOMAINPROJECT = "EasyPOS.Domain";
+    public const string UIPROJECT = "EasyPOS.WebApi";
+    public const string INFRASTRUCTUREPROJECT = "EasyPOS.Infrastructure";
+    public const string APPLICATIONPROJECT = "EasyPOS.Application";
 
     private const string _solutionItemsProjectName = "Solution Items";
     private static readonly Regex _reservedFileNamePattern = new($@"(?i)^(PRN|AUX|NUL|CON|COM\d|LPT\d)(\.|$)");

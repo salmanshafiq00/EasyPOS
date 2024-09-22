@@ -1,7 +1,7 @@
 ﻿namespace {namespace};
 
 [Authorize(Policy = Permissions.{nameofPlural}.View)]
-public record Get{nameofPlural}ListQuery(int PageNumber = 1, int PageSize = 10) 
+public record Get{nameofPlural}ListQuery 
      : DataGridModel, ICacheableQuery<PaginatedResponse<{itemname}Model>>
 {
     [JsonInclude]
@@ -23,7 +23,7 @@ internal sealed class Get{nameofPlural}QueryHandler(ISqlConnectionFactory sqlCon
             FROM dbo.{nameofPlural} AS t
             """;
 
-        return await PaginatedResponse<{itemname}lModel>
+        return await PaginatedResponse<{itemname}Model>
             .CreateAsync(connection, sql, request);
 
     }

@@ -2,7 +2,7 @@
 
 namespace {namespace};
 
-public record Get{itemname}ByIdQuery(int Id) : ICacheableQuery<{itemname}Model>
+public record Get{itemname}ByIdQuery(Guid Id) : ICacheableQuery<{itemname}Model>
 {
     [JsonIgnore]
     public string CacheKey => $"{CacheKeys.{itemname}}_{Id}";
