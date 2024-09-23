@@ -55,4 +55,10 @@ public static class CacheKeys
     public const string Sale = nameof(Sale);
 
     #endregion
+
+    #region Account
+    public const string Account = nameof(Account);
+    public const string Account_All_SelectList = nameof(Account_All_SelectList);
+
+    #endregion
 }

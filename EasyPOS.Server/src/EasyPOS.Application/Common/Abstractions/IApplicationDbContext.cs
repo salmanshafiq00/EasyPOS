@@ -1,4 +1,5 @@
-﻿using EasyPOS.Domain.Admin;
+﻿using EasyPOS.Domain.Accounts;
+using EasyPOS.Domain.Admin;
 using EasyPOS.Domain.Common;
 using EasyPOS.Domain.Products;
 using EasyPOS.Domain.Stakeholders;
@@ -47,6 +48,11 @@ public interface IApplicationDbContext
     DbSet<Purchase> Purchases { get; }
     DbSet<Sale> Sales { get; }
 
+
+    #endregion
+
+    #region Accounts
+    DbSet<Account> Accounts { get; }
 
     #endregion
 

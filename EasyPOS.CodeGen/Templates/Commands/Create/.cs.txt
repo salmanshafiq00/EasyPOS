@@ -11,7 +11,7 @@ internal sealed class Create{itemname}CommandHandler(
     IApplicationDbContext dbContext) 
     : ICommandHandler<Create{itemname}Command, Guid>
 {
-    public async Task<Guid> Handle(Create{itemname}Command request, CancellationToken cancellationToken)
+    public async Task<Result<Guid>> Handle(Create{itemname}Command request, CancellationToken cancellationToken)
     {
        var entity = request.Adapt<{itemname}>();
 

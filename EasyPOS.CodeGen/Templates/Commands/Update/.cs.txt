@@ -1,6 +1,7 @@
 ﻿namespace {namespace};
 
 public record Update{itemname}Command(
+    Guid Id,
     {recordFieldDefinition}
     ): ICacheInvalidatorCommand
 {

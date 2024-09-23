@@ -39,6 +39,7 @@ internal static class TemplateMap
             //"Commands\\AcceptChanges",
 			"Commands\\Create",
             "Commands\\Delete",
+            "Commands\\Deletes",
             "Commands\\Update",
             //"DTOs",
             "Caching",
@@ -47,8 +48,8 @@ internal static class TemplateMap
             "Specification",
             "Queries\\GetAll",
             "Queries\\GetById",
-            "Queries\\Response",
-            "Data\\Configurations",
+            "Queries\\Model",
+            "Persistence\\Configurations",
             "Endpoints"
             };
         var extension = Path.GetExtension(file).ToLowerInvariant();

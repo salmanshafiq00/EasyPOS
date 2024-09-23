@@ -39,7 +39,7 @@ public class {nameofPlural} : EndpointGroupBase
              .Produces<ProblemDetails>(StatusCodes.Status400BadRequest);
     }
 
-    private async Task<IResult> GetAll(ISender sender, GetAll{nameofPlural}Query query)
+    private async Task<IResult> GetAll(ISender sender, Get{nameofPlural}ListQuery query)
     {
         var result = await sender.Send(query);
         return TypedResults.Ok(result.Value);
