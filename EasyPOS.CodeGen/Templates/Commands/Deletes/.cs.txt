@@ -1,6 +1,4 @@
-﻿using {applicaitonRootNs}.Common.Interfaces;
-
-namespace {namespace};
+﻿namespace {namespace};
 
 public record Delete{itemname}sCommand(Guid[] Ids): ICacheInvalidatorCommand
 {

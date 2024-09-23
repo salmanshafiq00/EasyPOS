@@ -377,6 +377,7 @@ internal static class TemplateMap
         return output.ToString();
     }
 
+    #region MudBlazor
     private static string CreateMudTdHeaderDefinition(IntellisenseObject classObject)
     {
         var output = new StringBuilder();
@@ -531,6 +532,7 @@ internal static class TemplateMap
         return output.ToString();
     }
 
+    #endregion
 
     private static string CreateFieldAssignmentDefinition(IntellisenseObject classObject)
     {
