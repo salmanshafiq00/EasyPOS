@@ -11,11 +11,11 @@ public class {nameofPlural} : EndpointGroupBase
 
         group.MapPost("GetAll", GetAll)
              .WithName("Get{nameofPlural}")
-             .Produces<PaginatedResponse<{itemname}Response>>(StatusCodes.Status200OK);
+             .Produces<PaginatedResponse<{itemname}Model>>(StatusCodes.Status200OK);
 
         group.MapGet("Get/{id:Guid}", Get)
              .WithName("Get{itemname}")
-             .Produces<{itemname}Response>(StatusCodes.Status200OK);
+             .Produces<{itemname}Model>(StatusCodes.Status200OK);
 
         group.MapPost("Create", Create)
              .WithName("Create{itemname}")

@@ -1,6 +1,4 @@
-﻿using {applicaitonRootNs}.Common.Interfaces;
-
-namespace {namespace};
+﻿namespace {namespace};
 
 public record Get{itemname}ByIdQuery(Guid Id) : ICacheableQuery<{itemname}Model>
 {
@@ -17,7 +15,7 @@ internal sealed class Get{itemname}ByIdQueryHandler(ISqlConnectionFactory sqlCon
 
     public async Task<Result<{itemname}Model>> Handle(Get{itemname}ByIdQuery request, CancellationToken cancellationToken)
     {
-        if (query.Id.IsNullOrEmpty())
+        if (request.Id.IsNullOrEmpty())
         {
             return new {itemname}Model();
         }
@@ -30,7 +28,7 @@ internal sealed class Get{itemname}ByIdQueryHandler(ISqlConnectionFactory sqlCon
             FROM dbo.{nameofPlural} AS t
             """;
 
-        return await connection.QueryFirstOrDefaultAsync<{itemname}Model>(sql, new { query.Id });
+        return await connection.QueryFirstOrDefaultAsync<{itemname}Model>(sql, new { request.Id });
     }
 }
 
