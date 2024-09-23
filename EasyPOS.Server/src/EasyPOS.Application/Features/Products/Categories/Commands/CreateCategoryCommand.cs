@@ -1,5 +1,4 @@
 ﻿using EasyPOS.Domain.Products;
-using Mapster;
 
 namespace EasyPOS.Application.Features.Categories.Commands;
 

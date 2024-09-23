@@ -1,6 +1,4 @@
-﻿using EasyPOS.Application.Common.Constants;
-
-namespace EasyPOS.Application.Features.Categories.Commands;
+﻿namespace EasyPOS.Application.Features.Categories.Commands;
 
 public record DeleteCategoryCommand(Guid Id) : ICacheInvalidatorCommand
 {

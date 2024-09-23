@@ -1,5 +1,5 @@
-﻿using {applicationRootNs}.Features.{nameofPlural}.Commands;
-using {applicationRootNs}.Features.{nameofPlural}.Queries;
+﻿using {applicaitonRootNs}.Features.{nameofPlural}.Commands;
+using {applicaitonRootNs}.Features.{nameofPlural}.Queries;
 
 namespace {namespace};
 

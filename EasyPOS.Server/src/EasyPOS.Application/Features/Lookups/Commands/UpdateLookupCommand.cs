@@ -1,10 +1,4 @@
 ﻿using EasyPOS.Application.Common.Events;
-using EasyPOS.Domain.Common;
-using EasyPOS.Application.Common.Abstractions;
-using EasyPOS.Application.Common.Abstractions.Caching;
-using EasyPOS.Application.Common.Abstractions.Messaging;
-using EasyPOS.Application.Common.Constants;
-using EasyPOS.Domain.Shared;
 using EasyPOS.Domain.Common.DomainEvents;
 
 namespace EasyPOS.Application.Features.Lookups.Commands;

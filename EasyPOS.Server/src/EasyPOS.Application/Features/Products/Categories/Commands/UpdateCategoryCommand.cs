@@ -1,7 +1,4 @@
-﻿using EasyPOS.Application.Common.Constants;
-using Mapster;
-
-namespace EasyPOS.Application.Features.Categories.Commands;
+﻿namespace EasyPOS.Application.Features.Categories.Commands;
 
 public record UpdateCategoryCommand(
     Guid Id,

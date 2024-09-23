@@ -1,7 +1,4 @@
-﻿using EasyPOS.Application.Common.Constants;
-using Mapster;
-
-namespace EasyPOS.Application.Features.Brands.Commands;
+﻿namespace EasyPOS.Application.Features.Brands.Commands;
 
 public record UpdateBrandCommand(
     Guid Id,
