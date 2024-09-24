@@ -33,13 +33,19 @@ internal static class TemplateMap
     }
 
 
-    public static async Task<string> GetTemplateFilePathAsync(Project project, IntellisenseObject classObject, string file, string itemname, string selectFolder)
+    public static async Task<string> GetTemplateFilePathAsync(
+        Project project, 
+        IntellisenseObject classObject, 
+        string file, 
+        string itemname, 
+        string selectFolder)
     {
         var templatefolders = new string[]{
             //"Commands\\AcceptChanges",
 			"Commands\\Create",
             "Commands\\Delete",
-            "Commands\\Deletes",
+            "Commands\\MultiDelete",
+            "Commands\\Tests",
             "Commands\\Update",
             //"DTOs",
             "Caching",
@@ -130,7 +136,13 @@ internal static class TemplateMap
         list.InsertRange(0, dynaList);
     }
 
-    private static async Task<string> ReplaceTokensAsync(Project project, IntellisenseObject classObject, string name, string relative, string selectRelative, string templateFile)
+    private static async Task<string> ReplaceTokensAsync(
+        Project project, 
+        IntellisenseObject classObject, 
+        string name, 
+        string relative, 
+        string selectRelative, 
+        string templateFile)
     {
         if (string.IsNullOrEmpty(templateFile))
         {

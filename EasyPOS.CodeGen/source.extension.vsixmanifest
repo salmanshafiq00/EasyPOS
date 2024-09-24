@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="CodeGen.48ed8537-69e0-4f1c-9084-8d76ad861d2a" Version="1.0" Language="en-US" Publisher="Mizanuss Sayed" />
-        <DisplayName>Code Generator</DisplayName>
+        <Identity Id="EasyPOS.CodeGen.48ed8537-69e0-4f1c-9084-8d76ad861d2a" Version="1.1" Language="en-US" Publisher="Salman Farsy" />
+        <DisplayName>EasyPOS.CodeGen</DisplayName>
         <Description xml:space="preserve">Code Generation for Clean Architecture Project in .NET </Description>
-        <MoreInfo>https://github.com/mizanussayed/codegen</MoreInfo>
         <Icon>Resources\Icon.png</Icon>
         <PreviewImage>Resources\Icon.png</PreviewImage>
-        <Tags>Code Gen</Tags>
+        <Tags>EasyPOS.CodeGen</Tags>
         <Preview>true</Preview>
     </Metadata>
     <Installation>

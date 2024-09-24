@@ -13,7 +13,7 @@
         <CommandFlag>DynamicVisibility</CommandFlag>
         <Strings>
           <CommandName>AddFeaturesClassFile</CommandName>
-          <ButtonText>New Application Features... </ButtonText>
+          <ButtonText>Generate New Application Features </ButtonText>
         </Strings>
       </Button>
     </Buttons>
