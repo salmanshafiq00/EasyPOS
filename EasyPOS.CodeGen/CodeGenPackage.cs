@@ -31,6 +31,7 @@ public sealed class CodeGenPackage : AsyncPackage
     public const string UIPROJECT = "EasyPOS.WebApi";
     public const string INFRASTRUCTUREPROJECT = "EasyPOS.Infrastructure";
     public const string APPLICATIONPROJECT = "EasyPOS.Application";
+    public const string ClientApp = "EasyPOS.Client";
 
     private const string _solutionItemsProjectName = "Solution Items";
     private static readonly Regex _reservedFileNamePattern = new($@"(?i)^(PRN|AUX|NUL|CON|COM\d|LPT\d)(\.|$)");
@@ -67,6 +68,7 @@ public sealed class CodeGenPackage : AsyncPackage
         NewItemTarget infrastructure = NewItemTarget.Create(_dte, INFRASTRUCTUREPROJECT);
         NewItemTarget ui = NewItemTarget.Create(_dte, UIPROJECT);
         NewItemTarget application = NewItemTarget.Create(_dte, APPLICATIONPROJECT);
+        NewItemTarget clientApp = NewItemTarget.Create(_dte, ClientApp);
 
         DomainRootNs = domain.Project.GetRootNamespace();
         ApplicaitonRootNs = application.Project.GetRootNamespace();

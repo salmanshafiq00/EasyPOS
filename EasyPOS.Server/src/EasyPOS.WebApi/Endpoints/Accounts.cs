@@ -1,7 +1,7 @@
 ﻿using EasyPOS.Application.Features.Accounts.Accounts.Commands;
 using EasyPOS.Application.Features.Accounts.Accounts.Queries;
 
-namespace EasyPOS.WebApi.Endpoint;
+namespace EasyPOS.WebApi.Endpoints;
 
 public class Accounts : EndpointGroupBase
 {

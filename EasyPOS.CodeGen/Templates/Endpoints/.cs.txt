@@ -1,7 +1,7 @@
 ﻿using {applicaitonRootNs}.Features.{nameofPlural}.Commands;
 using {applicaitonRootNs}.Features.{nameofPlural}.Queries;
 
-namespace {namespace};
+namespace {namespace}s;
 
 public class {nameofPlural} : EndpointGroupBase
 {
