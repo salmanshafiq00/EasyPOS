@@ -130,8 +130,7 @@ public sealed class CodeGenPackage : AsyncPackage
                         $"{nameofPlural}/Commands/Create/Create{name}Command.cs",
                         $"{nameofPlural}/Commands/Create/Create{name}CommandValidator.cs",
                         $"{nameofPlural}/Commands/Delete/Delete{name}Command.cs",
-                        $"{nameofPlural}/Commands/Deletes/Delete{name}sCommand.cs",
-                        //$"{nameofPlural}/Commands/Delete{name}CommandValidator.cs",
+                        $"{nameofPlural}/Commands/MultipleDel/Delete{nameofPlural}Command.cs",
                         $"{nameofPlural}/Commands/Update/Update{name}Command.cs",
                         $"{nameofPlural}/Commands/Update/Update{name}CommandValidator.cs",
                         //$"{nameofPlural}/Commands/Import/Import{nameofPlural}Command.cs",
@@ -339,9 +338,9 @@ public sealed class CodeGenPackage : AsyncPackage
         {
             folderName = "Delete";
         }
-        if (file.Contains("Deletes"))
+        if (file.Contains("MultipleDel"))
         {
-            folderName = "Deletes";
+            folderName = "MultipleDel";
         }
         if (file.Contains("GetAll"))
         {

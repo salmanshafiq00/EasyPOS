@@ -1,0 +1,27 @@
+﻿namespace {namespace};
+
+public record Delete{nameofPlural}Command(Guid[] Ids): ICacheInvalidatorCommand
+{
+    public string CacheKey => CacheKeys.{itemname};
+}
+
+internal sealed class Delete{nameofPlural}CommandHandler(
+    ISqlConnectionFactory sqlConnection) 
+    : ICommandHandler<Delete{nameofPlural}Command>
+
+{
+    public async Task<Result> Handle(Delete{nameofPlural}Command request, CancellationToken cancellationToken)
+    {
+        var connection = sqlConnection.GetOpenConnection();
+
+        var sql = $"""
+            Delete dbo.{nameofPlural}
+            WHERE Id IN @Id
+            """;
+
+        await connection.ExecuteAsync(sql, new { request.Ids });
+
+        return Result.Success();
+    }
+
+}

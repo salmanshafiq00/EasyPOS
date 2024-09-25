@@ -1,4 +1,6 @@
-﻿namespace {namespace};
+﻿using {entityNamespace};
+
+namespace {namespace};
 
 public record Create{itemname}Command(
     {recordFieldDefinition}

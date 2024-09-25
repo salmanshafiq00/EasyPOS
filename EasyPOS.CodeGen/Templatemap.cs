@@ -44,7 +44,7 @@ internal static class TemplateMap
             //"Commands\\AcceptChanges",
 			"Commands\\Create",
             "Commands\\Delete",
-            "Commands\\Deletes",
+            "Commands\\MultipleDel",
             "Commands\\Update",
             //"DTOs",
             "Caching",
@@ -176,6 +176,7 @@ internal static class TemplateMap
         var templateFieldDefinition = CreateTemplateFieldDefinition(classObject);
         var exportFuncExpression = CreateExportFuncExpression(classObject);
         var fieldAssignmentDefinition = CreateFieldAssignmentDefinition(classObject);
+        var entityNamespace = classObject.FullName;
 
         return content.Replace("{rootnamespace}", _defaultNamespace)
                         .Replace("{namespace}", ns)
@@ -192,6 +193,7 @@ internal static class TemplateMap
                         .Replace("{infrastructureRootNs}", infrastructureRootNs)
                         .Replace("{webRootNs}", webRootNs)
                         .Replace("{applicaitonRootNs}", applicaitonRootNs)
+                        .Replace("{entityNamespace}", entityNamespace)
                         ;
     }
 

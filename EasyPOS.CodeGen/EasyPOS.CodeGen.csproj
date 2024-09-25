@@ -75,22 +75,20 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\AddApplicationInsights.png" />
-    <Content Include="Templates\.cs-interface.txt">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
+    <Content Include="Templates\.cs-interface.txt" />
     <Content Include="Templates\.cs.txt">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="Templates\Caching\.cachekey.cs.txt">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
+    <Content Include="Templates\Caching\.cachekey.cs.txt" />
     <Content Include="Templates\Commands\Create\.cs.txt">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="Templates\Commands\Create\.validator.cs.txt">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="Templates\Commands\Deletes\.cs.txt" />
+    <Content Include="Templates\Commands\MultipleDel\.cs.txt">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="Templates\Commands\Delete\.cs.txt">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
@@ -106,24 +104,12 @@
     <Content Include="Templates\Endpoints\.cs.txt">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="Templates\EventHandlers\.created.cs.txt">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Templates\EventHandlers\.deleted.cs.txt">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Templates\EventHandlers\.updated.cs.txt">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Templates\Events\.createdevent.cs.txt">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Templates\Events\.deletedevent.cs.txt">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Templates\Events\.updatedevent.cs.txt">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
+    <Content Include="Templates\EventHandlers\.created.cs.txt" />
+    <Content Include="Templates\EventHandlers\.deleted.cs.txt" />
+    <Content Include="Templates\EventHandlers\.updated.cs.txt" />
+    <Content Include="Templates\Events\.createdevent.cs.txt" />
+    <Content Include="Templates\Events\.deletedevent.cs.txt" />
+    <Content Include="Templates\Events\.updatedevent.cs.txt" />
     <Content Include="Templates\Persistence\Configurations\.configuration.cs.txt">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
@@ -136,15 +122,9 @@
     <Content Include="Templates\Queries\Model\.model.cs.txt">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="Templates\Specifications\AdvancedFilter.cs.txt">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Templates\Specifications\AdvancedSpecification.txt">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Templates\Specifications\ByIdSpecification.cs.txt">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
+    <Content Include="Templates\Specifications\AdvancedFilter.cs.txt" />
+    <Content Include="Templates\Specifications\AdvancedSpecification.txt" />
+    <Content Include="Templates\Specifications\ByIdSpecification.cs.txt" />
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
       <Generator>VsixManifestGenerator</Generator>
