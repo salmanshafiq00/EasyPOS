@@ -21,12 +21,7 @@ internal sealed class Get{itemname}ByIdQueryHandler(ISqlConnectionFactory sqlCon
         }
         var connection = sqlConnection.GetOpenConnection();
 
-        var sql = $"""
-            SELECT 
-                t.Id  AS {nameof({itemname}Model.Id)}, 
-                t.Name AS {nameof({itemname}Model.Name)}
-            FROM dbo.{nameofPlural} AS t
-            """;
+        {getByIdQuerySql}
 
         return await connection.QueryFirstOrDefaultAsync<{itemname}Model>(sql, new { request.Id });
     }

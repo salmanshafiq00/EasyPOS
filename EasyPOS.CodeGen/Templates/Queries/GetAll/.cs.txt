@@ -16,12 +16,7 @@ internal sealed class Get{nameofPlural}QueryHandler(ISqlConnectionFactory sqlCon
     {
         var connection = sqlConnection.GetOpenConnection();
 
-        var sql = $"""
-            SELECT 
-                t.Id  AS {nameof({itemname}Model.Id)}, 
-                t.Name AS {nameof({itemname}Model.Name)}
-            FROM dbo.{nameofPlural} AS t
-            """;
+        {getListQuerySql}
 
         return await PaginatedResponse<{itemname}Model>
             .CreateAsync(connection, sql, request);

@@ -1,10 +1,10 @@
-﻿using {entityNamespace};
+﻿using EasyPOS.Domain.Accounts;
 
-namespace {namespace};
+namespace EasyPOS.Infrastructure.Persistence.Configuration;
 
-public class {itemname}Configuration : IEntityTypeConfiguration<{itemname}>
+public class AccountConfiguration : IEntityTypeConfiguration<Account>
 {
-    public void Configure(EntityTypeBuilder<{itemname}> builder)
+    public void Configure(EntityTypeBuilder<Account> builder)
     {
         builder.HasKey(x => x.Id);
 

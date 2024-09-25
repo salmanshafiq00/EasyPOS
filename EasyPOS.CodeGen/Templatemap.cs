@@ -34,10 +34,10 @@ internal static class TemplateMap
 
 
     public static async Task<string> GetTemplateFilePathAsync(
-        Project project, 
-        IntellisenseObject classObject, 
-        string file, 
-        string itemname, 
+        Project project,
+        IntellisenseObject classObject,
+        string file,
+        string itemname,
         string selectFolder)
     {
         var templatefolders = new string[]{
@@ -95,9 +95,9 @@ internal static class TemplateMap
 
                 if (result)
                 {
-                  var fileName =  Path.GetFileNameWithoutExtension(f)
-                        .Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries)
-                        .All(x => name.IndexOf(x, StringComparison.OrdinalIgnoreCase) >= 0);
+                    var fileName = Path.GetFileNameWithoutExtension(f)
+                          .Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries)
+                          .All(x => name.IndexOf(x, StringComparison.OrdinalIgnoreCase) >= 0);
 
                     return fileName;
                 }
@@ -136,11 +136,11 @@ internal static class TemplateMap
     }
 
     private static async Task<string> ReplaceTokensAsync(
-        Project project, 
-        IntellisenseObject classObject, 
-        string name, 
-        string relative, 
-        string selectRelative, 
+        Project project,
+        IntellisenseObject classObject,
+        string name,
+        string relative,
+        string selectRelative,
         string templateFile)
     {
         if (string.IsNullOrEmpty(templateFile))
@@ -176,7 +176,9 @@ internal static class TemplateMap
         var templateFieldDefinition = CreateTemplateFieldDefinition(classObject);
         var exportFuncExpression = CreateExportFuncExpression(classObject);
         var fieldAssignmentDefinition = CreateFieldAssignmentDefinition(classObject);
-        var entityNamespace = classObject.FullName;
+        var entityNamespace = GetEntityNamespace(classObject.FullName);
+        var getByIdQuerySql = CreateGetByIdQuerySql(classObject, nameofPlural);
+        var getListQuerySql = CreateGetListQuerySql(classObject, nameofPlural);
 
         return content.Replace("{rootnamespace}", _defaultNamespace)
                         .Replace("{namespace}", ns)
@@ -194,7 +196,14 @@ internal static class TemplateMap
                         .Replace("{webRootNs}", webRootNs)
                         .Replace("{applicaitonRootNs}", applicaitonRootNs)
                         .Replace("{entityNamespace}", entityNamespace)
+                        .Replace("{getByIdQuerySql}", getByIdQuerySql)
+                        .Replace("{getListQuerySql}", getListQuerySql)
                         ;
+    }
+
+    private static string GetEntityNamespace(string fullName)
+    {
+        return fullName.Substring(0, fullName.LastIndexOf('.'));
     }
 
     private static string NormalizeLineEndings(string content)
@@ -283,7 +292,18 @@ internal static class TemplateMap
 
             }
         }
-        return output.ToString();
+
+        var result = output.ToString();
+
+        // Remove the first four leading spaces from the first line
+        var lines = result.Split(new[] { "\r\n" }, StringSplitOptions.None);
+        if (lines.Length > 0)
+        {
+            lines[0] = lines[0].TrimStart();
+        }
+
+        // Join lines back into the final string
+        return string.Join("\r\n", lines);
     }
 
     private static string CreateRecordFieldDefinition(IntellisenseObject classObject)
@@ -365,6 +385,86 @@ internal static class TemplateMap
 
         // Join lines back into the final string
         return string.Join("\r\n", lines);
+    }
+
+    private static string CreateGetByIdQuerySql(IntellisenseObject classObject, string entityPluralName)
+    {
+        var output = new StringBuilder();
+
+        // Start SQL query with proper triple quotes
+        output.AppendLine(@"var sql = $""""""");
+        output.AppendLine("            SELECT");
+        output.AppendLine($"                t.Id AS {{nameof({classObject.Name}Model.Id)}},");
+        // Get the properties count for checking the last property
+        var properties = classObject.Properties.Where(x => x.Type.IsKnownType).ToList();
+        int propertyCount = properties.Count;
+        int currentIndex = 0;
+
+        // Iterate over properties and append SQL column mappings
+        foreach (var property in properties)
+        {
+            currentIndex++;
+            if (currentIndex < propertyCount)
+            {
+                output.AppendLine($"                t.{property.Name} AS {{nameof({classObject.Name}Model.{property.Name})}},");
+            }
+            else
+            {
+                output.AppendLine($"                t.{property.Name} AS {{nameof({classObject.Name}Model.{property.Name})}}");
+            }
+        }
+
+        // Append FROM clause
+        output.AppendLine($"            FROM dbo.{entityPluralName} AS t");
+
+        // Append WHERE clause
+        output.AppendLine("            WHERE t.Id = @Id");
+
+        // End SQL query with proper triple quotes
+        output.AppendLine("            \"\"\";");
+
+        // Return the final SQL query as a string
+        return output.ToString();
+    }
+
+    private static string CreateGetListQuerySql(IntellisenseObject classObject, string entityPluralName)
+    {
+        var output = new StringBuilder();
+
+        // Start SQL query with proper triple quotes
+        output.AppendLine(@"var sql = $""""""");
+        output.AppendLine("            SELECT");
+        output.AppendLine($"                t.Id AS {{nameof({classObject.Name}Model.Id)}},");
+        // Get the properties count for checking the last property
+        var properties = classObject.Properties.Where(x => x.Type.IsKnownType).ToList();
+        int propertyCount = properties.Count;
+        int currentIndex = 0;
+
+        // Iterate over properties and append SQL column mappings
+        foreach (var property in properties)
+        {
+            currentIndex++;
+            if (currentIndex < propertyCount)
+            {
+                output.AppendLine($"                t.{property.Name} AS {{nameof({classObject.Name}Model.{property.Name})}},");
+            }
+            else
+            {
+                output.AppendLine($"                t.{property.Name} AS {{nameof({classObject.Name}Model.{property.Name})}}");
+            }
+        }
+
+        // Append FROM clause
+        output.AppendLine($"            FROM dbo.{entityPluralName} AS t");
+
+        // Append WHERE clause
+        output.AppendLine("            WHERE 1 = 1");
+
+        // End SQL query with proper triple quotes
+        output.AppendLine("            \"\"\";");
+
+        // Return the final SQL query as a string
+        return output.ToString();
     }
 
 
