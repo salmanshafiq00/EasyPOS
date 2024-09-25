@@ -289,9 +289,9 @@ internal static class TemplateMap
     private static string CreateRecordFieldDefinition(IntellisenseObject classObject)
     {
         var output = new StringBuilder();
+
         foreach (var property in classObject.Properties.Where(x => x.Type.IsKnownType == true))
         {
-            //output.Append($"    [Description(\"{SplitCamelCase(property.Name)}\")]\r\n");
             if (property.Name == PRIMARYKEY)
             {
                 output.Append($"    {property.Type.CodeName} {property.Name}, \r\n");
@@ -330,7 +330,7 @@ internal static class TemplateMap
                         output.Append($"    {property.Type.CodeName} {property.Name}, \r\n");
                         break;
                     default:
-                        if (property.Type.CodeName.Any(x => x == '?'))
+                        if (property.Type.CodeName.Contains('?'))
                         {
                             output.Append($"    {property.Type.CodeName} {property.Name}, \r\n");
                         }
@@ -347,11 +347,26 @@ internal static class TemplateMap
                         }
                         break;
                 }
-
             }
         }
-        return output.ToString();
+
+        // Convert StringBuilder to string
+        var result = output.ToString();
+
+        // Remove trailing comma and new line from the last property
+        result = result.TrimEnd(new[] { ',', ' ', '\r', '\n' });
+
+        // Remove the first four leading spaces from the first line
+        var lines = result.Split(new[] { "\r\n" }, StringSplitOptions.None);
+        if (lines.Length > 0)
+        {
+            lines[0] = lines[0].TrimStart();
+        }
+
+        // Join lines back into the final string
+        return string.Join("\r\n", lines);
     }
+
 
     private static string CreateImportFuncExpression(IntellisenseObject classObject)
     {
