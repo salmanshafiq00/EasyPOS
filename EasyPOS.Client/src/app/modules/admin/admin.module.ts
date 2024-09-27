@@ -19,10 +19,10 @@ import { TabViewModule } from 'primeng/tabview';
   ],
   imports: [
     CommonModule,
-    AdminRoutingModule,
     FormsModule,
     ReactiveFormsModule,
     AppSharedModule,
+    AdminRoutingModule,
     DropdownModule,
     DragDropModule,
     TabMenuModule,

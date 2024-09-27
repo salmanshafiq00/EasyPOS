@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 
-namespace CodeGen.Models;
+namespace EasyPOS.CodeGen.Models;
 
 public sealed class IntellisenseType
 {

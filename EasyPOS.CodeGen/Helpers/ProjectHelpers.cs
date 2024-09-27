@@ -1,4 +1,4 @@
-﻿using CodeGen.Models;
+﻿using EasyPOS.CodeGen.Models;
 using EnvDTE;
 using EnvDTE80;
 using Microsoft;
@@ -14,7 +14,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 
-namespace CodeGen.Helpers;
+namespace EasyPOS.CodeGen.Helpers;
 
 public static class ProjectHelpers
 {

@@ -1,10 +1,10 @@
-﻿using CodeGen.Helpers;
-using CodeGen.Models;
+﻿using EasyPOS.CodeGen.Helpers;
+using EasyPOS.CodeGen.Models;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 
-namespace CodeGen.Services;
+namespace EasyPOS.CodeGen.Services;
 
 internal static class IntellisenseWriter
 {

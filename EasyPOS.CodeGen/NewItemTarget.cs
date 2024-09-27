@@ -1,4 +1,4 @@
-﻿using CodeGen.Helpers;
+﻿using EasyPOS.CodeGen.Helpers;
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio.Shell;
@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 
 
-namespace CodeGen;
+namespace EasyPOS.CodeGen;
 public sealed class NewItemTarget
 {
 

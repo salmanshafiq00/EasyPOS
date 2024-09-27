@@ -13,8 +13,8 @@
     <ProjectGuid>{62A64C5B-3283-4A9F-8D6C-BF90BEAB3B62}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CodeGen</RootNamespace>
-    <AssemblyName>CodeGen</AssemblyName>
+    <RootNamespace>EasyPOS.CodeGen</RootNamespace>
+    <AssemblyName>EasyPOS.CodeGen</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <GeneratePkgDefFile>true</GeneratePkgDefFile>
     <UseCodebase>true</UseCodebase>

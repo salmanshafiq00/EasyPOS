@@ -53,6 +53,7 @@ public sealed class ApplicationDbContext : DbContext, IApplicationDbContext
 
     #region Accounts
     public DbSet<Account> Accounts => Set<Account>();
+    public DbSet<MoneyTransfer> MoneyTransfers => Set<MoneyTransfer>();
 
     #endregion
 

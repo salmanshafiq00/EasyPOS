@@ -42,7 +42,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="GeneratedClient\Detail\" />
+    <Folder Include="GeneratedClient\" />
     <Folder Include="Resources\files\" />
     <Folder Include="wwwroot\uploads\user-photos\" />
   </ItemGroup>

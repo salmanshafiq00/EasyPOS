@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CodeGen.Models;
+namespace EasyPOS.CodeGen.Models;
 
 public class IntellisenseObject : IEquatable<IntellisenseObject>
 {

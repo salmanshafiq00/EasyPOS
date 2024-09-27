@@ -53,6 +53,7 @@ public interface IApplicationDbContext
 
     #region Accounts
     DbSet<Account> Accounts { get; }
+    DbSet<MoneyTransfer> MoneyTransfers { get; }
 
     #endregion
 

@@ -56,9 +56,11 @@ public static class CacheKeys
 
     #endregion
 
-    #region Account
+    #region MoneyTransfer
     public const string Account = nameof(Account);
     public const string Account_All_SelectList = nameof(Account_All_SelectList);
+    public const string MoneyTransfer = nameof(MoneyTransfer);
+    public const string MoneyTransfer_All_SelectList = nameof(MoneyTransfer_All_SelectList);
 
     #endregion
 }

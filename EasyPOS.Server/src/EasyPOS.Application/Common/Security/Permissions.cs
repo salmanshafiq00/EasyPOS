@@ -228,5 +228,13 @@ public static class Permissions
         public const string Delete = "Permissions.Accounts.Delete";
     }
 
+    public static class MoneyTransfers
+    {
+        public const string View = "Permissions.MoneyTransfers.View";
+        public const string Create = "Permissions.MoneyTransfers.Create";
+        public const string Edit = "Permissions.MoneyTransfers.Edit";
+        public const string Delete = "Permissions.MoneyTransfers.Delete";
+    }
+
     #endregion
 }

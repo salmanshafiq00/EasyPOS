@@ -1,8 +1,8 @@
 ﻿global using System;
 global using System.Text;
 global using System.Linq;
-using CodeGen.Helpers;
-using CodeGen.Models;
+using EasyPOS.CodeGen.Helpers;
+using EasyPOS.CodeGen.Models;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.IO;
@@ -18,8 +18,9 @@ using EnvDTE;
 using Microsoft.VisualStudio.Threading;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio;
+using EasyPOS.CodeGen;
 
-namespace CodeGen;
+namespace EasyPOS.CodeGen;
 
 [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
 [InstalledProductRegistration(Vsix.Name, Vsix.Description, Vsix.Version, IconResourceID = 400)]
@@ -122,21 +123,21 @@ public sealed class CodeGenPackage : AsyncPackage
                         };
                 foreach (var item in configurations)
                 {
-                    //AddItemAsync(objectClass, item, name, infrastructure).Forget();
+                    AddItemAsync(objectClass, item, name, infrastructure).Forget();
                 }
 
                 var list = new List<string>()
                 {
-                    //$"{nameofPlural}/Commands/Create/Create{name}Command.cs",
-                    //$"{nameofPlural}/Commands/Create/Create{name}CommandValidator.cs",
-                    //$"{nameofPlural}/Commands/Delete/Delete{name}Command.cs",
-                    //$"{nameofPlural}/Commands/MultipleDel/Delete{nameofPlural}Command.cs",
-                    //$"{nameofPlural}/Commands/Update/Update{name}Command.cs",
-                    //$"{nameofPlural}/Commands/Update/Update{name}CommandValidator.cs",
+                    $"{nameofPlural}/Commands/Create/Create{name}Command.cs",
+                    $"{nameofPlural}/Commands/Create/Create{name}CommandValidator.cs",
+                    $"{nameofPlural}/Commands/Delete/Delete{name}Command.cs",
+                    $"{nameofPlural}/Commands/MultipleDel/Delete{nameofPlural}Command.cs",
+                    $"{nameofPlural}/Commands/Update/Update{name}Command.cs",
+                    $"{nameofPlural}/Commands/Update/Update{name}CommandValidator.cs",
 
-                    //$"{nameofPlural}/Queries/GetAll/Get{nameofPlural}ListQuery.cs",
-                    //$"{nameofPlural}/Queries/GetById/Get{name}ByIdQuery.cs",
-                    //$"{nameofPlural}/Queries/Model/{name}Model.cs"
+                    $"{nameofPlural}/Queries/GetAll/Get{nameofPlural}ListQuery.cs",
+                    $"{nameofPlural}/Queries/GetById/Get{name}ByIdQuery.cs",
+                    $"{nameofPlural}/Queries/Model/{name}Model.cs"
 
 
                     //$"{nameofPlural}/Commands/AddEdit/AddEdit{name}Command.cs",
@@ -165,12 +166,12 @@ public sealed class CodeGenPackage : AsyncPackage
 
                 // Add Endpoints
                 var pages = new List<string>()
-                    {
-                        //$"Endpoints/{nameofPlural}.cs",
-                    };
+                {
+                    $"Endpoints/{nameofPlural}.cs",
+                };
                 foreach (var item in pages)
                 {
-                    //AddItemAsync(objectClass, item, name, ui).Forget();
+                    AddItemAsync(objectClass, item, name, ui).Forget();
                 }
 
                 // Generated Client

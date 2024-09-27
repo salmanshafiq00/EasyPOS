@@ -12,9 +12,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
   ],
   imports: [
     CommonModule,
-    AppSharedModule,
     FormsModule,
     ReactiveFormsModule,
+    AppSharedModule,
     AccountsRoutingModule
   ]
 })

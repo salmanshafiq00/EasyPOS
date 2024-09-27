@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Xml.Linq;
 
-namespace CodeGen.Helpers;
+namespace EasyPOS.CodeGen.Helpers;
 
 internal static class Utility
 {

@@ -1,10 +1,10 @@
 ﻿using EasyPOS.Domain.Accounts;
 
-namespace EasyPOS.Infrastructure.Persistence.Configuration;
+namespace EasyPOS.Infrastructure.Persistence.Configurations.Accounts;
 
-public class AccountConfiguration : IEntityTypeConfiguration<Account>
+public class MoneyTransferConfiguration : IEntityTypeConfiguration<MoneyTransfer>
 {
-    public void Configure(EntityTypeBuilder<Account> builder)
+    public void Configure(EntityTypeBuilder<MoneyTransfer> builder)
     {
         builder.HasKey(x => x.Id);
 
@@ -12,7 +12,6 @@ public class AccountConfiguration : IEntityTypeConfiguration<Account>
                .HasDefaultValueSql("NEWSEQUENTIALID()")
                .ValueGeneratedOnAdd();
 
-        builder.Property(t => t.Name).HasMaxLength(50).IsRequired();
         //builder.Ignore(e => e.DomainEvents);
     }
 }

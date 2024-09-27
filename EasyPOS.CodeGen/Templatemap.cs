@@ -4,12 +4,12 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using CodeGen.Helpers;
-using CodeGen.Models;
+using EasyPOS.CodeGen.Helpers;
+using EasyPOS.CodeGen.Models;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 
-namespace CodeGen;
+namespace EasyPOS.CodeGen;
 
 internal static class TemplateMap
 {
@@ -246,7 +246,7 @@ internal static class TemplateMap
     private static string CreateDtoFieldDefinition(IntellisenseObject classObject)
     {
         var output = new StringBuilder();
-        foreach (var property in classObject.Properties.Where(x => x.Type.IsKnownType == true))
+        foreach (var property in classObject.Properties.Where(x => x.Type.IsKnownType == true || x.Type.CodeName == "System.Guid" || x.Type.CodeName == "System.Guid?"))
         {
             //output.Append($"    [Description(\"{SplitCamelCase(property.Name)}\")]\r\n");
             if (property.Name == PRIMARYKEY)
@@ -271,6 +271,12 @@ internal static class TemplateMap
                         break;
                     case "System.DateTime":
                         output.Append($"    public DateTime {property.Name} {{get;set;}} \r\n");
+                        break;
+                    case "System.Guid?":
+                        output.Append($"    public Guid? {property.Name} {{get;set;}} \r\n");
+                        break;
+                    case "System.Guid":
+                        output.Append($"    public Guid {property.Name} {{get;set;}} \r\n");
                         break;
                     case "decimal?":
                     case "decimal":
@@ -319,7 +325,7 @@ internal static class TemplateMap
     {
         var output = new StringBuilder();
 
-        foreach (var property in classObject.Properties.Where(x => x.Type.IsKnownType == true))
+        foreach (var property in classObject.Properties.Where(x => x.Type.IsKnownType == true || x.Type.CodeName == "System.Guid" || x.Type.CodeName == "System.Guid?"))
         {
             if (property.Name == PRIMARYKEY)
             {
@@ -405,7 +411,7 @@ internal static class TemplateMap
         output.AppendLine("            SELECT");
         output.AppendLine($"                t.Id AS {{nameof({classObject.Name}Model.Id)}},");
         // Get the properties count for checking the last property
-        var properties = classObject.Properties.Where(x => x.Type.IsKnownType).ToList();
+        var properties = classObject.Properties.Where(x => x.Type.IsKnownType || x.Type.CodeName == "System.Guid" || x.Type.CodeName == "System.Guid?").ToList();
         int propertyCount = properties.Count;
         int currentIndex = 0;
 
@@ -445,7 +451,7 @@ internal static class TemplateMap
         output.AppendLine("            SELECT");
         output.AppendLine($"                t.Id AS {{nameof({classObject.Name}Model.Id)}},");
         // Get the properties count for checking the last property
-        var properties = classObject.Properties.Where(x => x.Type.IsKnownType).ToList();
+        var properties = classObject.Properties.Where(x => x.Type.IsKnownType || x.Type.CodeName == "System.Guid" || x.Type.CodeName == "System.Guid?").ToList();
         int propertyCount = properties.Count;
         int currentIndex = 0;
 
@@ -481,7 +487,7 @@ internal static class TemplateMap
         var output = new StringBuilder();
 
         // Get the properties count for checking the last property
-        var properties = classObject.Properties.Where(x => x.Type.IsKnownType).ToList();
+        var properties = classObject.Properties.Where(x => x.Type.IsKnownType || x.Type.CodeName == "System.Guid" || x.Type.CodeName == "System.Guid?").ToList();
         int propertyCount = properties.Count;
         int currentIndex = 0;
 
@@ -511,9 +517,7 @@ internal static class TemplateMap
         var output = new StringBuilder();
 
         // Get the properties count for checking the last property
-        var properties = classObject.Properties.Where(x => x.Type.IsKnownType).ToList();
-        int propertyCount = properties.Count;
-        int currentIndex = 0;
+        var properties = classObject.Properties.Where(x => x.Type.IsKnownType || x.Type.CodeName == "System.Guid" || x.Type.CodeName == "System.Guid?").ToList();
 
         // Iterate over properties and append SQL column mappings
         foreach (var property in properties)
@@ -523,7 +527,7 @@ internal static class TemplateMap
                 case "string" when property.Name.Equals("Name", StringComparison.OrdinalIgnoreCase):
                     output.AppendLine($"""
                             <div class="field col-12 md:col-6">
-                                <app-input-text label="{property.Name}" formControlName="{property.Name.ToLower()}" [required]="false" [readonly]="false" />
+                                <app-input-text label="{property.Name}" formControlName="{property.Name.ToCamelCase()}" [required]="false" [readonly]="false" />
                                 <app-validator-msg [control]="f['{property.Name.ToLower()}']" />
                             </div>
                         """);
@@ -532,7 +536,7 @@ internal static class TemplateMap
                 case "System.DateTime":
                     output.AppendLine($"""
                             <div class="field col-12 md:col-6">
-                              <app-input-date label="{property.Name}" formControlName="{property.Name.ToLower()}" [required]="false" />
+                              <app-input-date label="{property.Name}" formControlName="{property.Name.ToCamelCase()}" [required]="false" />
                             </div>
                         """);
                     break;
@@ -540,7 +544,7 @@ internal static class TemplateMap
                 case "System.Guid":
                     output.AppendLine($"""
                             <div class="field col-12 md:col-6">
-                              <app-input-select label="{property.Name}" formControlName="{property.Name.ToLower()}" [options]="optionsDataSources?.['{property.Name.ToLower()}SelectList']"
+                              <app-input-select label="{property.Name}" formControlName="{property.Name.ToCamelCase()}" [options]="optionsDataSources?.['SelectList']"
                                 [required]="false" />
                             </div>
                         """);
@@ -551,7 +555,7 @@ internal static class TemplateMap
                 case "double":
                     output.AppendLine($""""
                             <div class="field col-12 md:col-6">
-                              <app-input-decimal label="{property.Name}" formControlName="{property.Name.ToLower()}" textAlign="right" [showButtons]="false" [required]="false" />
+                              <app-input-decimal label="{property.Name}" formControlName="{property.Name.ToCamelCase()}" textAlign="right" [showButtons]="false" [required]="false" />
                             </div>
                         """");
                     break;
@@ -559,7 +563,7 @@ internal static class TemplateMap
                 case "int":
                     output.AppendLine($""""
                             <div class="field col-12 md:col-6">
-                              <app-input-number label="{property.Name}" formControlName="{property.Name.ToLower()}" textAlign="right" [showButtons]="false" [required]="false" />
+                              <app-input-number label="{property.Name}" formControlName="{property.Name.ToCamelCase()}" textAlign="right" [showButtons]="false" [required]="false" />
                             </div>
                         """");
                     break;
@@ -567,15 +571,15 @@ internal static class TemplateMap
                 case "bool?":
                     output.AppendLine($""""
                             <div class="field col-12 md:col-6 md:flex align-items-center md:mt-4">
-                              <app-input-switch label="{property.Name}" formControlName="{property.Name.ToLower()}" />
+                              <app-input-switch label="{property.Name}" formControlName="{property.Name.ToCamelCase()}" />
                             </div>
                         """");
                     break;
                 default:
                     output.AppendLine($"""
                             <div class="field col-12 md:col-6">
-                              <app-input-text label="{property.Name}" formControlName="{property.Name.ToLower()}" [required]="false" [readonly]="false" />
-                              <app-validator-msg [control]="f['{property.Name.ToLower()}']"></app-validator-msg>
+                              <app-input-text label="{property.Name}" formControlName="{property.Name.ToCamelCase()}" [required]="false" [readonly]="false" />
+                              <app-validator-msg [control]="f['{property.Name.ToCamelCase()}']"></app-validator-msg>
                             </div>
                         """);
                     break;

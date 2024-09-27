@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Media.Imaging;
 
 
-namespace CodeGen;
+namespace EasyPOS.CodeGen;
 public partial class FileNameDialog : Window
 {
     private const string DEFAULT_TEXT = "Select a entity name";
@@ -33,7 +33,7 @@ public partial class FileNameDialog : Window
     {
         BitmapImage icon = new();
         icon.BeginInit();
-        icon.UriSource = new Uri("pack://application:,,,/CodeGen;component/Resources/AddApplicationInsights.png");
+        icon.UriSource = new Uri("pack://application:,,,/EasyPOS.CodeGen;component/Resources/AddApplicationInsights.png");
         icon.EndInit();
         Title = "Code Generation CA";
         SetRandomTip();
