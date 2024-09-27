@@ -218,4 +218,15 @@ public static class Permissions
         public const string Delete = "Permissions.Sales.Delete";
     }
     #endregion
+
+    #region Accounts
+    public static class Accounts
+    {
+        public const string View = "Permissions.Accounts.View";
+        public const string Create = "Permissions.Accounts.Create";
+        public const string Edit = "Permissions.Accounts.Edit";
+        public const string Delete = "Permissions.Accounts.Delete";
+    }
+
+    #endregion
 }

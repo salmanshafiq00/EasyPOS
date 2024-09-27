@@ -1,8 +1,7 @@
 import { Component, Inject } from '@angular/core';
-import { Validators } from '@angular/forms';
-import { CategoriesClient } from 'src/app/modules/generated-clients/api-service';
 import { BaseDetailComponent } from 'src/app/shared/components/base-detail/base-detail.component';
 import { ENTITY_CLIENT } from 'src/app/shared/injection-tokens/tokens';
+import { CategoriesClient } from 'src/app/modules/generated-clients/api-service';
 
 @Component({
   selector: 'app-category-detail',
@@ -19,7 +18,7 @@ export class CategoryDetailComponent extends BaseDetailComponent {
   override initializeFormGroup() {
     this.form = this.fb.group({
       id: [''],
-      name: ['', Validators.required],
+      name: [''],
       description: [''],
       parentId: [null],
       photoUrl: ['']

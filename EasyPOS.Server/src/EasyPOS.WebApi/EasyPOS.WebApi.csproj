@@ -6,6 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ClientApp\**" />
+    <Content Remove="ClientApp\**" />
+    <EmbeddedResource Remove="ClientApp\**" />
+    <None Remove="ClientApp\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\EasyPOS.Application\EasyPOS.Application.csproj" />
     <ProjectReference Include="..\EasyPOS.Infrastructure\EasyPOS.Infrastructure.csproj" />
   </ItemGroup>
@@ -35,6 +42,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="GeneratedClient\Detail\" />
     <Folder Include="Resources\files\" />
     <Folder Include="wwwroot\uploads\user-photos\" />
   </ItemGroup>

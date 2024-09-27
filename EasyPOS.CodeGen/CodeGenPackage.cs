@@ -31,7 +31,7 @@ public sealed class CodeGenPackage : AsyncPackage
     public const string UIPROJECT = "EasyPOS.WebApi";
     public const string INFRASTRUCTUREPROJECT = "EasyPOS.Infrastructure";
     public const string APPLICATIONPROJECT = "EasyPOS.Application";
-    public const string ClientApp = "EasyPOS.Client";
+    //public const string ClientApp = "EasyPOS.Client";
 
     private const string _solutionItemsProjectName = "Solution Items";
     private static readonly Regex _reservedFileNamePattern = new($@"(?i)^(PRN|AUX|NUL|CON|COM\d|LPT\d)(\.|$)");
@@ -68,7 +68,7 @@ public sealed class CodeGenPackage : AsyncPackage
         NewItemTarget infrastructure = NewItemTarget.Create(_dte, INFRASTRUCTUREPROJECT);
         NewItemTarget ui = NewItemTarget.Create(_dte, UIPROJECT);
         NewItemTarget application = NewItemTarget.Create(_dte, APPLICATIONPROJECT);
-        NewItemTarget clientApp = NewItemTarget.Create(_dte, ClientApp);
+        //NewItemTarget clientApp = NewItemTarget.Create(_dte, ClientApp);
 
         DomainRootNs = domain.Project.GetRootNamespace();
         ApplicaitonRootNs = application.Project.GetRootNamespace();
@@ -122,37 +122,42 @@ public sealed class CodeGenPackage : AsyncPackage
                         };
                 foreach (var item in configurations)
                 {
-                    AddItemAsync(objectClass, item, name, infrastructure).Forget();
+                    //AddItemAsync(objectClass, item, name, infrastructure).Forget();
                 }
 
                 var list = new List<string>()
-                    {
-                        //$"{nameofPlural}/Commands/AddEdit/AddEdit{name}Command.cs",
-                        //$"{nameofPlural}/Commands/AddEdit/AddEdit{name}CommandValidator.cs",
-                        $"{nameofPlural}/Commands/Create/Create{name}Command.cs",
-                        $"{nameofPlural}/Commands/Create/Create{name}CommandValidator.cs",
-                        $"{nameofPlural}/Commands/Delete/Delete{name}Command.cs",
-                        $"{nameofPlural}/Commands/MultipleDel/Delete{nameofPlural}Command.cs",
-                        $"{nameofPlural}/Commands/Update/Update{name}Command.cs",
-                        $"{nameofPlural}/Commands/Update/Update{name}CommandValidator.cs",
-                        //$"{nameofPlural}/Commands/Import/Import{nameofPlural}Command.cs",
-                        //$"{nameofPlural}/Commands/Import/Import{nameofPlural}CommandValidator.cs",
-                        //$"{nameofPlural}/Caching/{name}CacheKey.cs",
-                        //$"{nameofPlural}/DTOs/{name}Dto.cs",
-                        //$"{nameofPlural}/EventHandlers/{name}CreatedEventHandler.cs",
-                        //$"{nameofPlural}/EventHandlers/{name}UpdatedEventHandler.cs",
-                        //$"{nameofPlural}/EventHandlers/{name}DeletedEventHandler.cs",
-                        //$"{nameofPlural}/Specifications/{name}AdvancedFilter.cs",
-                        //$"{nameofPlural}/Specifications/{name}AdvancedSpecification.cs",
-                        //$"{nameofPlural}/Specifications/{name}ByIdSpecification.cs",
-                        //$"{nameofPlural}/Queries/Export/Export{nameofPlural}Query.cs",
-                        $"{nameofPlural}/Queries/GetAll/Get{nameofPlural}ListQuery.cs",
-                        $"{nameofPlural}/Queries/GetById/Get{name}ByIdQuery.cs",
-                        $"{nameofPlural}/Queries/Model/{name}Model.cs"
-                        
-                        //$"{nameofPlural}/Queries/Pagination/{nameofPlural}PaginationQuery.cs",
+                {
+                    //$"{nameofPlural}/Commands/Create/Create{name}Command.cs",
+                    //$"{nameofPlural}/Commands/Create/Create{name}CommandValidator.cs",
+                    //$"{nameofPlural}/Commands/Delete/Delete{name}Command.cs",
+                    //$"{nameofPlural}/Commands/MultipleDel/Delete{nameofPlural}Command.cs",
+                    //$"{nameofPlural}/Commands/Update/Update{name}Command.cs",
+                    //$"{nameofPlural}/Commands/Update/Update{name}CommandValidator.cs",
 
-                    };
+                    //$"{nameofPlural}/Queries/GetAll/Get{nameofPlural}ListQuery.cs",
+                    //$"{nameofPlural}/Queries/GetById/Get{name}ByIdQuery.cs",
+                    //$"{nameofPlural}/Queries/Model/{name}Model.cs"
+
+
+                    //$"{nameofPlural}/Commands/AddEdit/AddEdit{name}Command.cs",
+                    //$"{nameofPlural}/Commands/AddEdit/AddEdit{name}CommandValidator.cs",
+
+                    //$"{nameofPlural}/Commands/Import/Import{nameofPlural}Command.cs",
+                    //$"{nameofPlural}/Commands/Import/Import{nameofPlural}CommandValidator.cs",
+                    //$"{nameofPlural}/Caching/{name}CacheKey.cs",
+                    //$"{nameofPlural}/DTOs/{name}Dto.cs",
+                    //$"{nameofPlural}/EventHandlers/{name}CreatedEventHandler.cs",
+                    //$"{nameofPlural}/EventHandlers/{name}UpdatedEventHandler.cs",
+                    //$"{nameofPlural}/EventHandlers/{name}DeletedEventHandler.cs",
+                    //$"{nameofPlural}/Specifications/{name}AdvancedFilter.cs",
+                    //$"{nameofPlural}/Specifications/{name}AdvancedSpecification.cs",
+                    //$"{nameofPlural}/Specifications/{name}ByIdSpecification.cs",
+                    //$"{nameofPlural}/Queries/Export/Export{nameofPlural}Query.cs",
+
+
+                    //$"{nameofPlural}/Queries/Pagination/{nameofPlural}PaginationQuery.cs",
+
+                };
                 foreach (var item in list)
                 {
                     AddItemAsync(objectClass, item, name, target).Forget();
@@ -161,9 +166,24 @@ public sealed class CodeGenPackage : AsyncPackage
                 // Add Endpoints
                 var pages = new List<string>()
                     {
-                        $"Endpoints/{nameofPlural}.cs",
+                        //$"Endpoints/{nameofPlural}.cs",
                     };
                 foreach (var item in pages)
+                {
+                    //AddItemAsync(objectClass, item, name, ui).Forget();
+                }
+
+                // Generated Client
+                var generatedClientPages = new List<string>()
+                {
+                    $"GeneratedClient/List/{name.ToLower()}-list/{name.ToLower()}-list.component.html",
+                    $"GeneratedClient/List/{name.ToLower()}-list/{name.ToLower()}-list.component.scss",
+                    $"GeneratedClient/List/{name.ToLower()}-list/{name.ToLower()}-list.component.ts",
+                    $"GeneratedClient/Detail/{name.ToLower()}-detail/{name.ToLower()}-detail.component.html",
+                    $"GeneratedClient/Detail/{name.ToLower()}-detail/{name.ToLower()}-detail.component.scss",
+                    $"GeneratedClient/Detail/{name.ToLower()}-detail/{name.ToLower()}-detail.component.ts",
+                };
+                foreach (var item in generatedClientPages)
                 {
                     AddItemAsync(objectClass, item, name, ui).Forget();
                 }

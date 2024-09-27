@@ -1,0 +1,16 @@
+﻿import { Component, inject } from '@angular/core';
+import { {itemname}DetailComponent } from '../{itemnameLower}-detail/{itemnameLower}-detail.component';
+import { {nameofPlural}Client } from 'src/app/modules/generated-clients/api-service';
+
+@Component({
+  selector: 'app-{itemnameLower}-list',
+  templateUrl: './{itemnameLower}-list.component.html',
+  styleUrl: './{itemnameLower}-list.component.scss',
+  providers: [{nameofPlural}Client]
+})
+export class {itemname}ListComponent {
+  detailComponent = {itemname}DetailComponent;
+  pageId = ''
+
+  entityClient: {nameofPlural}Client = inject({nameofPlural}Client);
+}

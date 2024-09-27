@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Xml.Linq;
 
 namespace CodeGen.Helpers;
 
@@ -15,6 +16,11 @@ internal static class Utility
     }
 
     public static string CamelCasePropertyName(string name)
+    {
+        return CamelCase(name);
+    }
+
+    public static string ToCamelCase(this string name)
     {
         return CamelCase(name);
     }

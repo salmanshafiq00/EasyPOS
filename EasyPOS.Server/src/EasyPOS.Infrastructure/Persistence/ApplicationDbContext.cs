@@ -1,11 +1,11 @@
 ﻿using System.Reflection;
 using EasyPOS.Application.Common.Abstractions;
+using EasyPOS.Domain.Accounts;
 using EasyPOS.Domain.Admin;
 using EasyPOS.Domain.Common;
 using EasyPOS.Domain.Products;
 using EasyPOS.Domain.Stakeholders;
 using EasyPOS.Domain.Trades;
-using Microsoft.EntityFrameworkCore;
 
 namespace EasyPOS.Infrastructure.Persistence;
 
@@ -49,6 +49,11 @@ public sealed class ApplicationDbContext : DbContext, IApplicationDbContext
     #region Trades
     public DbSet<Purchase> Purchases => Set<Purchase>();
     public DbSet<Sale> Sales => Set<Sale>();
+    #endregion
+
+    #region Accounts
+    public DbSet<Account> Accounts => Set<Account>();
+
     #endregion
 
     protected override void OnModelCreating(ModelBuilder builder)

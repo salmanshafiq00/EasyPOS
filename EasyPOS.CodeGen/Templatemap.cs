@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using CodeGen.Helpers;
@@ -55,7 +56,9 @@ internal static class TemplateMap
             "Queries\\GetById",
             "Queries\\Model",
             "Persistence\\Configurations",
-            "Endpoints"
+            "Endpoints",
+            "GeneratedClient\\List",
+            "GeneratedClient\\Detail"
             };
         var extension = Path.GetExtension(file).ToLowerInvariant();
         var name = Path.GetFileName(file);
@@ -179,12 +182,16 @@ internal static class TemplateMap
         var entityNamespace = GetEntityNamespace(classObject.FullName);
         var getByIdQuerySql = CreateGetByIdQuerySql(classObject, nameofPlural);
         var getListQuerySql = CreateGetListQuerySql(classObject, nameofPlural);
+        var formInitializationProperties = CreateFormInitializationProperties(classObject, nameofPlural);
+        var formControls = CreateFormControls(classObject, nameofPlural);
 
         return content.Replace("{rootnamespace}", _defaultNamespace)
                         .Replace("{namespace}", ns)
                         .Replace("{selectns}", selectNs)
                         .Replace("{itemname}", name)
+                        .Replace("{itemnameLower}", name.ToLower())
                         .Replace("{nameofPlural}", nameofPlural)
+                        .Replace("{nameofPluralLower}", nameofPlural.ToLower())
                         .Replace("{dtoFieldDefinition}", dtoFieldDefinition)
                         .Replace("{recordFieldDefinition}", recordFieldDefinition)
                         .Replace("{fieldAssignmentDefinition}", fieldAssignmentDefinition)
@@ -198,6 +205,8 @@ internal static class TemplateMap
                         .Replace("{entityNamespace}", entityNamespace)
                         .Replace("{getByIdQuerySql}", getByIdQuerySql)
                         .Replace("{getListQuerySql}", getListQuerySql)
+                        .Replace("{formInitializationProperties}", formInitializationProperties)
+                        .Replace("{formControls}", formControls)
                         ;
     }
 
@@ -466,6 +475,115 @@ internal static class TemplateMap
         // Return the final SQL query as a string
         return output.ToString();
     }
+
+    private static string CreateFormInitializationProperties(IntellisenseObject classObject, string entityPluralName)
+    {
+        var output = new StringBuilder();
+
+        // Get the properties count for checking the last property
+        var properties = classObject.Properties.Where(x => x.Type.IsKnownType).ToList();
+        int propertyCount = properties.Count;
+        int currentIndex = 0;
+
+        // Iterate over properties and append SQL column mappings
+        foreach (var property in properties)
+        {
+            var propertyss =  property.Type.CodeName;
+            currentIndex++;
+            if (currentIndex < propertyCount && currentIndex == 1)
+            {
+                output.AppendLine($"{property.Name.ToCamelCase()}: [null],");
+            }
+            else if (currentIndex < propertyCount)
+            {
+                output.AppendLine($"      {property.Name.ToCamelCase()}: [null],");
+            }
+            else
+            {
+                output.AppendLine($"      {property.Name.ToCamelCase()}: [null]");
+            }
+        }
+        return output.ToString();
+    }
+
+    private static string CreateFormControls(IntellisenseObject classObject, string entityPluralName)
+    {
+        var output = new StringBuilder();
+
+        // Get the properties count for checking the last property
+        var properties = classObject.Properties.Where(x => x.Type.IsKnownType).ToList();
+        int propertyCount = properties.Count;
+        int currentIndex = 0;
+
+        // Iterate over properties and append SQL column mappings
+        foreach (var property in properties)
+        {
+            switch (property.Type.CodeName)
+            {
+                case "string" when property.Name.Equals("Name", StringComparison.OrdinalIgnoreCase):
+                    output.AppendLine($"""
+                            <div class="field col-12 md:col-6">
+                                <app-input-text label="{property.Name}" formControlName="{property.Name.ToLower()}" [required]="false" [readonly]="false" />
+                                <app-validator-msg [control]="f['{property.Name.ToLower()}']" />
+                            </div>
+                        """);
+                    break;
+                case "System.DateTime?":
+                case "System.DateTime":
+                    output.AppendLine($"""
+                            <div class="field col-12 md:col-6">
+                              <app-input-date label="{property.Name}" formControlName="{property.Name.ToLower()}" [required]="false" />
+                            </div>
+                        """);
+                    break;
+                case "System.Guid?":
+                case "System.Guid":
+                    output.AppendLine($"""
+                            <div class="field col-12 md:col-6">
+                              <app-input-select label="{property.Name}" formControlName="{property.Name.ToLower()}" [options]="optionsDataSources?.['{property.Name.ToLower()}SelectList']"
+                                [required]="false" />
+                            </div>
+                        """);
+                    break;
+                case "decimal?":
+                case "decimal":
+                case "double?":
+                case "double":
+                    output.AppendLine($""""
+                            <div class="field col-12 md:col-6">
+                              <app-input-decimal label="{property.Name}" formControlName="{property.Name.ToLower()}" textAlign="right" [showButtons]="false" [required]="false" />
+                            </div>
+                        """");
+                    break;
+                case "int?":
+                case "int":
+                    output.AppendLine($""""
+                            <div class="field col-12 md:col-6">
+                              <app-input-number label="{property.Name}" formControlName="{property.Name.ToLower()}" textAlign="right" [showButtons]="false" [required]="false" />
+                            </div>
+                        """");
+                    break;
+                case "bool":
+                case "bool?":
+                    output.AppendLine($""""
+                            <div class="field col-12 md:col-6 md:flex align-items-center md:mt-4">
+                              <app-input-switch label="{property.Name}" formControlName="{property.Name.ToLower()}" />
+                            </div>
+                        """");
+                    break;
+                default:
+                    output.AppendLine($"""
+                            <div class="field col-12 md:col-6">
+                              <app-input-text label="{property.Name}" formControlName="{property.Name.ToLower()}" [required]="false" [readonly]="false" />
+                              <app-validator-msg [control]="f['{property.Name.ToLower()}']"></app-validator-msg>
+                            </div>
+                        """);
+                    break;
+            }
+        }
+        return output.ToString();
+    }
+
 
 
     private static string CreateImportFuncExpression(IntellisenseObject classObject)

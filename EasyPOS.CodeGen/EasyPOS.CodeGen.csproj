@@ -110,6 +110,24 @@
     <Content Include="Templates\Events\.createdevent.cs.txt" />
     <Content Include="Templates\Events\.deletedevent.cs.txt" />
     <Content Include="Templates\Events\.updatedevent.cs.txt" />
+    <Content Include="Templates\GeneratedClient\Detail\.html.txt">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Templates\GeneratedClient\Detail\.scss.txt">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Templates\GeneratedClient\Detail\.ts.txt">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Templates\GeneratedClient\List\.html.txt">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Templates\GeneratedClient\List\.ts.txt">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Templates\GeneratedClient\List\.scss.txt">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="Templates\Persistence\Configurations\.configuration.cs.txt">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
