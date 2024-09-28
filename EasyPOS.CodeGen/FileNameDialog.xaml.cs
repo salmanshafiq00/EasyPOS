@@ -30,23 +30,35 @@ public partial class FileNameDialog : Window
             btnCreate.IsEnabled = true;
         };
         Loaded += (s, e) =>
-    {
-        BitmapImage icon = new();
-        icon.BeginInit();
-        icon.UriSource = new Uri("pack://application:,,,/EasyPOS.CodeGen;component/Resources/AddApplicationInsights.png");
-        icon.EndInit();
-        Title = "Code Generation CA";
-        SetRandomTip();
-    };
+        {
+            BitmapImage icon = new();
+            icon.BeginInit();
+            icon.UriSource = new Uri("pack://application:,,,/EasyPOS.CodeGen;component/Resources/AddApplicationInsights.png");
+            icon.EndInit();
+            Title = "Code Generation CA";
+            SetRandomTip();
+        };
     }
 
-    public string Input => selectName.SelectedItem?.ToString();
+    //public string Input => selectName.SelectedItem?.ToString();
+
+    // Property to get the ComboBox value
+    public string SelectedEntity => selectName.SelectedItem?.ToString() ?? string.Empty;
+
+    // Property to get the TextBox value
+    public string ClientPath => clientAbsolutePath.Text;
+
+    // Method that returns both ComboBox and TextBox values as a tuple
+    public (string selectedEntity, string clientPath) GetInputValues()
+    {
+        return (SelectedEntity, ClientPath);
+    }
 
     private void SetRandomTip()
     {
         Random rnd = new(DateTime.Now.GetHashCode());
         int index = rnd.Next(_tips.Count);
-        lblTips.Content = _tips[index];
+        //lblTips.Content = _tips[index];
     }
 
     private void Button_Click(object sender, RoutedEventArgs e)

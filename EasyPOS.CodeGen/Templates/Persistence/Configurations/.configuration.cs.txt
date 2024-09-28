@@ -12,7 +12,7 @@ public class {itemname}Configuration : IEntityTypeConfiguration<{itemname}>
                .HasDefaultValueSql("NEWSEQUENTIALID()")
                .ValueGeneratedOnAdd();
 
-        builder.Property(t => t.Name).HasMaxLength(50).IsRequired();
+        {configurationProps}
         //builder.Ignore(e => e.DomainEvents);
     }
 }

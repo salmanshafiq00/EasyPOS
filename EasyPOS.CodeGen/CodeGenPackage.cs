@@ -19,6 +19,7 @@ using Microsoft.VisualStudio.Threading;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio;
 using EasyPOS.CodeGen;
+using System.Xml.Linq;
 
 namespace EasyPOS.CodeGen;
 
@@ -90,43 +91,57 @@ public sealed class CodeGenPackage : AsyncPackage
             return;
         }
 
-        string input = PromptForFileName(target.Directory, entities).TrimStart('/', '\\').Replace("/", "\\");
-
-        if (string.IsNullOrEmpty(input))
+        var (selectedEntity, clientPath) = PromptForFileName(target.Directory, entities);
+        
+        // Now you have both `selectedEntity` and `clientPath` as separate values
+        if (string.IsNullOrEmpty(selectedEntity))
         {
+            // Handle case where nothing is selected or entered
             return;
         }
 
-        string[] parsedInputs = GetParsedInput(input);
-
-        foreach (string inputname in parsedInputs)
+        if (!string.IsNullOrWhiteSpace(clientPath))
         {
-            try
-            {
-                var name = Path.GetFileNameWithoutExtension(inputname);
-                var nameofPlural = ProjectHelpers.Pluralize(name);
-                var objectClass = objectlist.Where(x => x.Name == name).First();
+            clientPath = clientPath.Replace("\\", "/");
+        }
 
-                // For Domain Event
-                //var events = new List<string>() {
-                //        $"Events/{name}CreatedEvent.cs",
-                //        $"Events/{name}DeletedEvent.cs",
-                //        $"Events/{name}UpdatedEvent.cs",
-                //        };
-                //foreach (var item in events)
-                //{
-                //    AddItemAsync(objectClass, item, name, domain).Forget();
-                //}
+        //string input = PromptForFileName(target.Directory, entities).TrimStart('/', '\\').Replace("/", "\\");
 
-                var configurations = new List<string>() {
+        //if (string.IsNullOrEmpty(input))
+        //{
+        //    return;
+        //}
+
+        //string[] parsedInputs = GetParsedInput(input);
+
+        //foreach (string inputname in parsedInputs)
+        //{
+        try
+        {
+            var name = Path.GetFileNameWithoutExtension(selectedEntity);
+            var nameofPlural = ProjectHelpers.Pluralize(name);
+            var objectClass = objectlist.Where(x => x.Name == name).First();
+
+            // For Domain Event
+            //var events = new List<string>() {
+            //        $"Events/{name}CreatedEvent.cs",
+            //        $"Events/{name}DeletedEvent.cs",
+            //        $"Events/{name}UpdatedEvent.cs",
+            //        };
+            //foreach (var item in events)
+            //{
+            //    AddItemAsync(objectClass, item, name, domain).Forget();
+            //}
+
+            var configurations = new List<string>() {
                          $"Persistence/Configurations/{name}Configuration.cs"
                         };
-                foreach (var item in configurations)
-                {
-                    AddItemAsync(objectClass, item, name, infrastructure).Forget();
-                }
+            foreach (var item in configurations)
+            {
+                AddItemAsync(objectClass, item, name, infrastructure).Forget();
+            }
 
-                var list = new List<string>()
+            var list = new List<string>()
                 {
                     $"{nameofPlural}/Commands/Create/Create{name}Command.cs",
                     $"{nameofPlural}/Commands/Create/Create{name}CommandValidator.cs",
@@ -159,49 +174,68 @@ public sealed class CodeGenPackage : AsyncPackage
                     //$"{nameofPlural}/Queries/Pagination/{nameofPlural}PaginationQuery.cs",
 
                 };
-                foreach (var item in list)
-                {
-                    AddItemAsync(objectClass, item, name, target).Forget();
-                }
+            foreach (var item in list)
+            {
+                AddItemAsync(objectClass, item, name, target).Forget();
+            }
 
-                // Add Endpoints
-                var pages = new List<string>()
+            // Add Endpoints
+            var pages = new List<string>()
                 {
                     $"Endpoints/{nameofPlural}.cs",
                 };
-                foreach (var item in pages)
-                {
-                    AddItemAsync(objectClass, item, name, ui).Forget();
-                }
-
-                // Generated Client
-                var generatedClientPages = new List<string>()
-                {
-                    $"GeneratedClient/List/{name.ToLower()}-list/{name.ToLower()}-list.component.html",
-                    $"GeneratedClient/List/{name.ToLower()}-list/{name.ToLower()}-list.component.scss",
-                    $"GeneratedClient/List/{name.ToLower()}-list/{name.ToLower()}-list.component.ts",
-                    $"GeneratedClient/Detail/{name.ToLower()}-detail/{name.ToLower()}-detail.component.html",
-                    $"GeneratedClient/Detail/{name.ToLower()}-detail/{name.ToLower()}-detail.component.scss",
-                    $"GeneratedClient/Detail/{name.ToLower()}-detail/{name.ToLower()}-detail.component.ts",
-                };
-                foreach (var item in generatedClientPages)
-                {
-                    AddItemAsync(objectClass, item, name, ui).Forget();
-                }
-            }
-            catch (Exception ex) when (!ErrorHandler.IsCriticalException(ex))
+            foreach (var item in pages)
             {
-                Logger.Log(ex);
-                MessageBox.Show(
-                        $"Error creating file '{inputname}':{Environment.NewLine}{ex.Message}",
-                        Vsix.Name,
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Error);
+                AddItemAsync(objectClass, item, name, ui).Forget();
+            }
+
+            // Generated Client
+            var generatedClientPages = new List<string>()
+            {
+                $"GeneratedClient/List/{name.ToLower()}-list/{name.ToLower()}-list.component.html",
+                $"GeneratedClient/List/{name.ToLower()}-list/{name.ToLower()}-list.component.scss",
+                $"GeneratedClient/List/{name.ToLower()}-list/{name.ToLower()}-list.component.ts",
+                $"GeneratedClient/Detail/{name.ToLower()}-detail/{name.ToLower()}-detail.component.html",
+                $"GeneratedClient/Detail/{name.ToLower()}-detail/{name.ToLower()}-detail.component.scss",
+                $"GeneratedClient/Detail/{name.ToLower()}-detail/{name.ToLower()}-detail.component.ts",
+            };
+
+            List<string> clientAbsolutePaths = 
+            [
+                $"{clientPath}/{name.ToLower()}-list/{name.ToLower()}-list.component.html",
+                $"{clientPath}/{name.ToLower()}-list/{name.ToLower()}-list.component.scss",
+                $"{clientPath}/{name.ToLower()}-list/{name.ToLower()}-list.component.ts",
+                $"{clientPath}/{name.ToLower()}-detail/{name.ToLower()}-detail.component.html",
+                $"{clientPath}/{name.ToLower()}-detail/{name.ToLower()}-detail.component.scss",
+                $"{clientPath}/{name.ToLower()}-detail/{name.ToLower()}-detail.component.ts",
+            ];
+
+            foreach (var item in generatedClientPages)
+            {
+                string fileName = Path.GetFileName(item);
+                var clientAbsolutePath = clientAbsolutePaths.FirstOrDefault(x => x.Contains(fileName));
+                AddItemAsync(objectClass, item, name, ui, true, clientAbsolutePath).Forget();
             }
         }
+        catch (Exception ex) when (!ErrorHandler.IsCriticalException(ex))
+        {
+            Logger.Log(ex);
+            MessageBox.Show(
+                    $"Error creating file '{selectedEntity}':{Environment.NewLine}{ex.Message}",
+                    Vsix.Name,
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+        }
+        //}
     }
 
-    private async Task AddItemAsync(IntellisenseObject classObject, string name, string itemname, NewItemTarget target)
+    private async Task AddItemAsync(
+        IntellisenseObject classObject, 
+        string name, 
+        string itemname, 
+        NewItemTarget target,
+        bool isClient = false,
+        string clientAbsolutePath = null)
     {
         // The naming rules that apply to files created on disk also apply to virtual solution folders,
         // so regardless of what type of item we are creating, we need to validate the name.
@@ -220,7 +254,7 @@ public sealed class CodeGenPackage : AsyncPackage
         }
         else
         {
-            await AddFileAsync(classObject, name, itemname, target);
+            await AddFileAsync(classObject, name, itemname, target, isClient, clientAbsolutePath);
         }
     }
 
@@ -244,7 +278,13 @@ public sealed class CodeGenPackage : AsyncPackage
         } while (!string.IsNullOrEmpty(path));
     }
 
-    private async Task AddFileAsync(IntellisenseObject classObject, string name, string itemname, NewItemTarget target)
+    private async Task AddFileAsync(
+        IntellisenseObject classObject, 
+        string name, 
+        string itemname,
+        NewItemTarget target,
+        bool isClient = false,
+        string clientAbsolutePath = null)
     {
         await JoinableTaskFactory.SwitchToMainThreadAsync();
         FileInfo file;
@@ -276,7 +316,14 @@ public sealed class CodeGenPackage : AsyncPackage
 
         //    throw;
         //}
-        Directory.CreateDirectory(file.DirectoryName);
+        if (isClient)
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(clientAbsolutePath));
+        }
+        else
+        {
+            Directory.CreateDirectory(file.DirectoryName);
+        }
 
         if (!file.Exists && orgFile is not null)
         {
@@ -291,7 +338,7 @@ public sealed class CodeGenPackage : AsyncPackage
                 project = target.Project;
             }
 
-            int position = await WriteFileAsync(project, classObject, orgFile.FullName, itemname, target.Directory);
+            int position = await WriteFileAsync(project, classObject, orgFile.FullName, itemname, target.Directory, isClient, clientAbsolutePath);
             if (target.ProjectItem != null && target.ProjectItem.IsKind(Constants.vsProjectItemKindVirtualFolder))
             {
                 target.ProjectItem.ProjectItems.AddFromFile(file.FullName);
@@ -320,7 +367,15 @@ public sealed class CodeGenPackage : AsyncPackage
         }
     }
 
-    private static async Task<int> WriteFileAsync(Project project, IntellisenseObject classObject, string file, string itemname, string selectFolder)
+    private static async Task<int> WriteFileAsync(
+        Project project, 
+        IntellisenseObject 
+        classObject, 
+        string file, 
+        string itemname, 
+        string selectFolder,
+        bool isClient = false,
+        string clientAbsolutePath = null)
     {
         string template = await TemplateMap.GetTemplateFilePathAsync(project, classObject, file, itemname, selectFolder);
 
@@ -328,11 +383,19 @@ public sealed class CodeGenPackage : AsyncPackage
         {
             int index = template.IndexOf('$');
             string modifiedFile = RemoveFolderNameFromFile(file);
-            await WriteToDiskAsync(modifiedFile, template);
+            await WriteToDiskAsync(modifiedFile, template, isClient, clientAbsolutePath);
             return index;
         }
 
-        await WriteToDiskAsync(file, string.Empty);
+        if (isClient)
+        {
+            await WriteToDiskAsync(file, string.Empty, isClient, clientAbsolutePath);
+        }
+        else
+        {
+            await WriteToDiskAsync(file, string.Empty);
+        }
+
 
         return 0;
     }
@@ -383,10 +446,22 @@ public sealed class CodeGenPackage : AsyncPackage
         return modifiedFile.ToString();
     }
 
-    private static async Task WriteToDiskAsync(string file, string content)
+    private static async Task WriteToDiskAsync(
+        string file, 
+        string content,
+        bool isClient = false,
+        string clientAbsolutePath = null)
     {
-        using StreamWriter writer = new(file, false, GetFileEncoding(file));
-        await writer.WriteAsync(content);
+        if (isClient)
+        {
+            using StreamWriter writer = new(clientAbsolutePath, false, GetFileEncoding(clientAbsolutePath));
+            await writer.WriteAsync(content);
+        }
+        else
+        {
+            using StreamWriter writer = new(file, false, GetFileEncoding(file));
+            await writer.WriteAsync(content);
+        }
     }
 
     private static Encoding GetFileEncoding(string file)
@@ -498,7 +573,7 @@ public sealed class CodeGenPackage : AsyncPackage
         return [.. results];
     }
 
-    private string PromptForFileName(string folder, string[] entities)
+    private (string selectedEntity, string clientPath) PromptForFileName(string folder, string[] entities)
     {
         DirectoryInfo dir = new(folder);
         FileNameDialog dialog = new(dir.Name, entities)
@@ -507,8 +582,11 @@ public sealed class CodeGenPackage : AsyncPackage
         };
 
         bool? result = dialog.ShowDialog();
-        return (result.HasValue && result.Value) ? dialog.Input : string.Empty;
+
+        // Return the tuple with both ComboBox and TextBox values if the dialog was confirmed, otherwise return empty strings
+        return (result.HasValue && result.Value) ? dialog.GetInputValues() : (string.Empty, string.Empty);
     }
+
 
     private void ExecuteCommandIfAvailable(string commandName)
     {

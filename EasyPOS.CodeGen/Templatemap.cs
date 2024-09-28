@@ -184,6 +184,7 @@ internal static class TemplateMap
         var getListQuerySql = CreateGetListQuerySql(classObject, nameofPlural);
         var formInitializationProperties = CreateFormInitializationProperties(classObject, nameofPlural);
         var formControls = CreateFormControls(classObject, nameofPlural);
+        var configurationProps = CreateConfigurationContent(classObject, nameofPlural);
 
         return content.Replace("{rootnamespace}", _defaultNamespace)
                         .Replace("{namespace}", ns)
@@ -207,6 +208,7 @@ internal static class TemplateMap
                         .Replace("{getListQuerySql}", getListQuerySql)
                         .Replace("{formInitializationProperties}", formInitializationProperties)
                         .Replace("{formControls}", formControls)
+                        .Replace("{configurationProps}", configurationProps)
                         ;
     }
 
@@ -588,7 +590,41 @@ internal static class TemplateMap
         return output.ToString();
     }
 
+    private static string CreateConfigurationContent(IntellisenseObject classObject, string entityPluralName)
+    {
+        var output = new StringBuilder();
 
+        // Get the properties count for checking the last property
+        var properties = classObject.Properties.Where(x => x.Type.IsKnownType || x.Type.CodeName == "System.Guid" || x.Type.CodeName == "System.Guid?").ToList();
+
+        // Iterate over properties and append SQL column mappings
+        foreach (var property in properties)
+        {
+            switch (property.Type.CodeName)
+            {
+                case "string" when property.Name.Equals("Name", StringComparison.OrdinalIgnoreCase):
+                    output.AppendLine();
+                    output.AppendLine($"""
+                            builder.Property(t => t.{property.Name})
+                                .HasMaxLength(250)
+                                .IsRequired(false);
+                        """);
+                    break;
+                case "decimal?":
+                case "decimal":
+                    output.AppendLine();
+                    output.AppendLine($""""
+                            builder.Property(t => t.{property.Name})
+                                .HasColumnType("decimal(18, 2)")
+                                .IsRequired(false);
+                        """");
+                    break;
+                default:
+                    break;
+            }
+        }
+        return output.ToString();
+    }
 
     private static string CreateImportFuncExpression(IntellisenseObject classObject)
     {
