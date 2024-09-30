@@ -18,15 +18,13 @@ using EnvDTE;
 using Microsoft.VisualStudio.Threading;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio;
-using EasyPOS.CodeGen;
-using System.Xml.Linq;
 
 namespace EasyPOS.CodeGen;
 
 [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
 [InstalledProductRegistration(Vsix.Name, Vsix.Description, Vsix.Version, IconResourceID = 400)]
 [ProvideMenuResource("Menus.ctmenu", 1)]
-[Guid(PackageGuids.CodeGenString)]
+[Guid(PackageGuids.FeatureCodeGenString)]
 public sealed class CodeGenPackage : AsyncPackage
 {
     public const string DOMAINPROJECT = "EasyPOS.Domain";
@@ -57,7 +55,7 @@ public sealed class CodeGenPackage : AsyncPackage
 
         if (await GetServiceAsync(typeof(IMenuCommandService)) is OleMenuCommandService mcs)
         {
-            CommandID menuCommandID = new(PackageGuids.CodeGen, PackageIds.MyCommand);
+            CommandID menuCommandID = new(PackageGuids.FeatureCodeGen, PackageIds.GenerateFeatureCommand);
             OleMenuCommand menuItem = new(Execute, menuCommandID);
             mcs.AddCommand(menuItem);
         }
@@ -92,11 +90,16 @@ public sealed class CodeGenPackage : AsyncPackage
         }
 
         var (selectedEntity, clientPath) = PromptForFileName(target.Directory, entities);
-        
+
         // Now you have both `selectedEntity` and `clientPath` as separate values
         if (string.IsNullOrEmpty(selectedEntity))
         {
             // Handle case where nothing is selected or entered
+            return;
+        }
+
+        if (!string.IsNullOrWhiteSpace(clientPath) && !ValidatePath(clientPath))
+        {
             return;
         }
 
@@ -192,29 +195,31 @@ public sealed class CodeGenPackage : AsyncPackage
             // Generated Client
             var generatedClientPages = new List<string>()
             {
-                $"GeneratedClient/List/{name.ToLower()}-list/{name.ToLower()}-list.component.html",
-                $"GeneratedClient/List/{name.ToLower()}-list/{name.ToLower()}-list.component.scss",
-                $"GeneratedClient/List/{name.ToLower()}-list/{name.ToLower()}-list.component.ts",
-                $"GeneratedClient/Detail/{name.ToLower()}-detail/{name.ToLower()}-detail.component.html",
-                $"GeneratedClient/Detail/{name.ToLower()}-detail/{name.ToLower()}-detail.component.scss",
-                $"GeneratedClient/Detail/{name.ToLower()}-detail/{name.ToLower()}-detail.component.ts",
+                $"GeneratedClient/List/{name.ToKebabCase()}-list/{name.ToKebabCase()}-list.component.html",
+                $"GeneratedClient/List/{name.ToKebabCase()}-list/{name.ToKebabCase()}-list.component.scss",
+                $"GeneratedClient/List/{name.ToKebabCase()}-list/{name.ToKebabCase()}-list.component.ts",
+                $"GeneratedClient/Detail/{name.ToKebabCase()}-detail/{name.ToKebabCase()}-detail.component.html",
+                $"GeneratedClient/Detail/{name.ToKebabCase()}-detail/{name.ToKebabCase()}-detail.component.scss",
+                $"GeneratedClient/Detail/{name.ToKebabCase()}-detail/{name.ToKebabCase()}-detail.component.ts",
             };
 
-            List<string> clientAbsolutePaths = 
+            List<string> clientAbsolutePaths =
             [
-                $"{clientPath}/{name.ToLower()}-list/{name.ToLower()}-list.component.html",
-                $"{clientPath}/{name.ToLower()}-list/{name.ToLower()}-list.component.scss",
-                $"{clientPath}/{name.ToLower()}-list/{name.ToLower()}-list.component.ts",
-                $"{clientPath}/{name.ToLower()}-detail/{name.ToLower()}-detail.component.html",
-                $"{clientPath}/{name.ToLower()}-detail/{name.ToLower()}-detail.component.scss",
-                $"{clientPath}/{name.ToLower()}-detail/{name.ToLower()}-detail.component.ts",
+                $"{clientPath}/{name.ToKebabCase()}-list/{name.ToKebabCase()}-list.component.html",
+                $"{clientPath}/{name.ToKebabCase()}-list/{name.ToKebabCase()}-list.component.scss",
+                $"{clientPath}/{name.ToKebabCase()}-list/{name.ToKebabCase()}-list.component.ts",
+                $"{clientPath}/{name.ToKebabCase()}-detail/{name.ToKebabCase()}-detail.component.html",
+                $"{clientPath}/{name.ToKebabCase()}-detail/{name.ToKebabCase()}-detail.component.scss",
+                $"{clientPath}/{name.ToKebabCase()}-detail/{name.ToKebabCase()}-detail.component.ts",
             ];
-
-            foreach (var item in generatedClientPages)
+            if (!string.IsNullOrWhiteSpace(clientPath))
             {
-                string fileName = Path.GetFileName(item);
-                var clientAbsolutePath = clientAbsolutePaths.FirstOrDefault(x => x.Contains(fileName));
-                AddItemAsync(objectClass, item, name, ui, true, clientAbsolutePath).Forget();
+                foreach (var item in generatedClientPages)
+                {
+                    string fileName = Path.GetFileName(item);
+                    var clientAbsolutePath = clientAbsolutePaths.FirstOrDefault(x => x.Contains(fileName));
+                    AddItemAsync(objectClass, item, name, ui, true, clientAbsolutePath).Forget();
+                }
             }
         }
         catch (Exception ex) when (!ErrorHandler.IsCriticalException(ex))
@@ -230,9 +235,9 @@ public sealed class CodeGenPackage : AsyncPackage
     }
 
     private async Task AddItemAsync(
-        IntellisenseObject classObject, 
-        string name, 
-        string itemname, 
+        IntellisenseObject classObject,
+        string name,
+        string itemname,
         NewItemTarget target,
         bool isClient = false,
         string clientAbsolutePath = null)
@@ -258,29 +263,48 @@ public sealed class CodeGenPackage : AsyncPackage
         }
     }
 
-    private void ValidatePath(string path)
+    private bool ValidatePath(string path)
     {
-        do
+        try
         {
-            string name = Path.GetFileName(path);
-
-            if (_reservedFileNamePattern.IsMatch(name))
+            do
             {
-                throw new InvalidOperationException($"The name '{name}' is a system reserved name.");
-            }
+                string name = Path.GetFileName(path);
 
-            if (name.Any(c => _invalidFileNameChars.Contains(c)))
-            {
-                throw new InvalidOperationException($"The name '{name}' contains invalid characters.");
-            }
+                if (_reservedFileNamePattern.IsMatch(name))
+                {
+                    throw new InvalidOperationException($"The name '{name}' is a system reserved name.");
+                }
 
-            path = Path.GetDirectoryName(path);
-        } while (!string.IsNullOrEmpty(path));
+                if (name.Any(c => _invalidFileNameChars.Contains(c)))
+                {
+                    throw new InvalidOperationException($"The name '{name}' contains invalid characters.");
+                }
+
+                path = Path.GetDirectoryName(path);
+            } while (!string.IsNullOrEmpty(path));
+
+            return true;
+        }
+        catch (InvalidOperationException ex)
+        {
+            // Show a popup window with the exception message
+            MessageBox.Show(
+                ex.Message,
+                Vsix.Name, // Assuming this is the name of your VSIX extension
+                MessageBoxButton.OK,
+                MessageBoxImage.Error
+            );
+
+            // Return false indicating an invalid path
+            return false;
+        }
     }
 
+
     private async Task AddFileAsync(
-        IntellisenseObject classObject, 
-        string name, 
+        IntellisenseObject classObject,
+        string name,
         string itemname,
         NewItemTarget target,
         bool isClient = false,
@@ -368,11 +392,11 @@ public sealed class CodeGenPackage : AsyncPackage
     }
 
     private static async Task<int> WriteFileAsync(
-        Project project, 
-        IntellisenseObject 
-        classObject, 
-        string file, 
-        string itemname, 
+        Project project,
+        IntellisenseObject
+        classObject,
+        string file,
+        string itemname,
         string selectFolder,
         bool isClient = false,
         string clientAbsolutePath = null)
@@ -447,7 +471,7 @@ public sealed class CodeGenPackage : AsyncPackage
     }
 
     private static async Task WriteToDiskAsync(
-        string file, 
+        string file,
         string content,
         bool isClient = false,
         string clientAbsolutePath = null)

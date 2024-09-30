@@ -191,6 +191,7 @@ internal static class TemplateMap
                         .Replace("{selectns}", selectNs)
                         .Replace("{itemname}", name)
                         .Replace("{itemnameLower}", name.ToLower())
+                        .Replace("{itemnameKebab}", name.ToKebabCase())
                         .Replace("{nameofPlural}", nameofPlural)
                         .Replace("{nameofPluralLower}", nameofPlural.ToLower())
                         .Replace("{dtoFieldDefinition}", dtoFieldDefinition)

@@ -4,9 +4,9 @@ import { ENTITY_CLIENT } from 'src/app/shared/injection-tokens/tokens';
 import { MoneyTransfersClient } from 'src/app/modules/generated-clients/api-service';
 
 @Component({
-  selector: 'app-moneytransfer-detail',
-  templateUrl: './moneytransfer-detail.component.html',
-  styleUrl: './moneytransfer-detail.component.scss',
+  selector: 'app-money-transfer-detail',
+  templateUrl: './money-transfer-detail.component.html',
+  styleUrl: './money-transfer-detail.component.scss',
   providers: [MoneyTransfersClient]
 })
 export class MoneyTransferDetailComponent extends BaseDetailComponent {

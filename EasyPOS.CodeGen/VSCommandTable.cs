@@ -12,14 +12,14 @@ namespace EasyPOS.CodeGen
     /// </summary>
     internal sealed partial class PackageGuids
     {
-        public const string CodeGenString = "4da764c9-2442-497a-950c-99b7eae47bd8";
-        public static Guid CodeGen = new Guid(CodeGenString);
+        public const string FeatureCodeGenString = "4da764c9-2442-497a-950c-99b7eae47bd8";
+        public static Guid FeatureCodeGen = new Guid(FeatureCodeGenString);
     }
     /// <summary>
     /// Helper class that encapsulates all CommandIDs uses across VS Package.
     /// </summary>
     internal sealed partial class PackageIds
     {
-        public const int MyCommand = 0x0001;
+        public const int GenerateFeatureCommand = 0x0001;
     }
 }

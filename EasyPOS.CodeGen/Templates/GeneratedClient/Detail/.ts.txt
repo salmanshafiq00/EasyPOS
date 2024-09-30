@@ -4,9 +4,9 @@ import { ENTITY_CLIENT } from 'src/app/shared/injection-tokens/tokens';
 import { {nameofPlural}Client } from 'src/app/modules/generated-clients/api-service';
 
 @Component({
-  selector: 'app-{itemnameLower}-detail',
-  templateUrl: './{itemnameLower}-detail.component.html',
-  styleUrl: './{itemnameLower}-detail.component.scss',
+  selector: 'app-{itemnameKebab}-detail',
+  templateUrl: './{itemnameKebab}-detail.component.html',
+  styleUrl: './{itemnameKebab}-detail.component.scss',
   providers: [{nameofPlural}Client]
 })
 export class {itemname}DetailComponent extends BaseDetailComponent {

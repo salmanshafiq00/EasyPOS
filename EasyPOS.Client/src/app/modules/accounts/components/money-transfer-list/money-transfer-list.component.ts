@@ -1,11 +1,11 @@
 ﻿import { Component, inject } from '@angular/core';
-import { MoneyTransferDetailComponent } from '../moneytransfer-detail/moneytransfer-detail.component';
+import { MoneyTransferDetailComponent } from '../money-transfer-detail/money-transfer-detail.component';
 import { MoneyTransfersClient } from 'src/app/modules/generated-clients/api-service';
 
 @Component({
-  selector: 'app-moneytransfer-list',
-  templateUrl: './moneytransfer-list.component.html',
-  styleUrl: './moneytransfer-list.component.scss',
+  selector: 'app-money-transfer-list',
+  templateUrl: './money-transfer-list.component.html',
+  styleUrl: './money-transfer-list.component.scss',
   providers: [MoneyTransfersClient]
 })
 export class MoneyTransferListComponent {
