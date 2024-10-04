@@ -6,6 +6,8 @@ import { ProductDetailComponent } from "./components/product-detail/product-deta
 import { ProductListComponent } from "./components/product-list/product-list.component"
 import { WarehouseDetailComponent } from "./components/warehouse-detail/warehouse-detail.component"
 import { WarehouseListComponent } from "./components/warehouse-list/warehouse-list.component"
+import { BrandListComponent } from "./components/brand-list/brand-list.component"
+import { BrandDetailComponent } from "./components/brand-detail/brand-detail.component"
 
 const routes: Routes = [
   {path: 'categories', component: CategoryListComponent},
@@ -14,6 +16,7 @@ const routes: Routes = [
   {path: 'product/{id}', component: ProductDetailComponent  },
   {path: 'add-product', component: ProductDetailComponent  },
   {path: 'warehouses', component: WarehouseListComponent  },
+  {path: 'brands', component: BrandListComponent  },
 ]
 
 @NgModule({
@@ -28,5 +31,7 @@ export const ProductsRoutingComponents = [
   ProductDetailComponent,
   ProductListComponent,
   WarehouseListComponent,
-  WarehouseDetailComponent
+  WarehouseDetailComponent,
+  BrandListComponent,
+  BrandDetailComponent
 ]

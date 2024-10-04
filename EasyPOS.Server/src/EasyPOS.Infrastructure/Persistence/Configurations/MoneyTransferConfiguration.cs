@@ -15,7 +15,7 @@ public class MoneyTransferConfiguration : IEntityTypeConfiguration<MoneyTransfer
 
         builder.Property(t => t.Amount)
             .HasColumnType("decimal(18, 2)")
-            .IsRequired(false);
+            .IsRequired();
 
         //builder.Ignore(e => e.DomainEvents);
     }

@@ -1,7 +1,4 @@
-﻿using EasyPOS.Application.Common.Abstractions.Caching;
-using EasyPOS.Application.Common.Abstractions.Identity;
-using EasyPOS.Application.Common.Abstractions.Messaging;
-using EasyPOS.Domain.Shared;
+﻿using EasyPOS.Application.Common.Abstractions.Identity;
 
 namespace EasyPOS.Application.Features.Admin.Roles.Commands;
 

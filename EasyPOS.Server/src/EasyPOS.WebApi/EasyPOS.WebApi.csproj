@@ -13,6 +13,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Endpoints\Brands.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\EasyPOS.Application\EasyPOS.Application.csproj" />
     <ProjectReference Include="..\EasyPOS.Infrastructure\EasyPOS.Infrastructure.csproj" />
   </ItemGroup>

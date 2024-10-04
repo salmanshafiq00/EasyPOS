@@ -1,5 +1,4 @@
 ﻿using EasyPOS.Domain.Abstractions;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Newtonsoft.Json;
 

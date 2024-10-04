@@ -25,17 +25,25 @@ export class AppMenuComponent implements OnInit {
         this.signalrNotificationService.permissionChanged.subscribe({
             next: () => {
                 setTimeout(() => {
+                    this.getSidebarMenus();
                     this.permissionService.loadPermissions(false);    
-                }, 5000);
+                }, 2000);
             }
         });
     }
 
     ngOnInit() {
 
+        this.getSidebarMenus();
+
+        this.permissionService.loadPermissions(true);
+    }
+
+    private getSidebarMenus() {
         this.appMenuClient.getSidebarMenus().subscribe({
             next: (res) => {
                 const transformedMenu = this.transformMenuData(res);
+                this.model = [];
                 this.model.push({
                     items: transformedMenu
                 });
@@ -45,8 +53,6 @@ export class AppMenuComponent implements OnInit {
                 console.log(error);
             }
         });
-
-        this.permissionService.loadPermissions(true);
     }
 
     private transformMenuData(data: SidebarMenuModel[]): any[] {

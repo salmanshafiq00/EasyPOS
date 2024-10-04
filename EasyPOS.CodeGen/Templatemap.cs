@@ -527,7 +527,7 @@ internal static class TemplateMap
         {
             switch (property.Type.CodeName)
             {
-                case "string" when property.Name.Equals("Name", StringComparison.OrdinalIgnoreCase):
+                case "string":
                     output.AppendLine($"""
                             <div class="field col-12 md:col-6">
                                 <app-input-text label="{property.Name}" formControlName="{property.Name.ToCamelCase()}" [required]="false" [readonly]="false" />
@@ -603,12 +603,12 @@ internal static class TemplateMap
         {
             switch (property.Type.CodeName)
             {
-                case "string" when property.Name.Equals("Name", StringComparison.OrdinalIgnoreCase):
+                case "string":
                     output.AppendLine();
                     output.AppendLine($"""
                             builder.Property(t => t.{property.Name})
                                 .HasMaxLength(250)
-                                .IsRequired(false);
+                                .IsRequired();
                         """);
                     break;
                 case "decimal?":
@@ -617,7 +617,7 @@ internal static class TemplateMap
                     output.AppendLine($""""
                             builder.Property(t => t.{property.Name})
                                 .HasColumnType("decimal(18, 2)")
-                                .IsRequired(false);
+                                .IsRequired();
                         """");
                     break;
                 default:

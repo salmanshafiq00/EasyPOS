@@ -1,10 +1,4 @@
-﻿using EasyPOS.Application.Common.Abstractions;
-using EasyPOS.Application.Common.Abstractions.Caching;
-using EasyPOS.Application.Common.Abstractions.Messaging;
-using EasyPOS.Application.Common.Extensions;
-using EasyPOS.Domain.Shared;
-
-namespace EasyPOS.Application.Features.Admin.AppPages.Queries;
+﻿namespace EasyPOS.Application.Features.Admin.AppPages.Queries;
 
 //[Authorize(Policy = Permissions.Admin.AppPages.View)]
 public record GetAppPageByIdQuery(Guid Id) : ICacheableQuery<AppPageModel?>

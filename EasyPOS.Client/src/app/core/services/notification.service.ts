@@ -27,7 +27,6 @@ export class NotificationService {
     });
 
     this.hubConnection.on('ReceiveRolePermissionNotify', () => {
-        console.log('ReceiveRolePermissionNotify')
         this.permissionChanged.next(true);
     });
 

@@ -1,7 +1,4 @@
-﻿using EasyPOS.Application.Common.Abstractions.Caching;
-using EasyPOS.Application.Common.Abstractions.Messaging;
-
-namespace EasyPOS.Application.Common.Behaviours;
+﻿namespace EasyPOS.Application.Common.Behaviours;
 
 internal sealed class CacheInvalidationBehaviour<TRequest, TResponse>(
     ILogger<CacheInvalidationBehaviour<TRequest, TResponse>> logger,

@@ -1,10 +1,4 @@
-﻿using EasyPOS.Application.Common.Abstractions;
-using EasyPOS.Application.Common.Abstractions.Caching;
-using EasyPOS.Application.Common.Abstractions.Messaging;
-using EasyPOS.Domain.Shared;
-using Mapster;
-
-namespace EasyPOS.Application.Features.Admin.AppPages.Commands;
+﻿namespace EasyPOS.Application.Features.Admin.AppPages.Commands;
 
 public record UpdateAppPageCommand(
     Guid Id,

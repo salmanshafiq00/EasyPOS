@@ -7,7 +7,7 @@ import { {nameofPlural}Client } from 'src/app/modules/generated-clients/api-serv
   selector: 'app-{itemnameKebab}-detail',
   templateUrl: './{itemnameKebab}-detail.component.html',
   styleUrl: './{itemnameKebab}-detail.component.scss',
-  providers: [{nameofPlural}Client]
+  providers: [{provide: ENTITY_CLIENT, useClass: {nameofPlural}Client}]
 })
 export class {itemname}DetailComponent extends BaseDetailComponent {
 
