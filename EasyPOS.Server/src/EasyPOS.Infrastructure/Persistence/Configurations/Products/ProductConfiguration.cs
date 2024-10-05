@@ -1,6 +1,4 @@
 ﻿using EasyPOS.Domain.Products;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EasyPOS.Infrastructure.Persistence.Configurations.Products;
 
@@ -28,7 +26,7 @@ internal sealed class ProductConfiguration : IEntityTypeConfiguration<Product>
 
         builder.Property(x => x.SalePrice)
             .HasColumnType("decimal(18, 2)")
-            .IsRequired(true);
+            .IsRequired();
 
         builder.Property(x => x.CostPrice)
             .HasColumnType("decimal(18, 2)")
@@ -37,5 +35,12 @@ internal sealed class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.Property(x => x.WholesalePrice)
             .HasColumnType("decimal(18, 2)")
             .IsRequired(false);
+
+        builder.Property(t => t.Discount)
+            .HasColumnType("decimal(18, 2)");
+
+        builder.Property(t => t.TaxRate)
+           .HasColumnType("decimal(18, 2)");
+
     }
 }

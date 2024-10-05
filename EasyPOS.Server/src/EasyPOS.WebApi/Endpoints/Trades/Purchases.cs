@@ -1,5 +1,5 @@
 ﻿using EasyPOS.Application.Features.Common.Queries;
-using EasyPOS.Application.Features.Products.Queries;
+using EasyPOS.Application.Features.ProductManagement.Queries;
 using EasyPOS.Application.Features.Trades.Purchases.Commands;
 using EasyPOS.Application.Features.Trades.Purchases.Queries;
 

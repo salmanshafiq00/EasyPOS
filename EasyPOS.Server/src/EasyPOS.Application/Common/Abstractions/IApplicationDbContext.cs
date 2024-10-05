@@ -34,6 +34,7 @@ public interface IApplicationDbContext
     DbSet<Warehouse> Warehouses { get; }
     DbSet<Brand> Brands { get; }
     DbSet<Unit> Units { get; }
+    DbSet<Tax> Taxes { get; }
 
     #endregion
 

@@ -33,7 +33,7 @@ namespace EasyPOS.Infrastructure.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Balance")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
@@ -58,7 +58,7 @@ namespace EasyPOS.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Accounts");
+                    b.ToTable("Accounts", (string)null);
                 });
 
             modelBuilder.Entity("EasyPOS.Domain.Accounts.MoneyTransfer", b =>
@@ -91,7 +91,7 @@ namespace EasyPOS.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("MoneyTransfers");
+                    b.ToTable("MoneyTransfers", (string)null);
                 });
 
             modelBuilder.Entity("EasyPOS.Domain.Admin.AppMenu", b =>
@@ -155,7 +155,7 @@ namespace EasyPOS.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("MenuTypeId");
 
-                    b.ToTable("AppMenus");
+                    b.ToTable("AppMenus", (string)null);
                 });
 
             modelBuilder.Entity("EasyPOS.Domain.Admin.AppNotification", b =>
@@ -205,7 +205,7 @@ namespace EasyPOS.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AppNotifications");
+                    b.ToTable("AppNotifications", (string)null);
                 });
 
             modelBuilder.Entity("EasyPOS.Domain.Admin.AppPage", b =>
@@ -242,7 +242,7 @@ namespace EasyPOS.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AppPages");
+                    b.ToTable("AppPages", (string)null);
                 });
 
             modelBuilder.Entity("EasyPOS.Domain.Admin.RoleMenu", b =>
@@ -267,7 +267,7 @@ namespace EasyPOS.Infrastructure.Persistence.Migrations
                     b.HasIndex("RoleId", "AppMenuId")
                         .IsUnique();
 
-                    b.ToTable("RoleMenus");
+                    b.ToTable("RoleMenus", (string)null);
                 });
 
             modelBuilder.Entity("EasyPOS.Domain.Common.Lookup", b =>
@@ -319,7 +319,7 @@ namespace EasyPOS.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("ParentId");
 
-                    b.ToTable("Lookups");
+                    b.ToTable("Lookups", (string)null);
                 });
 
             modelBuilder.Entity("EasyPOS.Domain.Common.LookupDetail", b =>
@@ -376,7 +376,7 @@ namespace EasyPOS.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("ParentId");
 
-                    b.ToTable("LookupDetails");
+                    b.ToTable("LookupDetails", (string)null);
                 });
 
             modelBuilder.Entity("EasyPOS.Domain.Products.Brand", b =>
@@ -407,7 +407,7 @@ namespace EasyPOS.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Brands");
+                    b.ToTable("Brands", (string)null);
                 });
 
             modelBuilder.Entity("EasyPOS.Domain.Products.Category", b =>
@@ -446,7 +446,7 @@ namespace EasyPOS.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("EasyPOS.Domain.Products.Product", b =>
@@ -485,7 +485,7 @@ namespace EasyPOS.Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Discount")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<int>("DiscountType")
                         .HasColumnType("int");
@@ -527,7 +527,7 @@ namespace EasyPOS.Infrastructure.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("TaxRate")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<Guid?>("Unit")
                         .HasColumnType("uniqueidentifier");
@@ -539,22 +539,15 @@ namespace EasyPOS.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
-            modelBuilder.Entity("EasyPOS.Domain.Products.Unit", b =>
+            modelBuilder.Entity("EasyPOS.Domain.Products.Tax", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("BaseUnit")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
@@ -570,17 +563,60 @@ namespace EasyPOS.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
-                    b.Property<string>("Operator")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("OperatorValue")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<decimal>("Rate")
+                        .HasColumnType("decimal(10, 2)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Units");
+                    b.ToTable("Taxes", (string)null);
+                });
+
+            modelBuilder.Entity("EasyPOS.Domain.Products.Unit", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<Guid?>("BaseUnit")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<string>("Operator")
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<decimal?>("OperatorValue")
+                        .IsRequired()
+                        .HasColumnType("decimal(10, 2)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Units", (string)null);
                 });
 
             modelBuilder.Entity("EasyPOS.Domain.Products.Warehouse", b =>
@@ -635,7 +671,7 @@ namespace EasyPOS.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Warehouses");
+                    b.ToTable("Warehouses", (string)null);
                 });
 
             modelBuilder.Entity("EasyPOS.Domain.Stakeholders.Customer", b =>
@@ -689,18 +725,19 @@ namespace EasyPOS.Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(20)");
 
                     b.Property<decimal?>("PreviousDue")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18, 2)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Customers");
+                    b.ToTable("Customers", (string)null);
                 });
 
             modelBuilder.Entity("EasyPOS.Domain.Stakeholders.CustomerGroup", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
@@ -716,14 +753,15 @@ namespace EasyPOS.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<decimal>("Rate")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(10, 2)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("CustomerGroups");
+                    b.ToTable("CustomerGroups", (string)null);
                 });
 
             modelBuilder.Entity("EasyPOS.Domain.Stakeholders.Supplier", b =>
@@ -773,7 +811,7 @@ namespace EasyPOS.Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(250)");
 
                     b.Property<decimal?>("OpeningBalance")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<string>("PhoneNo")
                         .HasMaxLength(20)
@@ -781,7 +819,7 @@ namespace EasyPOS.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Suppliers");
+                    b.ToTable("Suppliers", (string)null);
                 });
 
             modelBuilder.Entity("EasyPOS.Domain.Trades.Purchase", b =>
@@ -835,7 +873,7 @@ namespace EasyPOS.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Purchases");
+                    b.ToTable("Purchases", (string)null);
                 });
 
             modelBuilder.Entity("EasyPOS.Domain.Trades.PurchaseDetail", b =>
@@ -876,7 +914,7 @@ namespace EasyPOS.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("PurchaseId");
 
-                    b.ToTable("PurchaseDetail");
+                    b.ToTable("PurchaseDetail", (string)null);
                 });
 
             modelBuilder.Entity("EasyPOS.Domain.Trades.Sale", b =>
@@ -942,7 +980,7 @@ namespace EasyPOS.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Sales");
+                    b.ToTable("Sales", (string)null);
                 });
 
             modelBuilder.Entity("EasyPOS.Domain.Trades.SaleDetail", b =>
@@ -983,7 +1021,7 @@ namespace EasyPOS.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("SaleId");
 
-                    b.ToTable("SaleDetail");
+                    b.ToTable("SaleDetail", (string)null);
                 });
 
             modelBuilder.Entity("EasyPOS.Infrastructure.Persistence.Outbox.OutboxMessage", b =>

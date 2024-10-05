@@ -1,6 +1,4 @@
-﻿using ClosedXML.Excel;
-using EasyPOS.Application.Features.Trades.Purchases.Queries;
-using EasyPOS.Domain.Trades;
+﻿using EasyPOS.Domain.Trades;
 using Microsoft.AspNetCore.Http;
 
 namespace EasyPOS.Application.Features.Trades.Purchases.Commands;

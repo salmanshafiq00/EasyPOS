@@ -172,6 +172,14 @@ public static class Permissions
         public const string Edit = "Permissions.Units.Edit";
         public const string Delete = "Permissions.Units.Delete";
     }
+
+    public static class Taxes
+    {
+        public const string View = "Permissions.Taxes.View";
+        public const string Create = "Permissions.Taxes.Create";
+        public const string Edit = "Permissions.Taxes.Edit";
+        public const string Delete = "Permissions.Taxes.Delete";
+    }
     #endregion
 
     #region Stakeholders

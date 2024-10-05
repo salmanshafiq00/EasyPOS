@@ -113,7 +113,7 @@ export class ProductDetailComponent implements OnInit {
       code: [''],
       sku: [''],
       costPrice: [null],
-      price: [null],
+      salePrice: [null],
       wholesalePrice: [null],
       unit: [null],
       saleUnit: [null],

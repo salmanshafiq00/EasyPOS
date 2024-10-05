@@ -36,6 +36,8 @@ public static class CacheKeys
     public const string Brand_All_SelectList = nameof(Brand_All_SelectList);
     public const string Unit = nameof(Unit);
     public const string Unit_All_SelectList = nameof(Unit_All_SelectList);
+    public const string Tax = nameof(Tax);
+    public const string Tax_All_SelectList = nameof(Tax_All_SelectList);
     #endregion
 
     #region Stakeholders

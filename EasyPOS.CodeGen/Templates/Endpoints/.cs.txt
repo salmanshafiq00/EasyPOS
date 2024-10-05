@@ -39,7 +39,7 @@ public class {nameofPlural} : EndpointGroupBase
              .Produces<ProblemDetails>(StatusCodes.Status400BadRequest);
     }
 
-    private async Task<IResult> GetAll(ISender sender, Get{nameofPlural}ListQuery query)
+    private async Task<IResult> GetAll(ISender sender, Get{itemname}ListQuery query)
     {
         var result = await sender.Send(query);
         return TypedResults.Ok(result.Value);
@@ -80,7 +80,7 @@ public class {nameofPlural} : EndpointGroupBase
 
     private async Task<IResult> DeleteMultiple(ISender sender, [FromBody] Guid[] ids)
     {
-        var result = await sender.Send(new Delete{itemname}sCommand(ids));
+        var result = await sender.Send(new Delete{nameofPlural}Command(ids));
         
         return result!.Match(
             onSuccess: Results.NoContent,

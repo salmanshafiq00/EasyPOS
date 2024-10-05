@@ -153,7 +153,7 @@ public sealed class CodeGenPackage : AsyncPackage
                     $"{nameofPlural}/Commands/Update/Update{name}Command.cs",
                     $"{nameofPlural}/Commands/Update/Update{name}CommandValidator.cs",
 
-                    $"{nameofPlural}/Queries/GetAll/Get{nameofPlural}ListQuery.cs",
+                    $"{nameofPlural}/Queries/GetAll/Get{name}ListQuery.cs",
                     $"{nameofPlural}/Queries/GetById/Get{name}ByIdQuery.cs",
                     $"{nameofPlural}/Queries/Model/{name}Model.cs"
 

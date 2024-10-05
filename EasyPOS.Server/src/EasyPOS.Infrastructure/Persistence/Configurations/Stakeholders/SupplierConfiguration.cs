@@ -1,6 +1,4 @@
 ﻿using EasyPOS.Domain.Stakeholders;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EasyPOS.Infrastructure.Persistence.Configurations.Products;
 
@@ -37,5 +35,8 @@ internal sealed class SupplierConfiguration : IEntityTypeConfiguration<Supplier>
         builder.Property(p => p.City)
            .HasMaxLength(200)
            .IsRequired(false);
+
+        builder.Property(t => t.OpeningBalance)
+            .HasColumnType("decimal(18, 2)");
     }
 }

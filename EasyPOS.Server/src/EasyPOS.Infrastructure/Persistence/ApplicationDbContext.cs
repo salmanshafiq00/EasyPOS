@@ -36,6 +36,7 @@ public sealed class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<Warehouse> Warehouses => Set<Warehouse>();
     public DbSet<Brand> Brands => Set<Brand>();
     public DbSet<Unit> Units => Set<Unit>();
+    public DbSet<Tax> Taxes => Set<Tax>();
 
     #endregion
 

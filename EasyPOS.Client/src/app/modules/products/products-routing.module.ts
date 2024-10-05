@@ -8,6 +8,10 @@ import { WarehouseDetailComponent } from "./components/warehouse-detail/warehous
 import { WarehouseListComponent } from "./components/warehouse-list/warehouse-list.component"
 import { BrandListComponent } from "./components/brand-list/brand-list.component"
 import { BrandDetailComponent } from "./components/brand-detail/brand-detail.component"
+import { UnitListComponent } from "./components/unit-list/unit-list.component"
+import { UnitDetailComponent } from "./components/unit-detail/unit-detail.component"
+import { TaxDetailComponent } from "./components/tax-detail/tax-detail.component"
+import { TaxListComponent } from "./components/tax-list/tax-list.component"
 
 const routes: Routes = [
   {path: 'categories', component: CategoryListComponent},
@@ -17,6 +21,8 @@ const routes: Routes = [
   {path: 'add-product', component: ProductDetailComponent  },
   {path: 'warehouses', component: WarehouseListComponent  },
   {path: 'brands', component: BrandListComponent  },
+  {path: 'units', component: UnitListComponent  },
+  {path: 'taxes', component: TaxListComponent  },
 ]
 
 @NgModule({
@@ -33,5 +39,9 @@ export const ProductsRoutingComponents = [
   WarehouseListComponent,
   WarehouseDetailComponent,
   BrandListComponent,
-  BrandDetailComponent
+  BrandDetailComponent,
+  UnitListComponent,
+  UnitDetailComponent,
+  TaxListComponent,
+  TaxDetailComponent
 ]

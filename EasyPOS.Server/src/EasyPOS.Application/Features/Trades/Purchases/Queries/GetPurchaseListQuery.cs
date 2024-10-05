@@ -1,6 +1,4 @@
-﻿using EasyPOS.Application.Features.Warehouses.Queries;
-
-namespace EasyPOS.Application.Features.Trades.Purchases.Queries;
+﻿namespace EasyPOS.Application.Features.Trades.Purchases.Queries;
 
 [Authorize(Policy = Permissions.Purchases.View)]
 public record GetPurchaseListQuery
@@ -19,7 +17,7 @@ internal sealed class GetPurchaseListQueryHandler(ISqlConnectionFactory sqlConne
 
         var sql = $"""
             SELECT
-                t.Id AS {nameof(PurchaseModel.Id)},
+                t.Id AS {nameof(PurchaseModel.Id)}
             FROM dbo.Purchases t
             """;
 

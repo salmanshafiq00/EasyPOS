@@ -9,5 +9,5 @@ public enum TaxMethod
 public enum DiscountType
 {
     Percentage = 1,
-    Flat = 2
+    Fixed = 2
 }

@@ -12,6 +12,9 @@ public class AccountConfiguration : IEntityTypeConfiguration<Account>
                .HasDefaultValueSql("NEWSEQUENTIALID()")
                .ValueGeneratedOnAdd();
 
+        builder.Property(t => t.Balance)
+            .HasColumnType("decimal(18, 2)");
+
         builder.Property(t => t.Name).HasMaxLength(50).IsRequired();
         //builder.Ignore(e => e.DomainEvents);
     }

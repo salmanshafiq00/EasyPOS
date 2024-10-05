@@ -1,7 +1,7 @@
 ﻿namespace {namespace};
 
 [Authorize(Policy = Permissions.{nameofPlural}.View)]
-public record Get{nameofPlural}ListQuery 
+public record Get{itemname}ListQuery 
      : DataGridModel, ICacheableQuery<PaginatedResponse<{itemname}Model>>
 {
     [JsonInclude]
@@ -9,10 +9,10 @@ public record Get{nameofPlural}ListQuery
      
 }
 
-internal sealed class Get{nameofPlural}QueryHandler(ISqlConnectionFactory sqlConnection) 
-     : IQueryHandler<Get{nameofPlural}ListQuery, PaginatedResponse<{itemname}Model>>
+internal sealed class Get{itemname}QueryHandler(ISqlConnectionFactory sqlConnection) 
+     : IQueryHandler<Get{itemname}ListQuery, PaginatedResponse<{itemname}Model>>
 {
-    public async Task<Result<PaginatedResponse<{itemname}Model>>> Handle(Get{nameofPlural}ListQuery request, CancellationToken cancellationToken)
+    public async Task<Result<PaginatedResponse<{itemname}Model>>> Handle(Get{itemname}ListQuery request, CancellationToken cancellationToken)
     {
         var connection = sqlConnection.GetOpenConnection();
 

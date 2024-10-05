@@ -1,6 +1,5 @@
 ﻿using EasyPOS.Application.Features.Trades.Purchases.Queries;
 using EasyPOS.Domain.Trades;
-using Mapster;
 
 namespace EasyPOS.Application.Features.Trades.Purchases.Commands;
 

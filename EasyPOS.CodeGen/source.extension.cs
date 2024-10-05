@@ -11,7 +11,7 @@ namespace EasyPOS.CodeGen
         public const string Name = "EasyPOS.CodeGen";
         public const string Description = @"Code Generation for Clean Architecture Project in .NET ";
         public const string Language = "en-US";
-        public const string Version = "1.3";
+        public const string Version = "1.9";
         public const string Author = "Salman Farsy";
         public const string Tags = "EasyPOS.CodeGen";
     }

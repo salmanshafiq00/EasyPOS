@@ -80,13 +80,33 @@ public static class SelectListSqls
         ORDER BY Name
         """;
 
-
     public const string CategoryParentSelectListSql = """
         SELECT Distinct c.Id, c.Name 
         FROM dbo.Categories c
         INNER JOIN dbo.Categories c2 ON c2.ParentId = c.Id
         WHERE 1 = 1
         ORDER BY c.Name
+        """;
+
+    public const string BrandsSelectListSql = """
+        SELECT Id, Name 
+        FROM dbo.Brands t
+        WHERE 1 = 1
+        ORDER BY Name
+        """;
+
+    public const string TaxesSelectListSql = """
+        SELECT Rate AS Id, Name 
+        FROM dbo.Taxes t
+        WHERE 1 = 1
+        ORDER BY Name
+        """;
+
+    public const string UnitsSelectListSql = """
+        SELECT Id, Name 
+        FROM dbo.Units t
+        WHERE 1 = 1
+        ORDER BY Name
         """;
 
     public const string WarehouseSelectListSql = """

@@ -43,4 +43,16 @@ internal static class Utility
         result = Regex.Replace(result, "-([a-z])$", "$1");
         return result;
     }
+
+    public static string SeparateWords(this string input)
+    {
+        // Regular expression that identifies transitions from:
+        // - a lowercase letter followed by an uppercase letter
+        // - two uppercase letters followed by a lowercase letter
+        // Skip cases like AbdurR where it's a lowercase followed by a single uppercase letter at the end.
+        var regex = new Regex(@"(?<=[a-z])(?=[A-Z][a-z])|(?<=[a-z])(?=[A-Z][A-Z])|(?<=[A-Z]{2})(?=[A-Z][a-z])");
+
+        // Replace matching points with a space
+        return regex.Replace(input, " ");
+    }
 }

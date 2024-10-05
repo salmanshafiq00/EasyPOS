@@ -530,7 +530,7 @@ internal static class TemplateMap
                 case "string":
                     output.AppendLine($"""
                             <div class="field col-12 md:col-6">
-                                <app-input-text label="{property.Name}" formControlName="{property.Name.ToCamelCase()}" [required]="false" [readonly]="false" />
+                                <app-input-text label="{property.Name.SeparateWords()}" formControlName="{property.Name.ToCamelCase()}" [required]="false" [readonly]="false" />
                                 <app-validator-msg [control]="f['{property.Name.ToLower()}']" />
                             </div>
                         """);
@@ -539,7 +539,7 @@ internal static class TemplateMap
                 case "System.DateTime":
                     output.AppendLine($"""
                             <div class="field col-12 md:col-6">
-                              <app-input-date label="{property.Name}" formControlName="{property.Name.ToCamelCase()}" [required]="false" />
+                              <app-input-date label="{property.Name.SeparateWords()}" formControlName="{property.Name.ToCamelCase()}" [required]="false" />
                             </div>
                         """);
                     break;
@@ -547,7 +547,7 @@ internal static class TemplateMap
                 case "System.Guid":
                     output.AppendLine($"""
                             <div class="field col-12 md:col-6">
-                              <app-input-select label="{property.Name}" formControlName="{property.Name.ToCamelCase()}" [options]="optionsDataSources?.['SelectList']"
+                              <app-input-select label="{property.Name.SeparateWords()}" formControlName="{property.Name.ToCamelCase()}" [options]="optionsDataSources?.['SelectList']"
                                 [required]="false" />
                             </div>
                         """);
@@ -558,7 +558,7 @@ internal static class TemplateMap
                 case "double":
                     output.AppendLine($""""
                             <div class="field col-12 md:col-6">
-                              <app-input-decimal label="{property.Name}" formControlName="{property.Name.ToCamelCase()}" textAlign="right" [showButtons]="false" [required]="false" />
+                              <app-input-decimal label="{property.Name.SeparateWords()}" formControlName="{property.Name.ToCamelCase()}" textAlign="right" [showButtons]="false" [required]="false" />
                             </div>
                         """");
                     break;
@@ -566,7 +566,7 @@ internal static class TemplateMap
                 case "int":
                     output.AppendLine($""""
                             <div class="field col-12 md:col-6">
-                              <app-input-number label="{property.Name}" formControlName="{property.Name.ToCamelCase()}" textAlign="right" [showButtons]="false" [required]="false" />
+                              <app-input-number label="{property.Name.SeparateWords()}" formControlName="{property.Name.ToCamelCase()}" textAlign="right" [showButtons]="false" [required]="false" />
                             </div>
                         """");
                     break;
@@ -574,14 +574,14 @@ internal static class TemplateMap
                 case "bool?":
                     output.AppendLine($""""
                             <div class="field col-12 md:col-6 md:flex align-items-center md:mt-4">
-                              <app-input-switch label="{property.Name}" formControlName="{property.Name.ToCamelCase()}" />
+                              <app-input-switch label="{property.Name.SeparateWords()}" formControlName="{property.Name.ToCamelCase()}" />
                             </div>
                         """");
                     break;
                 default:
                     output.AppendLine($"""
                             <div class="field col-12 md:col-6">
-                              <app-input-text label="{property.Name}" formControlName="{property.Name.ToCamelCase()}" [required]="false" [readonly]="false" />
+                              <app-input-text label="{property.Name.SeparateWords()}" formControlName="{property.Name.ToCamelCase()}" [required]="false" [readonly]="false" />
                               <app-validator-msg [control]="f['{property.Name.ToCamelCase()}']"></app-validator-msg>
                             </div>
                         """);
@@ -606,18 +606,18 @@ internal static class TemplateMap
                 case "string":
                     output.AppendLine();
                     output.AppendLine($"""
-                            builder.Property(t => t.{property.Name})
-                                .HasMaxLength(250)
-                                .IsRequired();
+                                builder.Property(t => t.{property.Name})
+                                    .HasMaxLength(250)
+                                    .IsRequired();
                         """);
                     break;
                 case "decimal?":
                 case "decimal":
                     output.AppendLine();
                     output.AppendLine($""""
-                            builder.Property(t => t.{property.Name})
-                                .HasColumnType("decimal(18, 2)")
-                                .IsRequired();
+                                builder.Property(t => t.{property.Name})
+                                    .HasColumnType("decimal(18, 2)")
+                                    .IsRequired();
                         """");
                     break;
                 default:

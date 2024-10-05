@@ -47,7 +47,7 @@
   
         <!-- Price Input Currency -->
         <div class="field col-12 md:col-4">
-          <app-input-currency label="Price" formControlName="price" [required]="true" />
+          <app-input-currency label="Price" formControlName="salePrice" [required]="true" />
         </div>
   
         <!-- Wholesale Price Input Currency -->
@@ -80,7 +80,7 @@
         </div>
 
         <div class="field col-12 md:col-4">
-          <app-input-select label="Tax" formControlName="taxRate" [options]="taxMethods" [required]="false" />
+          <app-input-select label="Tax" formControlName="taxRate" [options]="optionsDataSources?.['taxesSelectList']" [required]="false" />
         </div>
         
         <div class="field col-12 md:col-4">

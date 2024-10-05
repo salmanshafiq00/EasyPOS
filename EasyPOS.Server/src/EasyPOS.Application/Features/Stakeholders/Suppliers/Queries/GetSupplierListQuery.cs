@@ -1,6 +1,4 @@
-﻿using EasyPOS.Application.Features.Warehouses.Queries;
-
-namespace EasyPOS.Application.Features.Suppliers.Queries;
+﻿namespace EasyPOS.Application.Features.Suppliers.Queries;
 
 [Authorize(Policy = Permissions.Suppliers.View)]
 public record GetSupplierListQuery

@@ -37,5 +37,8 @@ internal sealed class CustomerConfiguration : IEntityTypeConfiguration<Customer>
         builder.Property(p => p.City)
            .HasMaxLength(200)
            .IsRequired(false);
+
+        builder.Property(t => t.PreviousDue)
+            .HasColumnType("decimal(18, 2)");
     }
 }

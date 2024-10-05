@@ -1,0 +1,32 @@
+﻿<div class="col-12">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+    <div class="p-fluid p-formgrid grid">
+         <div class="field col-12 md:col-6">
+        <app-input-text label="Code" formControlName="code" [required]="false" [readonly]="false" />
+        <app-validator-msg [control]="f['code']" />
+    </div>
+    <div class="field col-12 md:col-6">
+        <app-input-text label="Name" formControlName="name" [required]="false" [readonly]="false" />
+        <app-validator-msg [control]="f['name']" />
+    </div>
+    <div class="field col-12 md:col-6">
+      <app-input-select label="BaseUnit" formControlName="baseUnit" [options]="optionsDataSources?.['productUnitSelectList']"
+        [required]="false" />
+    </div>
+    <div class="field col-12 md:col-6">
+        <app-input-text label="Operator" formControlName="operator" [required]="false" [readonly]="false" />
+        <app-validator-msg [control]="f['operator']" />
+    </div>
+    <div class="field col-12 md:col-6">
+      <app-input-decimal label="OperatorValue" formControlName="operatorValue" textAlign="right" [showButtons]="false" [required]="false" />
+    </div>
+
+    </div>
+
+    <div class="mt-3 p-dialog-footer">
+      <app-button label="Cancel" type="button" icon="pi pi-times" [text]="true" severity="warning"
+        (onClick)="cancel()" />
+      <app-button label="Save" type="submit" icon="pi pi-check" [text]="true" [disabled]="form.invalid" />
+    </div>
+  </form>
+</div>
