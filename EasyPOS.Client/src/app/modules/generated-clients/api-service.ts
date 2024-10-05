@@ -11006,6 +11006,7 @@ export class PurchaseModel implements IPurchaseModel {
     referenceNo?: string;
     warehouseId?: string;
     supplierId?: string;
+    supplier?: string;
     purchaseStatusId?: string;
     attachmentUrl?: string | undefined;
     orderTax?: number | undefined;
@@ -11031,6 +11032,7 @@ export class PurchaseModel implements IPurchaseModel {
             this.referenceNo = _data["referenceNo"];
             this.warehouseId = _data["warehouseId"];
             this.supplierId = _data["supplierId"];
+            this.supplier = _data["supplier"];
             this.purchaseStatusId = _data["purchaseStatusId"];
             this.attachmentUrl = _data["attachmentUrl"];
             this.orderTax = _data["orderTax"];
@@ -11066,6 +11068,7 @@ export class PurchaseModel implements IPurchaseModel {
         data["referenceNo"] = this.referenceNo;
         data["warehouseId"] = this.warehouseId;
         data["supplierId"] = this.supplierId;
+        data["supplier"] = this.supplier;
         data["purchaseStatusId"] = this.purchaseStatusId;
         data["attachmentUrl"] = this.attachmentUrl;
         data["orderTax"] = this.orderTax;
@@ -11094,6 +11097,7 @@ export interface IPurchaseModel {
     referenceNo?: string;
     warehouseId?: string;
     supplierId?: string;
+    supplier?: string;
     purchaseStatusId?: string;
     attachmentUrl?: string | undefined;
     orderTax?: number | undefined;

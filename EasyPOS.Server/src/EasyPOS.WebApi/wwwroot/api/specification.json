@@ -7021,6 +7021,9 @@
             "type": "string",
             "format": "guid"
           },
+          "supplier": {
+            "type": "string"
+          },
           "purchaseStatusId": {
             "type": "string",
             "format": "guid"

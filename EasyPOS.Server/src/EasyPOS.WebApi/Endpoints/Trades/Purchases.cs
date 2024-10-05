@@ -80,11 +80,11 @@ public class Purchases : EndpointGroupBase
             AllowCacheList: false)
         );
 
-        var orderTaxStatusSelectList = await sender.Send(new GetSelectListQuery(
-            Sql: SelectListSqls.GetLookupDetailSelectListByDevCodeSql,
-            Parameters: new { DevCode = LookupDevCode.OrderTax },
-            Key: $"{CacheKeys.LookupDetail}_{LookupDevCode.OrderTax}",
-            AllowCacheList: true)
+        var taxesSelectList = await sender.Send(new GetSelectListQuery(
+           Sql: SelectListSqls.TaxesSelectListSql,
+           Parameters: new { },
+           Key: CacheKeys.Tax_All_SelectList,
+           AllowCacheList: true)
         );
 
         var productsSelectList = await sender.Send(new ProductSelectListQuery(
@@ -94,8 +94,9 @@ public class Purchases : EndpointGroupBase
         result.Value.OptionsDataSources.Add("suppliersSelectList", suppliersSelectList.Value);
         result.Value.OptionsDataSources.Add("warehousesSelectList", warehousesSelectList.Value);
         result.Value.OptionsDataSources.Add("purchaseStatusSelectList", purchaseStatusSelectList.Value);
-        result.Value.OptionsDataSources.Add("orderTaxStatusSelectList", orderTaxStatusSelectList.Value);
         result.Value.OptionsDataSources.Add("productsSelectList", productsSelectList.Value);
+        result.Value.OptionsDataSources.Add("taxesSelectList", taxesSelectList.Value);
+
 
         return TypedResults.Ok(result.Value);
     }

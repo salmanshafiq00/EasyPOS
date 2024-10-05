@@ -17,8 +17,12 @@ internal sealed class GetPurchaseListQueryHandler(ISqlConnectionFactory sqlConne
 
         var sql = $"""
             SELECT
-                t.Id AS {nameof(PurchaseModel.Id)}
+                t.Id AS {nameof(PurchaseModel.Id)},
+                t.PurchaseDate AS {nameof(PurchaseModel.PurchaseDate)},
+                t.ReferenceNo AS {nameof(PurchaseModel.ReferenceNo)},
+                s.Name AS {nameof(PurchaseModel.Supplier)}
             FROM dbo.Purchases t
+            LEFT JOIN dbo.Suppliers s ON s.Id = t.SupplierId
             """;
 
         var sqlWithOrders = $"""

@@ -11,7 +11,7 @@ import { PurchaseDetailComponent } from '../purchase-detail/purchase-detail.comp
 })
 export class PurchaseListComponent {
   detailComponent = PurchaseDetailComponent;
-  pageId = ''
+  pageId = 'e6a24c4e-13aa-4862-b415-08dce587d160'
 
   entityClient: PurchasesClient = inject(PurchasesClient);
 

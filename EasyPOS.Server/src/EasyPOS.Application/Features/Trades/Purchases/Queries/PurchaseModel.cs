@@ -7,6 +7,7 @@ public record PurchaseModel
     public string ReferenceNo { get; set; }
     public Guid WarehouseId { get; set; }
     public Guid SupplierId { get; set; }
+    public string Supplier { get; set; }
     public Guid PurchaseStatusId { get; set; }
     public string? AttachmentUrl { get; set; }
     public decimal? OrderTax { get; set; }
