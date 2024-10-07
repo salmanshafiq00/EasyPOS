@@ -1,9 +1,8 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AppMenuService } from '../sidebar/app-menu.service';
 import { SidebarMenuModel } from 'src/app/modules/generated-clients/api-service';
-import { Subscription, debounceTime, filter } from 'rxjs';
-import { NavigationEnd, Router } from '@angular/router';
-import { MenuItem } from 'primeng/api';
+import { Subscription, filter } from 'rxjs';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 
 @Component({
   selector: 'app-breadcrumb',
@@ -17,7 +16,8 @@ export class BreadcrumbComponent implements OnInit {
   subscriptions: Subscription = new Subscription();
 
   constructor(private appMenuService: AppMenuService,
-    private router: Router
+    private router: Router,
+    private activatedRoute: ActivatedRoute
   ) { }
 
   ngOnInit() {
@@ -25,11 +25,6 @@ export class BreadcrumbComponent implements OnInit {
       this.appMenus = data;
       this.updateBreadcrumbs();
     }));
-
-    // this.subscriptions.add(this.appMenuService.getSelectedMenu().subscribe(data => {
-    //   this.selectedMenu = data;
-    //   this.updateBreadcrumbs();
-    // }));
 
     this.subscriptions.add(this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(event => {
       this.updateBreadcrumbs();
@@ -66,10 +61,42 @@ export class BreadcrumbComponent implements OnInit {
     return flatMenus?.find(menu => menu?.routerLink[0]?.toLowerCase() === url?.toLowerCase());
   }
 
-  private getUnmatchedBreadcrumb(currentUrl: string): any[]{
-    const breadcrumb = currentUrl.split('/').map(x => ({label: x}));
+  // private getUnmatchedBreadcrumb(currentUrl: string): any[]{
+  //   const breadcrumb = currentUrl.split('/').map(x => ({label: x}));
+  //   return breadcrumb;
+  // }
+
+  private getUnmatchedBreadcrumb(currentUrl: string): any[] {
+    const urlSegments = currentUrl.split('/');
+    const breadcrumb = [];
+  
+    let currentRoute = this.activatedRoute.root;
+  
+    urlSegments.forEach((segment, index) => {
+      // Check if the current route has routeConfig and check its path
+      if (currentRoute.routeConfig && currentRoute.routeConfig.path) {
+        const path = currentRoute.routeConfig.path;
+  
+        // If the path contains a dynamic parameter (e.g. ":id"), skip this segment
+        const isParam = path.includes(':');
+        if (!isParam && segment) {
+          breadcrumb.push({ label: segment });
+        }
+      } else if (segment && !segment.match(/[0-9a-fA-F-]{36}/)) {  // Fallback check for GUIDs or other known param formats
+        // Push static segments that are not known parameter formats like GUIDs
+        breadcrumb.push({ label: segment });
+      }
+  
+      // Move to the next child route for nested routes
+      if (currentRoute.children && currentRoute.children.length > 0) {
+        currentRoute = currentRoute.children[0];
+      }
+    });
+  
     return breadcrumb;
   }
+  
+  
 
   private setBreadcrumb() {
     if (!this.selectedMenu) return;

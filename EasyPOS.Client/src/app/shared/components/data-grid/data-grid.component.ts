@@ -142,25 +142,25 @@ export class DataGridComponent implements OnInit, OnDestroy {
     if (this.pageId) {
       this.appPagesClient.get(this.pageId).subscribe({
         next: (data: AppPageModel) => {
-          if (data) {
+          if (data) {            
             this.appPageModel = data;
 
-            this.appPageLayout = JSON.parse(data.appPageLayout);
-
+            this.appPageLayout = data.appPageLayout ? JSON.parse(data.appPageLayout) : null;
+            
             this.filterType = this.appPageLayout?.gridFilterType || this.filterType;
-
+            
             this.pageTitle = this.pageTitle ?? this.appPageModel?.title ?? this.listComponent.constructor.name;
-
-            this.dataFields = [...this.appPageLayout?.appPageFields?.filter(field => field.isVisible === true)] ?? [];
-
-            this.leftToolbarActions = [...this.appPageLayout?.toolbarActions?.filter(action => action.position === 'left' && action.isVisible === true)] ?? [];
-
-            this.rightToolbarActions = [...this.appPageLayout?.toolbarActions?.filter(action => action.position === 'right' && action.isVisible === true)] ?? [];
-
-            this.rowActions = [...this.appPageLayout?.rowActions?.filter(field => field.isVisible === true)] ?? [];
-
-            this.globalFilterFields = [...this.appPageLayout?.appPageFields?.filter(x => x.isGlobalFilterable)?.map(x => x.field)] ?? []
-
+            
+            this.dataFields = this.appPageLayout?.appPageFields?.filter(field => field.isVisible === true) || [];
+            
+            this.leftToolbarActions = this.appPageLayout?.toolbarActions?.filter(action => action.position === 'left' && action.isVisible === true) || [];
+            
+            this.rightToolbarActions = this.appPageLayout?.toolbarActions?.filter(action => action.position === 'right' && action.isVisible === true) || [];
+            
+            this.rowActions = this.appPageLayout?.rowActions?.filter(field => field.isVisible === true) || [];
+            
+            this.globalFilterFields = this.appPageLayout?.appPageFields?.filter(x => x.isGlobalFilterable)?.map(x => x.field) || [];
+            
             this.appPageLayout?.appPageFields?.filter(x => x.isGlobalFilterable)?.forEach(field => {
               this.globalFilterFieldModels.push(new GlobalFilterFieldModel({
                 field: field.field,
@@ -435,7 +435,6 @@ export class DataGridComponent implements OnInit, OnDestroy {
   }
 
   private mapAndSetToDataFilterModelForBasic(filters: FilterDictionary) {
-    console.log(this.filters)
     for (const field in filters) {
       if (field === 'global') continue;
 
@@ -558,9 +557,8 @@ export class DataGridComponent implements OnInit, OnDestroy {
     )
       .subscribe((isSucceed: boolean) => {
         if (isSucceed) {
-          this.clear();
           this.loadGridLayout();
-          this.loadData({ first: this.first, rows: this.rows }, false)
+          this.clear();
         }
       });
   }

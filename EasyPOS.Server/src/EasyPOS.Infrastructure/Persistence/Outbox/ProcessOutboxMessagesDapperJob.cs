@@ -3,9 +3,9 @@ using Dapper;
 using EasyPOS.Application.Common.Abstractions;
 using EasyPOS.Domain.Abstractions;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+
 
 namespace EasyPOS.Infrastructure.Persistence.Outbox;
 
@@ -72,6 +72,8 @@ public class ProcessOutboxMessagesDapperJob(
                 await UpdateOutboxMessagesAsync(connection, transaction, outboxMessage, exception);
             }
 
+            transaction.Commit();
+
         }
         catch (Exception ex)
         {
@@ -105,11 +107,10 @@ public class ProcessOutboxMessagesDapperJob(
         OutboxMessage outboxMessage,
         Exception? exception)
     {
-        const string sql = @"""
+        const string sql = @"
             UPDATE OutboxMessage
             SET ProcessedOn = @ProcessedOn, error = @Error
-            WHERE Id = @Id
-            """;
+            WHERE Id = @Id";
 
         await connection.ExecuteAsync(
            sql,

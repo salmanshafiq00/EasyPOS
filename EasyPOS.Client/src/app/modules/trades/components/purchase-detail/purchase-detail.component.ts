@@ -13,29 +13,39 @@ import { ToastService } from 'src/app/shared/services/toast.service';
   styleUrl: './purchase-detail.component.scss',
   providers: [PurchasesClient, DatePipe]
 })
-export class PurchaseDetailComponent  implements OnInit {
+export class PurchaseDetailComponent implements OnInit {
 
   emptyGuid = '00000000-0000-0000-0000-000000000000';
-  id: string = '';  
+  id: string = '';
   public optionsDataSources = {};
   form: FormGroup;
   item: PurchaseModel;
 
-  protected get f() {
+  totalQuantity: number = 0;
+  totalNetUnitCost: number = 0;
+  totalDiscount: number = 0;
+  totalTax: number = 0;
+  totalSubTotal: number = 0;
+
+  get purchaseDetails() {
+    return this.form.get('purchaseDetails') as FormArray;
+  }
+
+  get f() {
     return this.form.controls;
   }
-  
+
   protected toast: ToastService = inject(ToastService);
   protected customDialogService: CustomDialogService = inject(CustomDialogService)
   protected fb: FormBuilder = inject(FormBuilder);
   protected datePipe: DatePipe = inject(DatePipe);
 
   constructor(private entityClient: PurchasesClient
-  ) {}
+  ) { }
 
   selectedProduct: any;
 
- ngOnInit(): void {
+  ngOnInit(): void {
     this.getById(this.id || this.emptyGuid)
     this.initializeFormGroup();
   }
@@ -54,7 +64,7 @@ export class PurchaseDetailComponent  implements OnInit {
     }
   }
 
-  protected save() {
+  save() {
     const createCommand = { ...this.form.value };
     createCommand.purchaseDate = this.datePipe.transform(createCommand.purchaseDate, 'yyyy-MM-dd');
     console.log(createCommand)
@@ -68,7 +78,7 @@ export class PurchaseDetailComponent  implements OnInit {
     });
   }
 
-  protected getById(id: string) {
+  getById(id: string) {
     this.entityClient.get(id).subscribe({
       next: (res: any) => {
         if (id !== this.emptyGuid) {
@@ -85,7 +95,7 @@ export class PurchaseDetailComponent  implements OnInit {
     });
   }
 
-  protected  initializeFormGroup(): void {
+  initializeFormGroup(): void {
     this.form = this.fb.group({
       id: [null],
       purchaseDate: [null],
@@ -112,7 +122,7 @@ export class PurchaseDetailComponent  implements OnInit {
       this.addProductToPurchaseDetails(selectedProduct);
     }
   }
-  
+
   addProductToPurchaseDetails(product: any) {
     const productFormGroup = this.fb.group({
       productId: [product.id],
@@ -128,7 +138,14 @@ export class PurchaseDetailComponent  implements OnInit {
     });
 
     this.purchaseDetails.push(productFormGroup);
+
+    this.calculateSubTotal(this.purchaseDetails.length - 1);
   }
+
+  removeProductFromPurchaseDetails(index: number) {
+    this.purchaseDetails.removeAt(index);
+  }
+
 
   calculateSubTotal(index: number) {
     const product = this.purchaseDetails.at(index);
@@ -139,15 +156,18 @@ export class PurchaseDetailComponent  implements OnInit {
 
     const subTotal = (netUnitCost * quantity) - discount + tax;
     product.get('subTotal').setValue(subTotal, { emitEvent: false });
+
+    this.calculateTotals();
   }
 
-  removeProductFromPurchaseDetails(index: number) {
-    this.purchaseDetails.removeAt(index);
+  calculateTotals() {
+    this.totalQuantity = this.purchaseDetails.controls.reduce((acc, curr) => acc + (curr.get('quantity').value || 0), 0);
+    this.totalNetUnitCost = this.purchaseDetails.controls.reduce((acc, curr) => acc + (curr.get('netUnitCost').value || 0), 0);
+    this.totalDiscount = this.purchaseDetails.controls.reduce((acc, curr) => acc + (curr.get('discount').value || 0), 0);
+    this.totalTax = this.purchaseDetails.controls.reduce((acc, curr) => acc + (curr.get('tax').value || 0), 0);
+    this.totalSubTotal = this.purchaseDetails.controls.reduce((acc, curr) => acc + (curr.get('subTotal').value || 0), 0);
   }
-  
-  get purchaseDetails() {
-    return this.form.get('purchaseDetails') as FormArray;
-  }
+
 
   protected getErrorMessage(error: any): string {
     return error?.errors?.[0]?.description || 'An unexpected error occurred';

@@ -1,6 +1,4 @@
 ﻿using EasyPOS.Application.Common.Events;
-using EasyPOS.Application.Common.Abstractions;
-using EasyPOS.Application.Common.Abstractions.Caching;
 using EasyPOS.Domain.Common.DomainEvents;
 
 namespace EasyPOS.Application.Features.LookupDetails.EventHandlers;
@@ -13,24 +11,40 @@ internal sealed class LookupUpdatedEventHandler(
 {
     public async Task Handle(LookupUpdatedEvent notification, CancellationToken cancellationToken)
     {
-        var connection = sqlConnection.GetOpenConnection();
+        var connection = sqlConnection.CreateNewConnection();
 
-        var sql = """
+        using var transaction = connection.BeginTransaction();
+
+        try
+        {
+            var sql = """
             UPDATE dbo.LookupDetails
             SET Status = @Status
             WHERE LookupId = @LookupId
             """;
 
-        var result = await connection.ExecuteAsync(sql, new { notification.Lookup.Status, LookupId = notification.Lookup.Id });
+            var result = await connection.ExecuteAsync(
+                sql,
+                new { notification.Lookup.Status, LookupId = notification.Lookup.Id },
+                transaction: transaction);
 
-        var eventHandlerName = nameof(LookupUpdatedEventHandler);
-        logger.LogInformation("Event Handler: {EventHandlerName} {@Notification} {ExecutedOn}", eventHandlerName, notification, DateTime.Now);
+            var eventHandlerName = nameof(LookupUpdatedEventHandler);
+            logger.LogInformation("Event Handler: {EventHandlerName} {@Notification} {ExecutedOn}", eventHandlerName, notification, DateTime.Now);
 
-        if (result > 0)
+            if (result > 0)
+            {
+                await publisher.Publish(
+        new CacheInvalidationEvent { CacheKey = CacheKeys.LookupDetail });
+
+            }
+
+            transaction.Commit();
+        }
+        catch (Exception ex)
         {
-            await publisher.Publish(
-    new CacheInvalidationEvent { CacheKey = CacheKeys.LookupDetail });
-
+            transaction.Rollback();
+            logger.LogError(ex, "Error in LookupUpdatedEventHandler");
+            throw;
         }
     }
 }

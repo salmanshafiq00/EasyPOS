@@ -5,7 +5,7 @@ public record GetProductListQuery
     : DataGridModel, ICacheableQuery<PaginatedResponse<ProductModel>>
 {
     [JsonInclude]
-    public string CacheKey => $"{CacheKeys.Product}l_{PageNumber}_{PageSize}";
+    public string CacheKey => $"{CacheKeys.Product}_{PageNumber}_{PageSize}";
 }
 
 internal sealed class GetProductListQueryHandler(ISqlConnectionFactory sqlConnection)
@@ -17,30 +17,30 @@ internal sealed class GetProductListQueryHandler(ISqlConnectionFactory sqlConnec
 
         string sql = $"""
             SELECT
-                p.Id AS {nameof(ProductModel.Id)},
-                p.Name AS {nameof(ProductModel.Name)},
-                p.CategoryId AS {nameof(ProductModel.CategoryId)},
-                p.ProductTypeId AS {nameof(ProductModel.ProductTypeId)},
-                p.BrandId AS {nameof(ProductModel.BrandId)},
-                p.Code AS {nameof(ProductModel.Code)},
-                p.SKU AS {nameof(ProductModel.SKU)},
-                p.CostPrice AS {nameof(ProductModel.CostPrice)},
-                p.SalePrice AS {nameof(ProductModel.SalePrice)},
-                p.WholesalePrice AS {nameof(ProductModel.WholesalePrice)},
-                p.Unit AS {nameof(ProductModel.Unit)},
-                p.SaleUnit AS {nameof(ProductModel.SaleUnit)},
-                p.PurchaseUnit AS {nameof(ProductModel.PurchaseUnit)},
-                p.AlertQuantity AS {nameof(ProductModel.AlertQuantity)},
-                p.BarCodeType AS {nameof(ProductModel.BarCodeType)},
-                p.QRCodeType AS {nameof(ProductModel.QRCodeType)},
-                p.Description AS {nameof(ProductModel.Description)},
-                p.IsActive AS {nameof(ProductModel.IsActive)}
-            FROM dbo.Products p
+                t.Id AS {nameof(ProductModel.Id)},
+                t.Name AS {nameof(ProductModel.Name)},
+                t.CategoryId AS {nameof(ProductModel.CategoryId)},
+                t.ProductTypeId AS {nameof(ProductModel.ProductTypeId)},
+                t.BrandId AS {nameof(ProductModel.BrandId)},
+                t.Code AS {nameof(ProductModel.Code)},
+                t.SKU AS {nameof(ProductModel.SKU)},
+                t.CostPrice AS {nameof(ProductModel.CostPrice)},
+                t.SalePrice AS {nameof(ProductModel.SalePrice)},
+                t.WholesalePrice AS {nameof(ProductModel.WholesalePrice)},
+                t.Unit AS {nameof(ProductModel.Unit)},
+                t.SaleUnit AS {nameof(ProductModel.SaleUnit)},
+                t.PurchaseUnit AS {nameof(ProductModel.PurchaseUnit)},
+                t.AlertQuantity AS {nameof(ProductModel.AlertQuantity)},
+                t.BarCodeType AS {nameof(ProductModel.BarCodeType)},
+                t.QRCodeType AS {nameof(ProductModel.QRCodeType)},
+                t.Description AS {nameof(ProductModel.Description)},
+                t.IsActive AS {nameof(ProductModel.IsActive)}
+            FROM dbo.Products t
             """;
 
         var sqlWithOrders = $"""
             {sql} 
-            ORDER BY p.Name
+            ORDER BY t.Name
             """;
 
         return await PaginatedResponse<ProductModel>
