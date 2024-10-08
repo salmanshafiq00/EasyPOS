@@ -6,54 +6,31 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace EasyPOS.Infrastructure.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class ProductEntityChanged : Migration
+    public partial class Morning : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<decimal>(
-                name: "Discount",
-                table: "Products",
-                type: "decimal(18,2)",
-                nullable: false,
-                defaultValue: 0m);
-
-            migrationBuilder.AddColumn<int>(
-                name: "DiscountType",
-                table: "Products",
-                type: "int",
-                nullable: false,
-                defaultValue: 0);
-
-            migrationBuilder.AddColumn<int>(
-                name: "TaxMethod",
-                table: "Products",
-                type: "int",
-                nullable: false,
-                defaultValue: 0);
-
-            migrationBuilder.AddColumn<decimal>(
-                name: "TaxRate",
-                table: "Products",
-                type: "decimal(18,2)",
-                nullable: false,
-                defaultValue: 0m);
+            
 
             migrationBuilder.CreateTable(
                 name: "Purchases",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     PurchaseDate = table.Column<DateOnly>(type: "date", nullable: false),
-                    ReferenceNo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ReferenceNo = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     WarehouseId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     SupplierId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PurchaseStatusId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AttachmentUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AttachmentUrl = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    SubTotal = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     OrderTax = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
-                    Discount = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    OrderTaxAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    OrderDiscount = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
                     ShippingCost = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
-                    Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    GrantTotal = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Note = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -68,20 +45,20 @@ namespace EasyPOS.Infrastructure.Persistence.Migrations
                 name: "Sales",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     SaleDate = table.Column<DateOnly>(type: "date", nullable: false),
-                    ReferenceNo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ReferenceNo = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     WarehouseId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     BullerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AttachmentUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AttachmentUrl = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
                     OrderTax = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
                     OrderDiscountTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Discount = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
                     ShippingCost = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
                     SaleStatusId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PaymentStatusId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    SaleNote = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SaleNote = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     StaffNote = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -91,28 +68,30 @@ namespace EasyPOS.Infrastructure.Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Sales", x => x.Id);
-                });
+                });           
 
             migrationBuilder.CreateTable(
-                name: "PurchaseDetail",
+                name: "PurchaseDetails",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     PurchaseId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
-                    BatchNo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    BatchNo = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     ExpiredDate = table.Column<DateOnly>(type: "date", nullable: true),
                     NetUnitCost = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Decimal = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    DiscountAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Tax = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    TaxAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    TaxMethod = table.Column<int>(type: "int", nullable: false),
                     SubTotal = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PurchaseDetail", x => x.Id);
+                    table.PrimaryKey("PK_PurchaseDetails", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PurchaseDetail_Purchases_PurchaseId",
+                        name: "FK_PurchaseDetails_Purchases_PurchaseId",
                         column: x => x.PurchaseId,
                         principalTable: "Purchases",
                         principalColumn: "Id",
@@ -120,25 +99,25 @@ namespace EasyPOS.Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "SaleDetail",
+                name: "SaleDetails",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     SaleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
-                    BatchNo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    BatchNo = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     ExpiredDate = table.Column<DateOnly>(type: "date", nullable: true),
                     NetUnitCost = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Decimal = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    DiscountAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Tax = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     SubTotal = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SaleDetail", x => x.Id);
+                    table.PrimaryKey("PK_SaleDetails", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SaleDetail_Sales_SaleId",
+                        name: "FK_SaleDetails_Sales_SaleId",
                         column: x => x.SaleId,
                         principalTable: "Sales",
                         principalColumn: "Id",
@@ -146,13 +125,13 @@ namespace EasyPOS.Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_PurchaseDetail_PurchaseId",
-                table: "PurchaseDetail",
+                name: "IX_PurchaseDetails_PurchaseId",
+                table: "PurchaseDetails",
                 column: "PurchaseId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SaleDetail_SaleId",
-                table: "SaleDetail",
+                name: "IX_SaleDetails_SaleId",
+                table: "SaleDetails",
                 column: "SaleId");
         }
 
@@ -160,32 +139,16 @@ namespace EasyPOS.Infrastructure.Persistence.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "PurchaseDetail");
+                name: "PurchaseDetails");
 
             migrationBuilder.DropTable(
-                name: "SaleDetail");
+                name: "SaleDetails");
 
             migrationBuilder.DropTable(
                 name: "Purchases");
 
             migrationBuilder.DropTable(
                 name: "Sales");
-
-            migrationBuilder.DropColumn(
-                name: "Discount",
-                table: "Products");
-
-            migrationBuilder.DropColumn(
-                name: "DiscountType",
-                table: "Products");
-
-            migrationBuilder.DropColumn(
-                name: "TaxMethod",
-                table: "Products");
-
-            migrationBuilder.DropColumn(
-                name: "TaxRate",
-                table: "Products");
         }
     }
 }

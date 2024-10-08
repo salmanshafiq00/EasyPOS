@@ -249,7 +249,7 @@ export class AppPageDetailComponent implements OnInit {
 
   private createAppPageAction(): FormGroup {
     const atn_id = 'atn_' + this.newGuid();
-    const sortOrder = this.toolbarActions?.length + 1 ?? 1;
+    const sortOrder = this.toolbarActions ? this.toolbarActions.length + 1 : 1;
     return this.fb.group({
       id: [atn_id],
       actionName: ['', Validators.required],
@@ -326,7 +326,7 @@ export class AppPageDetailComponent implements OnInit {
 
   private createRowAction(): FormGroup {
     const ract_id = 'ract_' + this.newGuid();
-    const sortOrder = this.rowActions?.length + 1 ?? 1;
+    const sortOrder = this.rowActions && this.rowActions.length ? this.rowActions.length + 1 : 1;
     return this.fb.group({
       id: [ract_id],
       actionName: ['', Validators.required],
@@ -359,7 +359,7 @@ export class AppPageDetailComponent implements OnInit {
 
   createAppPageField(): FormGroup {
     const fld_id = 'fld_' + this.newGuid();
-    const sortOrder = this.appPageFields?.length + 1 ?? 1;
+    const sortOrder = this.appPageFields && this.appPageFields.length ? this.appPageFields.length + 1 : 1;
     return this.fb.group({
       id: [fld_id],
       field: ['', Validators.required],

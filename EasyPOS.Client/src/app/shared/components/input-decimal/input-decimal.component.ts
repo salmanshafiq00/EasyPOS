@@ -76,7 +76,7 @@ export class InputDecimalComponent implements ControlValueAccessor, Validator {
   }
 
   onInputChange(event: any): void {
-    this.value = event ? parseFloat(event) : null;
+    this.value = event !== '' && event !== null ? parseFloat(event) : null;
     this.onChangeFn(this.value);
   }
   

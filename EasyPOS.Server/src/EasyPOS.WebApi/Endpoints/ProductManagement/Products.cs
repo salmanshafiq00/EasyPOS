@@ -43,6 +43,10 @@ public class Products : EndpointGroupBase
              .WithName("ProductUpload")
              .Produces<int>(StatusCodes.Status200OK)
              .Produces<ProblemDetails>(StatusCodes.Status400BadRequest);
+
+        group.MapPost("GetProductSelectList", GetProductSelectList)
+             .WithName("GetProductSelectList")
+             .Produces<List<ProductSelectListModel>>(StatusCodes.Status200OK);
     }
 
     private async Task<IResult> GetAll(ISender sender, GetProductListQuery query)
@@ -171,5 +175,14 @@ public class Products : EndpointGroupBase
         return result!.Match(
             onSuccess: () => Results.Ok(result.Value),
             onFailure: result!.ToProblemDetails);
+    }
+
+    private async Task<IResult> GetProductSelectList(ISender sender, bool allowCache = true)
+    {
+        var result =await sender.Send(new ProductSelectListQuery(
+            AllowCacheList: allowCache)
+        );
+
+        return TypedResults.Ok(result.Value);
     }
 }

@@ -43,7 +43,7 @@ internal sealed class CreatePurchaseFromExcelCommandHandler(
 
         //}
 
-        dbContext.Purchases.AddRange(entities);
+        //dbContext.Purchases.AddRange(entities);
         var affectedRow = await dbContext.SaveChangesAsync(cancellationToken);
 
         return affectedRow;

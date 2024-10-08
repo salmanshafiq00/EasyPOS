@@ -29,14 +29,25 @@ internal sealed class PurchaseConfiguration : IEntityTypeConfiguration<Purchase>
         builder.Property(x => x.AttachmentUrl)
                .HasMaxLength(255);
 
+        builder.Property(x => x.SubTotal)
+               .HasColumnType("decimal(18, 2)")
+               .IsRequired();
+
         builder.Property(x => x.OrderTax)
                .HasColumnType("decimal(18, 2)");
 
-        builder.Property(x => x.Discount)
+        builder.Property(x => x.OrderTaxAmount)
+               .HasColumnType("decimal(18, 2)");
+
+        builder.Property(x => x.OrderDiscount)
                .HasColumnType("decimal(18, 2)");
 
         builder.Property(x => x.ShippingCost)
                .HasColumnType("decimal(18, 2)");
+
+        builder.Property(x => x.GrandTotal)
+              .HasColumnType("decimal(18, 2)")
+              .IsRequired();
 
         builder.Property(x => x.Note)
                .HasMaxLength(500);

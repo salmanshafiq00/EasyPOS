@@ -10,9 +10,12 @@ public record CreatePurchaseCommand(
     Guid SupplierId,
     Guid PurchaseStatusId,
     string? AttachmentUrl,
+    decimal SubTotal,
     decimal? OrderTax,
-    decimal? Discount,
+    decimal? OrderTaxAmount,
+    decimal? OrderDiscount,
     decimal? ShippingCost,
+    decimal GrandTotal,
     string? Note,
     List<PurchaseDetailModel> PurchaseDetails
     ) : ICacheInvalidatorCommand<Guid>

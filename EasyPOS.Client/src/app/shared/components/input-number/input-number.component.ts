@@ -74,7 +74,9 @@ export class InputNumberComponent implements ControlValueAccessor, Validator {
   }
 
   onInputChange(event: any): void {
-    this.value = event ? parseFloat(event) : null;
+    console.log(event)
+    this.value = event !== '' && event !== null ? parseInt(event) : null;
+    console.log(this.value)
     this.onChangeFn(this.value);
   }
 

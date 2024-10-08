@@ -6,7 +6,7 @@ public record GetProductByIdQuery(Guid Id) : ICacheableQuery<ProductModel>
 
     public TimeSpan? Expiration => null;
 
-    public bool? AllowCache => true;
+    public bool? AllowCache => false;
 }
 
 internal sealed class GetProductByIdQueryHandler(ISqlConnectionFactory sqlConnectionFactory) 
@@ -22,26 +22,28 @@ internal sealed class GetProductByIdQueryHandler(ISqlConnectionFactory sqlConnec
 
         string sql = $"""
             SELECT
-                c.Id AS {nameof(ProductModel.Id)},
-                c.Name AS {nameof(ProductModel.Name)},
-                c.CategoryId AS {nameof(ProductModel.CategoryId)},
-                c.ProductTypeId AS {nameof(ProductModel.ProductTypeId)},
-                c.BrandId AS {nameof(ProductModel.BrandId)},
-                c.Code AS {nameof(ProductModel.Code)},
-                c.SKU AS {nameof(ProductModel.SKU)},
-                c.CostPrice AS {nameof(ProductModel.CostPrice)},
-                c.SalePrice AS {nameof(ProductModel.SalePrice)},
-                c.WholesalePrice AS {nameof(ProductModel.WholesalePrice)},
-                c.Unit AS {nameof(ProductModel.Unit)},
-                c.SaleUnit AS {nameof(ProductModel.SaleUnit)},
-                c.PurchaseUnit AS {nameof(ProductModel.PurchaseUnit)},
-                c.AlertQuantity AS {nameof(ProductModel.AlertQuantity)},
-                c.BarCodeType AS {nameof(ProductModel.BarCodeType)},
-                c.QRCodeType AS {nameof(ProductModel.QRCodeType)},
-                c.Description AS {nameof(ProductModel.Description)},
-                c.IsActive AS {nameof(ProductModel.IsActive)},
-            FROM dbo.Products c
-            WHERE c.Id = @Id
+                t.Id AS {nameof(ProductModel.Id)},
+                t.Name AS {nameof(ProductModel.Name)},
+                t.CategoryId AS {nameof(ProductModel.CategoryId)},
+                t.ProductTypeId AS {nameof(ProductModel.ProductTypeId)},
+                t.BrandId AS {nameof(ProductModel.BrandId)},
+                t.Code AS {nameof(ProductModel.Code)},
+                t.SKU AS {nameof(ProductModel.SKU)},
+                t.CostPrice AS {nameof(ProductModel.CostPrice)},
+                t.SalePrice AS {nameof(ProductModel.SalePrice)},
+                t.WholesalePrice AS {nameof(ProductModel.WholesalePrice)},
+                t.Unit AS {nameof(ProductModel.Unit)},
+                t.SaleUnit AS {nameof(ProductModel.SaleUnit)},
+                t.PurchaseUnit AS {nameof(ProductModel.PurchaseUnit)},
+                t.AlertQuantity AS {nameof(ProductModel.AlertQuantity)},
+                t.BarCodeType AS {nameof(ProductModel.BarCodeType)},
+                t.QRCodeType AS {nameof(ProductModel.QRCodeType)},
+                t.Description AS {nameof(ProductModel.Description)},
+                t.TaxRate AS {nameof(ProductModel.TaxRate)},
+                t.TaxMethod AS {nameof(ProductModel.TaxMethod)},
+                t.IsActive AS {nameof(ProductModel.IsActive)}
+            FROM dbo.Products t
+            WHERE t.Id = @Id
             """;
 
 

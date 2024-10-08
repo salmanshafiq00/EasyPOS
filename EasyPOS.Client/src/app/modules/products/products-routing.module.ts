@@ -15,11 +15,11 @@ import { TaxListComponent } from "./components/tax-list/tax-list.component"
 
 const routes: Routes = [
   {path: 'categories', component: CategoryListComponent},
-  {path: 'category/:{id}', component: CategoryDetailComponent},
+  {path: 'category/:id', component: CategoryDetailComponent},
   {path: 'products', component: ProductListComponent},
-  {path: 'product/{id}', component: ProductDetailComponent  },
+  {path: 'product/:id', component: ProductDetailComponent  },
   {path: 'add-product', component: ProductDetailComponent  },
-  {path: 'edit-product/:{id}', component: ProductDetailComponent  },
+  {path: 'edit-product/:id', component: ProductDetailComponent  },
   {path: 'warehouses', component: WarehouseListComponent  },
   {path: 'brands', component: BrandListComponent  },
   {path: 'units', component: UnitListComponent  },

@@ -3624,6 +3624,45 @@
         ]
       }
     },
+    "/api/Products/GetProductSelectList": {
+      "post": {
+        "tags": [
+          "Products"
+        ],
+        "operationId": "GetProductSelectList",
+        "parameters": [
+          {
+            "name": "allowCache",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": true
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProductSelectListModel"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
     "/api/Taxes/GetAll": {
       "post": {
         "tags": [
@@ -7021,7 +7060,7 @@
             "type": "string",
             "format": "guid"
           },
-          "supplier": {
+          "supplierName": {
             "type": "string"
           },
           "purchaseStatusId": {
@@ -7032,12 +7071,21 @@
             "type": "string",
             "nullable": true
           },
+          "subTotal": {
+            "type": "number",
+            "format": "decimal"
+          },
           "orderTax": {
             "type": "number",
             "format": "decimal",
             "nullable": true
           },
-          "discount": {
+          "orderTaxAmount": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "orderDiscount": {
             "type": "number",
             "format": "decimal",
             "nullable": true
@@ -7046,6 +7094,10 @@
             "type": "number",
             "format": "decimal",
             "nullable": true
+          },
+          "grandTotal": {
+            "type": "number",
+            "format": "decimal"
           },
           "note": {
             "type": "string",
@@ -7071,6 +7123,12 @@
             "type": "string",
             "format": "guid"
           },
+          "code": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
           "purchaseId": {
             "type": "string",
             "format": "guid"
@@ -7095,11 +7153,18 @@
             "type": "number",
             "format": "decimal"
           },
-          "decimal": {
+          "tax": {
             "type": "number",
             "format": "decimal"
           },
-          "tax": {
+          "taxAmount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "taxMethod": {
+            "$ref": "#/components/schemas/TaxMethod"
+          },
+          "discountAmount": {
             "type": "number",
             "format": "decimal"
           },
@@ -7108,6 +7173,18 @@
             "format": "decimal"
           }
         }
+      },
+      "TaxMethod": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Exclusive",
+          "Inclusive"
+        ],
+        "enum": [
+          1,
+          2
+        ]
       },
       "GetPurchaseListQuery": {
         "allOf": [
@@ -7152,12 +7229,21 @@
             "type": "string",
             "nullable": true
           },
+          "subTotal": {
+            "type": "number",
+            "format": "decimal"
+          },
           "orderTax": {
             "type": "number",
             "format": "decimal",
             "nullable": true
           },
-          "discount": {
+          "orderTaxAmount": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "orderDiscount": {
             "type": "number",
             "format": "decimal",
             "nullable": true
@@ -7166,6 +7252,10 @@
             "type": "number",
             "format": "decimal",
             "nullable": true
+          },
+          "grandTotal": {
+            "type": "number",
+            "format": "decimal"
           },
           "note": {
             "type": "string",
@@ -7213,12 +7303,21 @@
             "type": "string",
             "nullable": true
           },
+          "subTotal": {
+            "type": "number",
+            "format": "decimal"
+          },
           "orderTax": {
             "type": "number",
             "format": "decimal",
             "nullable": true
           },
-          "discount": {
+          "orderTaxAmount": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "orderDiscount": {
             "type": "number",
             "format": "decimal",
             "nullable": true
@@ -7227,6 +7326,10 @@
             "type": "number",
             "format": "decimal",
             "nullable": true
+          },
+          "grandTotal": {
+            "type": "number",
+            "format": "decimal"
           },
           "note": {
             "type": "string",
@@ -7388,7 +7491,7 @@
                 "type": "number",
                 "format": "decimal"
               },
-              "decimal": {
+              "discountAmount": {
                 "type": "number",
                 "format": "decimal"
               },
@@ -8153,18 +8256,6 @@
           }
         }
       },
-      "TaxMethod": {
-        "type": "integer",
-        "description": "",
-        "x-enumNames": [
-          "Exclusive",
-          "Inclusive"
-        ],
-        "enum": [
-          1,
-          2
-        ]
-      },
       "DiscountType": {
         "type": "integer",
         "description": "",
@@ -8288,13 +8379,6 @@
             "type": "number",
             "format": "decimal"
           },
-          "discountType": {
-            "$ref": "#/components/schemas/DiscountType"
-          },
-          "discount": {
-            "type": "number",
-            "format": "decimal"
-          },
           "description": {
             "type": "string",
             "nullable": true
@@ -8323,6 +8407,44 @@
             }
           }
         ]
+      },
+      "ProductSelectListModel": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string",
+            "nullable": true
+          },
+          "costPrice": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "salePrice": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "purchaseUnit": {
+            "type": "string",
+            "format": "guid",
+            "nullable": true
+          },
+          "taxRate": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "taxMethod": {
+            "$ref": "#/components/schemas/TaxMethod"
+          }
+        }
       },
       "PaginatedResponseOfTaxModel": {
         "type": "object",

@@ -1,5 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { DiscountType, ProductsClient, TaxMethod } from 'src/app/modules/generated-clients/api-service';
 import { NavigationStateService } from 'src/app/shared/services/navigation-state.service';
 import { NavigationService } from 'src/app/shared/services/navigation.service';
@@ -28,10 +29,13 @@ export class ProductDetailComponent implements OnInit {
   navigationService = inject(NavigationService);
   navigationStateService = inject(NavigationStateService);
 
-  constructor() {}
+  constructor(private activatedRoute: ActivatedRoute) {}
 
   ngOnInit() {
-    // this.id = this.customDialogService.getConfigData();
+    this.activatedRoute.paramMap.subscribe(params => {
+      this.id = params.get('id')
+    });
+
     this.taxMethods = this.enumToArray(TaxMethod);
     this.discountTypes = this.enumToArray(DiscountType);
     this.initializeFormGroup();
@@ -122,8 +126,8 @@ export class ProductDetailComponent implements OnInit {
       barCodeType: [null],
       taxMethod: [TaxMethod.Exclusive],
       taxRate: [null],
-      discountType: [DiscountType.Percentage],
-      discount: [null],
+      // discountType: [DiscountType.Percentage],
+      // discount: [null],
       description: [''],
       isActive: [false],            
       photoUrl: ['']

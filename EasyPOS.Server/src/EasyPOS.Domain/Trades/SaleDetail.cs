@@ -8,7 +8,7 @@ public class SaleDetail: BaseEntity
     public string BatchNo { get; set; }
     public DateOnly? ExpiredDate { get; set; }
     public decimal NetUnitCost { get; set; }
-    public decimal Decimal { get; set; }
+    public decimal DiscountAmount { get; set; }
     public decimal Tax { get; set; }
     public decimal SubTotal { get; set; }
 

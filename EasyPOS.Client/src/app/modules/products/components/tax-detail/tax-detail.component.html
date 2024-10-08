@@ -2,11 +2,12 @@
   <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
     <div class="p-fluid p-formgrid grid">
          <div class="field col-12 md:col-6">
-        <app-input-text label="Name" formControlName="name" [required]="false" [readonly]="false" />
+        <app-input-text label="Name" formControlName="name" [required]="true" [readonly]="false" />
         <app-validator-msg [control]="f['name']" />
     </div>
     <div class="field col-12 md:col-6">
-      <app-input-decimal label="Rate" formControlName="rate" textAlign="right" [showButtons]="false" [required]="false" />
+      <app-input-decimal label="Rate" formControlName="rate" textAlign="right" [showButtons]="false" [required]="true" />
+      <app-validator-msg [control]="f['rate']" />
     </div>
 
     </div>

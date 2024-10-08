@@ -839,7 +839,7 @@ namespace EasyPOS.Infrastructure.Persistence.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal?>("Discount")
+                    b.Property<decimal>("GrandTotal")
                         .HasColumnType("decimal(18, 2)");
 
                     b.Property<DateTime?>("LastModified")
@@ -852,7 +852,13 @@ namespace EasyPOS.Infrastructure.Persistence.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
+                    b.Property<decimal?>("OrderDiscount")
+                        .HasColumnType("decimal(18, 2)");
+
                     b.Property<decimal?>("OrderTax")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<decimal?>("OrderTaxAmount")
                         .HasColumnType("decimal(18, 2)");
 
                     b.Property<DateOnly>("PurchaseDate")
@@ -867,6 +873,9 @@ namespace EasyPOS.Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<decimal?>("ShippingCost")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<decimal>("SubTotal")
                         .HasColumnType("decimal(18, 2)");
 
                     b.Property<Guid>("SupplierId")
@@ -891,7 +900,7 @@ namespace EasyPOS.Infrastructure.Persistence.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<decimal>("Decimal")
+                    b.Property<decimal>("DiscountAmount")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateOnly?>("ExpiredDate")
@@ -915,11 +924,17 @@ namespace EasyPOS.Infrastructure.Persistence.Migrations
                     b.Property<decimal>("Tax")
                         .HasColumnType("decimal(18, 2)");
 
+                    b.Property<decimal>("TaxAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("TaxMethod")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("PurchaseId");
 
-                    b.ToTable("PurchaseDetail");
+                    b.ToTable("PurchaseDetails");
                 });
 
             modelBuilder.Entity("EasyPOS.Domain.Trades.Sale", b =>
@@ -1003,7 +1018,7 @@ namespace EasyPOS.Infrastructure.Persistence.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<decimal>("Decimal")
+                    b.Property<decimal>("DiscountAmount")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateOnly?>("ExpiredDate")
@@ -1031,7 +1046,7 @@ namespace EasyPOS.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("SaleId");
 
-                    b.ToTable("SaleDetail");
+                    b.ToTable("SaleDetails");
                 });
 
             modelBuilder.Entity("EasyPOS.Infrastructure.Persistence.Outbox.OutboxMessage", b =>

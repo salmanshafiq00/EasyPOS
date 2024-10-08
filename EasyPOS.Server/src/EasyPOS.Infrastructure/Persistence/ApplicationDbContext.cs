@@ -49,7 +49,9 @@ public sealed class ApplicationDbContext : DbContext, IApplicationDbContext
 
     #region Trades
     public DbSet<Purchase> Purchases => Set<Purchase>();
+    public DbSet<PurchaseDetail> PurchaseDetails => Set<PurchaseDetail>();
     public DbSet<Sale> Sales => Set<Sale>();
+    public DbSet<SaleDetail> SaleDetails => Set<SaleDetail>();
     #endregion
 
     #region Accounts
