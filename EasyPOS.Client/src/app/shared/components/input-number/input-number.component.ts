@@ -28,11 +28,10 @@ export class InputNumberComponent implements ControlValueAccessor, Validator {
   @Input() variant: 'outlined' | 'filled' = 'outlined';
   @Input() autofocus: boolean = false;
   @Input() inputId: string = '';
-  // @Input() textRight: boolean = false;
-  // @Input() textCenter: boolean = false;
   @Input() textAlign: string = 'left';
   @Input() min: number = null;
   @Input() max: number = null;
+  @Input() size: number = null;
   @Input() locale?: string;
   @Input() prefix: string = '';
   @Input() suffix: string = '';
@@ -45,6 +44,10 @@ export class InputNumberComponent implements ControlValueAccessor, Validator {
   @Input() incrementButtonClass: string =  'p-button-success';
   @Input() incrementButtonIcon: string =  'pi pi-plus';
   @Input() decrementButtonIcon: string =  'pi pi-minus';
+  // @Input() decrementButtonClass: string =  '';
+  // @Input() incrementButtonClass: string =  '';
+  // @Input() incrementButtonIcon: string =  '';
+  // @Input() decrementButtonIcon: string =  '';
 
   value: number | null = null;
   onTouched: any = () => {};
@@ -74,9 +77,7 @@ export class InputNumberComponent implements ControlValueAccessor, Validator {
   }
 
   onInputChange(event: any): void {
-    console.log(event)
     this.value = event !== '' && event !== null ? parseInt(event) : null;
-    console.log(this.value)
     this.onChangeFn(this.value);
   }
 

@@ -85,6 +85,9 @@ export class PurchaseDetailComponent implements OnInit {
         }
         this.optionsDataSources = res.optionsDataSources;
         this.form.patchValue(this.item);
+        console.log(this.form)
+        console.log(this.form.value)
+        console.log(this.item)
         this.calculateTotals();
       },
       error: (error) => {
@@ -109,6 +112,7 @@ export class PurchaseDetailComponent implements OnInit {
 
   update() {
     const updateCommand = { ...this.form.value };
+    updateCommand.purchaseDate = this.datePipe.transform(updateCommand.purchaseDate, 'yyyy-MM-dd');
     this.entityClient.update(updateCommand).subscribe({
       next: () => {
         this.toast.updated();
@@ -167,30 +171,6 @@ export class PurchaseDetailComponent implements OnInit {
     this.calculateGrandTotal();
   }
 
-  // private addProductToPurchaseDetails(product: ProductSelectListModel) {
-  //   const netUnitCostAmount = this.getNetUnitCostAmount(product);
-  //   const taxAmount = this.getTaxAmount(product, netUnitCostAmount);
-
-  //   const productFormGroup = this.fb.group({
-  //     productId: [product.id],
-  //     name: [product.name],
-  //     code: [product.code],
-  //     quantity: [1],
-  //     expiredDate: [null],
-  //     batchNo: [null],
-  //     netUnitCost: [netUnitCostAmount || 0],
-  //     discountAmount: [0],
-  //     tax: [product.taxRate || 0],
-  //     taxAmount: [taxAmount || 0],
-  //     taxMethod: [product.taxMethod],
-  //     subTotal: [product?.costPrice || 0]
-  //   });
-
-  //   this.purchaseDetails.push(productFormGroup);
-
-  //   this.calculateSubTotal(this.purchaseDetails.length - 1);
-  // }
-
   private addProductToPurchaseDetails(product: ProductSelectListModel) {
     // Get the default form group structure
     const productFormGroup = this.addProductFormGroup();
@@ -220,7 +200,9 @@ export class PurchaseDetailComponent implements OnInit {
 
   private addProductFormGroup(): FormGroup{
     return this.fb.group({
+      id: [null],
       productId: [null],
+      purchaseId: [null],
       name: [""],
       code: [""],
       quantity: [1],
@@ -246,9 +228,6 @@ export class PurchaseDetailComponent implements OnInit {
     const netUnitCost = product.get('netUnitCost').value || 0;
     const discountAmount = (product.get('discountAmount').value || 0) * quantity;
     const taxAmount = (product.get('taxAmount').value || 0) * quantity;
-    console.log(netUnitCost)
-    console.log(discountAmount)
-    console.log(taxAmount)
     const subTotal = (netUnitCost * quantity) - discountAmount + taxAmount;
     product.get('subTotal').setValue(subTotal, { emitEvent: false });
 

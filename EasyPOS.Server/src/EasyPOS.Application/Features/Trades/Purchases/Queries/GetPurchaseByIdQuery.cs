@@ -69,7 +69,7 @@ internal sealed class GetPurchaseByIdQueryHandler(ISqlConnectionFactory sqlConne
                 if (!purchaseDictionary.TryGetValue(purchase.Id, out var purchaseEntry))
                 {
                     purchaseEntry = purchase;
-                    purchaseEntry.PurchaseDetails = new List<PurchaseDetailModel>();
+                    purchaseEntry.PurchaseDetails = [];
                     purchaseDictionary.Add(purchase.Id, purchaseEntry);
                 }
 
@@ -80,7 +80,7 @@ internal sealed class GetPurchaseByIdQueryHandler(ISqlConnectionFactory sqlConne
 
                 return purchaseEntry;
             },
-            new { Id = request.Id },
+            new { request.Id },
             splitOn: "Id" // Specifies the column to split the result set between master and child
         );
 

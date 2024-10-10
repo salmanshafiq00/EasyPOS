@@ -4,7 +4,7 @@
     <span class="required-star" *ngIf="required">*</span>
   </label>
   <p-inputNumber
-      [ngClass]="{'digit-right': textAlign === 'right', 'digit-center': textAlign === 'center'}"
+      [ngClass]="{'digit-right': textAlign === 'right', 'digit-center': textAlign === 'center', 'button-resize': showButtons && buttonLayout === 'stacked'}"
       [inputId]="inputId"
       [placeholder]="placeholder"
       [disabled]="disabled"
@@ -12,9 +12,11 @@
       [autofocus]="autofocus"
       [min]="min"
       [max]="max"
+      [size]="size"
       [locale]="locale"
       [prefix]="prefix"
       [suffix]="suffix"
+      [variant]="variant"
       [useGrouping]="useGrouping"
       [showButtons]="showButtons"
       [buttonLayout]="buttonLayout"
