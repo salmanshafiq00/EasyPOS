@@ -44,6 +44,11 @@ public class Purchases : EndpointGroupBase
              .WithName("PurchaseUpload")
              .Produces<int>(StatusCodes.Status200OK)
              .Produces<ProblemDetails>(StatusCodes.Status400BadRequest);
+
+        group.MapPost("DeleteDetail", DeleteDetail)
+             .WithName("DeleteDetail")
+             .Produces(StatusCodes.Status204NoContent)
+             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest);
     }
 
     private async Task<IResult> GetAll(ISender sender, GetPurchaseListQuery query)
@@ -154,5 +159,14 @@ public class Purchases : EndpointGroupBase
         return result!.Match(
             onSuccess: () => Results.Ok(result.Value),
             onFailure: result!.ToProblemDetails);
+    }
+
+    private async Task<IResult> DeleteDetail(ISender sender, Guid id)
+    {
+        var result = await sender.Send(new DeletePurchaseDetailCommand(id));
+
+        return result.Match(
+            onSuccess: Results.NoContent,
+            onFailure: result.ToProblemDetails);
     }
 }

@@ -2478,6 +2478,46 @@
         ]
       }
     },
+    "/api/Purchases/DeleteDetail": {
+      "post": {
+        "tags": [
+          "Purchases"
+        ],
+        "operationId": "DeleteDetail",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
     "/api/Sales/GetAll": {
       "post": {
         "tags": [

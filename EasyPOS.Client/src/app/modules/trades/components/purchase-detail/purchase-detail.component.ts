@@ -218,7 +218,9 @@ export class PurchaseDetailComponent implements OnInit {
   }
 
   removeProductFromPurchaseDetails(index: number) {
+    const product = this.purchaseDetails.at(index).value;
     this.purchaseDetails.removeAt(index);
+    this.removeDetail(product?.id);
     this.calculateTotals();
   }
 
@@ -247,6 +249,20 @@ export class PurchaseDetailComponent implements OnInit {
     // Get order tax, discount, and shipping cost from the form
     this.calculateGrandTotal();
 
+  }
+
+  private removeDetail(id: string){
+    if(!id){
+      return;
+    }
+
+    this.entityClient.deleteDetail(id).subscribe({
+      next: () => {
+        console.log('delete detail')
+      }, error: (error) => {
+        console.log(error)
+      }
+    });
   }
 
   private calculateGrandTotal() {
