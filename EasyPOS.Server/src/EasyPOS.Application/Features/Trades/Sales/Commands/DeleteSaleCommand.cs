@@ -1,19 +1,19 @@
-﻿using EasyPOS.Application.Common.Constants;
+﻿namespace EasyPOS.Application.Features.Trades.Sales.Commands;
 
-namespace EasyPOS.Application.Features.Trades.Sales.Commands;
-
-public record DeleteSaleCommand(Guid Id) : ICacheInvalidatorCommand
+public record DeleteSaleCommand(Guid Id): ICacheInvalidatorCommand
 {
     public string CacheKey => CacheKeys.Sale;
 }
 
 internal sealed class DeleteSaleCommandHandler(
-    IApplicationDbContext dbContext)
+    IApplicationDbContext dbContext) 
     : ICommandHandler<DeleteSaleCommand>
+
 {
     public async Task<Result> Handle(DeleteSaleCommand request, CancellationToken cancellationToken)
     {
-        var entity = await dbContext.Sales.FindAsync(request.Id, cancellationToken);
+        var entity = await dbContext.Sales
+            .FindAsync([request.Id], cancellationToken);
 
         if (entity is null) return Result.Failure(Error.NotFound(nameof(entity), ErrorMessages.EntityNotFound));
 
@@ -23,4 +23,5 @@ internal sealed class DeleteSaleCommandHandler(
 
         return Result.Success();
     }
+
 }

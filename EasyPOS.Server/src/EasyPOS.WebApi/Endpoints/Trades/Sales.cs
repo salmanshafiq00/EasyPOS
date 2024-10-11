@@ -1,7 +1,10 @@
-﻿using EasyPOS.Application.Features.Trades.Sales.Commands;
+﻿using EasyPOS.Application.Features.Common.Queries;
+using EasyPOS.Application.Features.ProductManagement.Queries;
+using EasyPOS.Application.Features.Trades.Sales.Commands;
 using EasyPOS.Application.Features.Trades.Sales.Queries;
+using EasyPOS.Application.Features.UnitManagement.Queries;
 
-namespace EasyPOS.WebApi.Endpoints;
+namespace EasyPOS.WebApi.Endpoints.Trades;
 
 public class Sales : EndpointGroupBase
 {
@@ -37,25 +40,60 @@ public class Sales : EndpointGroupBase
              .WithName("DeleteSales")
              .Produces(StatusCodes.Status204NoContent)
              .Produces<ProblemDetails>(StatusCodes.Status400BadRequest);
-
-        //group.MapPost("Upload", Upload)
-        //     .WithName("SaleUpload")
-        //     .Produces<int>(StatusCodes.Status200OK)
-        //     .Produces<ProblemDetails>(StatusCodes.Status400BadRequest);
     }
 
     private async Task<IResult> GetAll(ISender sender, GetSaleListQuery query)
     {
         var result = await sender.Send(query);
-        if (!query.IsInitialLoaded)
-        {
-        }
         return TypedResults.Ok(result.Value);
     }
 
     private async Task<IResult> Get(ISender sender, Guid id)
     {
         var result = await sender.Send(new GetSaleByIdQuery(id));
+
+        var warehousesSelectList = await sender.Send(new GetSelectListQuery(
+            Sql: SelectListSqls.WarehouseSelectListSql,
+            Parameters: new { },
+            Key: $"{CacheKeys.Warehouse_All_SelectList}",
+            AllowCacheList: true)
+        );
+
+        var customersSelectList = await sender.Send(new GetSelectListQuery(
+            Sql: SelectListSqls.GetCustomerSelectListSql,
+            Parameters: new { },
+            Key: $"{CacheKeys.Customer_All_SelectList}",
+            AllowCacheList: true)
+        );
+
+        var saleStatusSelectList = await sender.Send(new GetSelectListQuery(
+            Sql: SelectListSqls.GetLookupDetailSelectListByDevCodeSql,
+            Parameters: new { DevCode = LookupDevCode.SaleStatus },
+            Key: $"{CacheKeys.LookupDetail}_{LookupDevCode.SaleStatus}",
+            AllowCacheList: false)
+        );
+
+        var taxesSelectList = await sender.Send(new GetSelectListQuery(
+           Sql: SelectListSqls.TaxesSelectListSql,
+           Parameters: new { },
+           Key: CacheKeys.Tax_All_SelectList,
+           AllowCacheList: true)
+        );
+
+        var productsSelectList = await sender.Send(new GetProductSelectListQuery(
+            AllowCacheList: false)
+        );
+
+        var productUnitSelectList = await sender.Send(new GetUnitSelectListQuery(
+           AllowCacheList: false)
+        );
+
+        result.Value.OptionsDataSources.Add("customersSelectList", customersSelectList.Value);
+        result.Value.OptionsDataSources.Add("warehousesSelectList", warehousesSelectList.Value);
+        result.Value.OptionsDataSources.Add("saleStatusSelectList", saleStatusSelectList.Value);
+        result.Value.OptionsDataSources.Add("productsSelectList", productsSelectList.Value);
+        result.Value.OptionsDataSources.Add("taxesSelectList", taxesSelectList.Value);
+        result.Value.OptionsDataSources.Add("productUnitSelectList", productUnitSelectList.Value);
 
         return TypedResults.Ok(result.Value);
     }
@@ -89,29 +127,10 @@ public class Sales : EndpointGroupBase
 
     private async Task<IResult> DeleteMultiple(ISender sender, [FromBody] Guid[] ids)
     {
-        Result? result = null;
-        foreach (var id in ids)
-        {
-            result = await sender.Send(new DeleteSaleCommand(id));
-        }
+        var result = await sender.Send(new DeleteSalesCommand(ids));
+
         return result!.Match(
             onSuccess: Results.NoContent,
             onFailure: result!.ToProblemDetails);
     }
-
-    //private async Task<IResult> Upload(ISender sender, IHttpContextAccessor contextAccessor)
-    //{
-    //    var file = contextAccessor.HttpContext.Request.Form.Files[0];
-
-    //    if (file == null || file.Length == 0)
-    //    {
-    //        return Results.BadRequest("No file uploaded.");
-    //    }
-
-    //    var result = await sender.Send(new CreateSaleFromExcelCommand(file));
-
-    //    return result!.Match(
-    //        onSuccess: () => Results.Ok(result.Value),
-    //        onFailure: result!.ToProblemDetails);
-    //}
 }

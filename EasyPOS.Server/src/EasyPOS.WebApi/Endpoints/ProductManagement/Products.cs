@@ -179,7 +179,7 @@ public class Products : EndpointGroupBase
 
     private async Task<IResult> GetProductSelectList(ISender sender, bool allowCache = true)
     {
-        var result =await sender.Send(new ProductSelectListQuery(
+        var result =await sender.Send(new GetProductSelectListQuery(
             AllowCacheList: allowCache)
         );
 

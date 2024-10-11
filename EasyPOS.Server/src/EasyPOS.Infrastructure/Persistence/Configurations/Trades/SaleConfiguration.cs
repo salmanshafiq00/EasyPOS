@@ -29,16 +29,29 @@ internal sealed class SaleConfiguration : IEntityTypeConfiguration<Sale>
         builder.Property(x => x.AttachmentUrl)
                .HasMaxLength(255);
 
-        builder.Property(x => x.OrderTax)
+        builder.Property(x => x.TaxRate)
                .HasColumnType("decimal(18, 2)");
 
-        builder.Property(x => x.Discount)
+        builder.Property(x => x.TaxAmount)
                .HasColumnType("decimal(18, 2)");
+
+        builder.Property(x => x.DiscountRate)
+              .HasColumnType("decimal(18, 2)");
+
+        builder.Property(x => x.DiscountAmount)
+           .HasColumnType("decimal(18, 2)");
 
         builder.Property(x => x.ShippingCost)
                .HasColumnType("decimal(18, 2)");
 
+        builder.Property(x => x.GrandTotal)
+              .HasColumnType("decimal(18, 2)")
+              .IsRequired();
+
         builder.Property(x => x.SaleNote)
+               .HasMaxLength(500);
+
+        builder.Property(x => x.StaffNote)
                .HasMaxLength(500);
 
         builder.HasMany(x => x.SaleDetails)

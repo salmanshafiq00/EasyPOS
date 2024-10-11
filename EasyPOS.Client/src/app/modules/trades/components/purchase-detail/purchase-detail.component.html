@@ -46,65 +46,6 @@
           />
         </div> -->
 
-
-        <!-- Purchase Details Table -->
-        <!-- <div class="col-12">
-          <table>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Code</th>
-                <th>Quantity</th>
-                <th>Batch No</th>
-                <th>Net Unit Cost</th>
-                <th>Discount</th>
-                <th>Tax</th>
-                <th>SubTotal</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody formArrayName="purchaseDetails">
-              <tr *ngFor="let field of purchaseDetails.controls; let i = index" [formGroupName]="i">
-                <td>{{ field.get('name').value }}</td>
-                <td>{{ field.get('code').value }}</td>
-                <td>
-                  <app-input-number formControlName="quantity" (ngModelChange)="onItemPropsChange(i)"
-                    textAlign="center" />
-                </td>
-                <td>
-                  <app-input-text formControlName="batchNo"></app-input-text>
-                </td>
-                <td>
-                  <app-input-decimal formControlName="netUnitCost" (ngModelChange)="onItemPropsChange(i)" />
-                </td>
-                <td>
-                  <app-input-decimal formControlName="discount" (ngModelChange)="onItemPropsChange(i)" />
-                </td>
-                <td>
-                  <app-input-decimal formControlName="tax" (ngModelChange)="onItemPropsChange(i)" />
-                </td>
-                <td>{{ field.get('subTotal').value }}</td>
-                <td>
-                  <app-button type="button" severity="danger" icon="pi pi-trash"
-                    (click)="removeProductFromPurchaseDetails(i)" />
-                </td>
-              </tr>
-            </tbody>
-            <tfoot>
-              <tr class="border-top-2" style="border-top: 2px solid #000;">
-                <td colspan="2">Total</td>
-                <td>{{ totalQuantity }}</td>
-                <td></td>
-                <td>{{ totalNetUnitCost }}</td>
-                <td>{{ totalDiscount }}</td>
-                <td>{{ totalTax }}</td>
-                <td>{{ totalSubTotal }}</td>
-                <td></td>
-              </tr>
-            </tfoot>
-          </table>
-        </div> -->
-
         <div class="col-12">
           <p-table [value]="purchaseDetails.controls" [scrollable]="true" scrollHeight="600px">
             <ng-template pTemplate="header">

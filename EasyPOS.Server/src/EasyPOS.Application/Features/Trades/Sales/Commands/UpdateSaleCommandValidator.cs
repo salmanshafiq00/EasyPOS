@@ -1,28 +1,23 @@
 ﻿namespace EasyPOS.Application.Features.Trades.Sales.Commands;
 
-public class UpdatSaleCommandValidator : AbstractValidator<UpdateSaleCommand>
+public class UpdateSaleCommandValidator : AbstractValidator<UpdateSaleCommand>
 {
-    private readonly ICommonQueryService _commonQuery;
+     public UpdateSaleCommandValidator()
+     {
+        RuleFor(v => v.Id).NotNull();
 
-    public UpdatSaleCommandValidator(ICommonQueryService commonQuery)
-    {
-        _commonQuery = commonQuery;
-
-        //RuleFor(v => v.Name)
+       //RuleFor(v => v.Name)
         //    .NotEmpty()
         //    .MaximumLength(200)
         //    .MustAsync(async (v, name, cancellation) => await BeUniqueNameSkipCurrent(name, v.Id, cancellation))
         //        .WithMessage("'{PropertyName}' must be unique.")
         //        .WithErrorCode("Unique");
 
-        //RuleFor(v => v.Address)
-        //    .MaximumLength(5000)
-        //    .WithMessage("{0} can not exceed max {1} chars.");
-
-    }
-
-    public async Task<bool> BeUniqueNameSkipCurrent(string name, Guid id, CancellationToken cancellationToken)
-    {
-        return !await _commonQuery.IsExist("dbo.Sales", ["Name"], new { Name = name, Id = id }, ["Id"]);
-    }
+        //public async Task<bool> BeUniqueNameSkipCurrent(string name, Guid id, CancellationToken cancellationToken)
+        //{
+        //    return !await _commonQuery.IsExist("dbo.Lookups", ["Name"], new { Name = name, Id = id }, ["Id"]);
+        //}
+       
+     }  
 }
+

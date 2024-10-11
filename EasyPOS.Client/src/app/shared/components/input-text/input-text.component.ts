@@ -29,7 +29,7 @@ export class InputTextComponent implements ControlValueAccessor, Validator {
   @Input() variant: "outlined" | "filled" = 'filled';
   @Input() autofocus: boolean = false;
 
-  value: string = '';
+  value: string | undefined | null = '';
   onTouched: any = () => {};
   onChangeFn: any = (_: any) => {};
 
@@ -50,11 +50,11 @@ export class InputTextComponent implements ControlValueAccessor, Validator {
   // }
 
   validate(control: AbstractControl): ValidationErrors | null {
-    if (this.required && !control.value) {
+    if (this.required && (control.value === null || control.value === '')) {
       return { required: true };
     }
     return null;
-  }
+  }  
 
   onInputChange(event: any): void {
     const value = event.target.value;

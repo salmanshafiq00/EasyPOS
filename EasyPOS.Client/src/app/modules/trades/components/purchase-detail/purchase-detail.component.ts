@@ -17,7 +17,7 @@ import { ToastService } from 'src/app/shared/services/toast.service';
 export class PurchaseDetailComponent implements OnInit {
   emptyGuid = '00000000-0000-0000-0000-000000000000';
   id: string = '';
-  public optionsDataSources = {};
+  optionsDataSources = {};
   form: FormGroup;
   item: PurchaseModel;
 
@@ -42,7 +42,7 @@ export class PurchaseDetailComponent implements OnInit {
   }
 
   protected toast: ToastService = inject(ToastService);
-  protected customDialogService: CustomDialogService = inject(CustomDialogService)
+  // protected customDialogService: CustomDialogService = inject(CustomDialogService)
   protected fb: FormBuilder = inject(FormBuilder);
   protected datePipe: DatePipe = inject(DatePipe);
 
@@ -85,9 +85,6 @@ export class PurchaseDetailComponent implements OnInit {
         }
         this.optionsDataSources = res.optionsDataSources;
         this.form.patchValue(this.item);
-        console.log(this.form)
-        console.log(this.form.value)
-        console.log(this.item)
         this.calculateTotals();
       },
       error: (error) => {
@@ -116,7 +113,6 @@ export class PurchaseDetailComponent implements OnInit {
     this.entityClient.update(updateCommand).subscribe({
       next: () => {
         this.toast.updated();
-        this.customDialogService.close(true);
       },
       error: (error) => {
         this.toast.showError(this.getErrorMessage(error));

@@ -1,6 +1,6 @@
 ﻿using EasyPOS.Domain.Common;
 
-namespace EasyPOS.Infrastructure.Persistence.Configurations;
+namespace EasyPOS.Infrastructure.Persistence.Configurations.Common;
 
 internal sealed class LookupConfiguration : IEntityTypeConfiguration<Lookup>
 {

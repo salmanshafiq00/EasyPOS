@@ -92,7 +92,7 @@ public class Purchases : EndpointGroupBase
            AllowCacheList: true)
         );
 
-        var productsSelectList = await sender.Send(new ProductSelectListQuery(
+        var productsSelectList = await sender.Send(new GetProductSelectListQuery(
             AllowCacheList: false)
         );
 

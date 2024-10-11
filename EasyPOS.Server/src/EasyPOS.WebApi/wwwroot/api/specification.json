@@ -2518,6 +2518,84 @@
         ]
       }
     },
+    "/api/TreeNodeLists/GetAllPermissionNodeList": {
+      "get": {
+        "tags": [
+          "TreeNodeLists"
+        ],
+        "operationId": "GetAllPermissionNodeList",
+        "parameters": [
+          {
+            "name": "allowCache",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TreeNodeModel"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
+    "/api/TreeNodeLists/GetAllAppMenuTreeSelectList": {
+      "get": {
+        "tags": [
+          "TreeNodeLists"
+        ],
+        "operationId": "GetAllAppMenuTreeSelectList",
+        "parameters": [
+          {
+            "name": "allowCache",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TreeNodeModel"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
     "/api/Sales/GetAll": {
       "post": {
         "tags": [
@@ -2755,84 +2833,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
-      }
-    },
-    "/api/TreeNodeLists/GetAllPermissionNodeList": {
-      "get": {
-        "tags": [
-          "TreeNodeLists"
-        ],
-        "operationId": "GetAllPermissionNodeList",
-        "parameters": [
-          {
-            "name": "allowCache",
-            "in": "query",
-            "schema": {
-              "type": "boolean",
-              "nullable": true
-            },
-            "x-position": 1
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/TreeNodeModel"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
-      }
-    },
-    "/api/TreeNodeLists/GetAllAppMenuTreeSelectList": {
-      "get": {
-        "tags": [
-          "TreeNodeLists"
-        ],
-        "operationId": "GetAllAppMenuTreeSelectList",
-        "parameters": [
-          {
-            "name": "allowCache",
-            "in": "query",
-            "schema": {
-              "type": "boolean",
-              "nullable": true
-            },
-            "x-position": 1
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/TreeNodeModel"
-                  }
                 }
               }
             }
@@ -7386,6 +7386,49 @@
           }
         }
       },
+      "TreeNodeModel": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "key": {},
+          "label": {
+            "type": "string"
+          },
+          "icon": {
+            "type": "string"
+          },
+          "parentId": {
+            "nullable": true
+          },
+          "data": {
+            "type": "string"
+          },
+          "disabledCheckbox": {
+            "type": "boolean"
+          },
+          "disabled": {
+            "type": "boolean"
+          },
+          "visible": {
+            "type": "boolean"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "partialSelected": {
+            "type": "boolean"
+          },
+          "leaf": {
+            "type": "boolean"
+          },
+          "children": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TreeNodeModel"
+            }
+          }
+        }
+      },
       "PaginatedResponseOfSaleModel": {
         "type": "object",
         "additionalProperties": false,
@@ -7433,7 +7476,8 @@
             "format": "date"
           },
           "referenceNo": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "warehouseId": {
             "type": "string",
@@ -7443,31 +7487,12 @@
             "type": "string",
             "format": "guid"
           },
-          "bullerId": {
+          "billerId": {
             "type": "string",
             "format": "guid"
           },
           "attachmentUrl": {
             "type": "string",
-            "nullable": true
-          },
-          "orderTax": {
-            "type": "number",
-            "format": "decimal",
-            "nullable": true
-          },
-          "orderDiscountTypeId": {
-            "type": "string",
-            "format": "guid"
-          },
-          "discount": {
-            "type": "number",
-            "format": "decimal",
-            "nullable": true
-          },
-          "shippingCost": {
-            "type": "number",
-            "format": "decimal",
             "nullable": true
           },
           "saleStatusId": {
@@ -7477,6 +7502,43 @@
           "paymentStatusId": {
             "type": "string",
             "format": "guid"
+          },
+          "taxRate": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "taxAmount": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "discountAmount": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "discountRate": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "discountType": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/DiscountType"
+              }
+            ]
+          },
+          "shippingCost": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "grandTotal": {
+            "type": "number",
+            "format": "decimal"
           },
           "saleNote": {
             "type": "string",
@@ -7489,7 +7551,7 @@
           "saleDetails": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/SaleDetail"
+              "$ref": "#/components/schemas/SaleDetailModel"
             }
           },
           "optionsDataSources": {
@@ -7498,187 +7560,96 @@
           }
         }
       },
-      "SaleDetail": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/BaseEntity"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "saleId": {
-                "type": "string",
-                "format": "guid"
-              },
-              "productId": {
-                "type": "string",
-                "format": "guid"
-              },
-              "quantity": {
-                "type": "integer",
-                "format": "int32"
-              },
-              "batchNo": {
-                "type": "string"
-              },
-              "expiredDate": {
-                "type": "string",
-                "format": "date",
-                "nullable": true
-              },
-              "netUnitCost": {
-                "type": "number",
-                "format": "decimal"
-              },
-              "discountAmount": {
-                "type": "number",
-                "format": "decimal"
-              },
-              "tax": {
-                "type": "number",
-                "format": "decimal"
-              },
-              "subTotal": {
-                "type": "number",
-                "format": "decimal"
-              },
-              "sale": {
-                "$ref": "#/components/schemas/Sale"
-              }
-            }
-          }
+      "DiscountType": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Percentage",
+          "Fixed"
+        ],
+        "enum": [
+          1,
+          2
         ]
       },
-      "Sale": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/BaseAuditableEntity"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "saleDate": {
-                "type": "string",
-                "format": "date"
-              },
-              "referenceNo": {
-                "type": "string"
-              },
-              "warehouseId": {
-                "type": "string",
-                "format": "guid"
-              },
-              "customerId": {
-                "type": "string",
-                "format": "guid"
-              },
-              "bullerId": {
-                "type": "string",
-                "format": "guid"
-              },
-              "attachmentUrl": {
-                "type": "string",
-                "nullable": true
-              },
-              "orderTax": {
-                "type": "number",
-                "format": "decimal",
-                "nullable": true
-              },
-              "orderDiscountTypeId": {
-                "type": "string",
-                "format": "guid"
-              },
-              "discount": {
-                "type": "number",
-                "format": "decimal",
-                "nullable": true
-              },
-              "shippingCost": {
-                "type": "number",
-                "format": "decimal",
-                "nullable": true
-              },
-              "saleStatusId": {
-                "type": "string",
-                "format": "guid"
-              },
-              "paymentStatusId": {
-                "type": "string",
-                "format": "guid"
-              },
-              "saleNote": {
-                "type": "string",
-                "nullable": true
-              },
-              "staffNote": {
-                "type": "string",
-                "nullable": true
-              },
-              "saleDetails": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SaleDetail"
-                }
-              }
-            }
-          }
-        ]
-      },
-      "BaseAuditableEntity": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/BaseEntity"
-          },
-          {
-            "type": "object",
-            "x-abstract": true,
-            "additionalProperties": false,
-            "properties": {
-              "created": {
-                "type": "string",
-                "format": "date-time"
-              },
-              "createdBy": {
-                "type": "string",
-                "nullable": true
-              },
-              "lastModified": {
-                "type": "string",
-                "format": "date-time",
-                "nullable": true
-              },
-              "lastModifiedBy": {
-                "type": "string",
-                "nullable": true
-              }
-            }
-          }
-        ]
-      },
-      "BaseEntity": {
+      "SaleDetailModel": {
         "type": "object",
-        "x-abstract": true,
         "additionalProperties": false,
         "properties": {
           "id": {
             "type": "string",
             "format": "guid"
           },
-          "domainEvents": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/BaseEvent"
-            }
+          "saleId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "productId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "productCode": {
+            "type": "string"
+          },
+          "productName": {
+            "type": "string"
+          },
+          "productUnitCost": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "productUnitPrice": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "productUnitId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "productUnit": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "productUnitDiscount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "batchNo": {
+            "type": "string"
+          },
+          "expiredDate": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "netUnitPrice": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "discountAmount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "tax": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "taxAmount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "taxMethod": {
+            "$ref": "#/components/schemas/TaxMethod"
+          },
+          "totalPrice": {
+            "type": "number",
+            "format": "decimal"
           }
         }
-      },
-      "BaseEvent": {
-        "type": "object",
-        "x-abstract": true,
-        "additionalProperties": false
       },
       "GetSaleListQuery": {
         "allOf": [
@@ -7697,197 +7668,36 @@
         ]
       },
       "CreateSaleCommand": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "saleDate": {
-            "type": "string",
-            "format": "date"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SaleModel"
           },
-          "referenceNo": {
-            "type": "string"
-          },
-          "warehouseId": {
-            "type": "string",
-            "format": "guid"
-          },
-          "customerId": {
-            "type": "string",
-            "format": "guid"
-          },
-          "bullerId": {
-            "type": "string",
-            "format": "guid"
-          },
-          "attachmentUrl": {
-            "type": "string",
-            "nullable": true
-          },
-          "orderTax": {
-            "type": "number",
-            "format": "decimal",
-            "nullable": true
-          },
-          "orderDiscountTypeId": {
-            "type": "string",
-            "format": "guid"
-          },
-          "discount": {
-            "type": "number",
-            "format": "decimal",
-            "nullable": true
-          },
-          "shippingCost": {
-            "type": "number",
-            "format": "decimal",
-            "nullable": true
-          },
-          "saleStatusId": {
-            "type": "string",
-            "format": "guid"
-          },
-          "paymentStatusId": {
-            "type": "string",
-            "format": "guid"
-          },
-          "saleNote": {
-            "type": "string",
-            "nullable": true
-          },
-          "staffNote": {
-            "type": "string",
-            "nullable": true
-          },
-          "saleDetails": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SaleDetail"
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "cacheKey": {
+                "type": "string"
+              }
             }
-          },
-          "cacheKey": {
-            "type": "string"
           }
-        }
+        ]
       },
       "UpdateSaleCommand": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "guid"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SaleModel"
           },
-          "saleDate": {
-            "type": "string",
-            "format": "date"
-          },
-          "referenceNo": {
-            "type": "string"
-          },
-          "warehouseId": {
-            "type": "string",
-            "format": "guid"
-          },
-          "customerId": {
-            "type": "string",
-            "format": "guid"
-          },
-          "bullerId": {
-            "type": "string",
-            "format": "guid"
-          },
-          "attachmentUrl": {
-            "type": "string",
-            "nullable": true
-          },
-          "orderTax": {
-            "type": "number",
-            "format": "decimal",
-            "nullable": true
-          },
-          "orderDiscountTypeId": {
-            "type": "string",
-            "format": "guid"
-          },
-          "discount": {
-            "type": "number",
-            "format": "decimal",
-            "nullable": true
-          },
-          "shippingCost": {
-            "type": "number",
-            "format": "decimal",
-            "nullable": true
-          },
-          "saleStatusId": {
-            "type": "string",
-            "format": "guid"
-          },
-          "paymentStatusId": {
-            "type": "string",
-            "format": "guid"
-          },
-          "saleNote": {
-            "type": "string",
-            "nullable": true
-          },
-          "staffNote": {
-            "type": "string",
-            "nullable": true
-          },
-          "saleDetails": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SaleDetail"
-            }
-          },
-          "cacheKey": {
-            "type": "string"
-          }
-        }
-      },
-      "TreeNodeModel": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "key": {},
-          "label": {
-            "type": "string"
-          },
-          "icon": {
-            "type": "string"
-          },
-          "parentId": {
-            "nullable": true
-          },
-          "data": {
-            "type": "string"
-          },
-          "disabledCheckbox": {
-            "type": "boolean"
-          },
-          "disabled": {
-            "type": "boolean"
-          },
-          "visible": {
-            "type": "boolean"
-          },
-          "isActive": {
-            "type": "boolean"
-          },
-          "partialSelected": {
-            "type": "boolean"
-          },
-          "leaf": {
-            "type": "boolean"
-          },
-          "children": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TreeNodeModel"
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "cacheKey": {
+                "type": "string"
+              }
             }
           }
-        }
+        ]
       },
       "PaginatedResponseOfBrandModel": {
         "type": "object",
@@ -8296,18 +8106,6 @@
           }
         }
       },
-      "DiscountType": {
-        "type": "integer",
-        "description": "",
-        "x-enumNames": [
-          "Percentage",
-          "Fixed"
-        ],
-        "enum": [
-          1,
-          2
-        ]
-      },
       "GetProductListQuery": {
         "allOf": [
           {
@@ -8476,6 +8274,18 @@
             "type": "string",
             "format": "guid",
             "nullable": true
+          },
+          "saleUnit": {
+            "type": "string",
+            "format": "guid",
+            "nullable": true
+          },
+          "discount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "discountType": {
+            "$ref": "#/components/schemas/DiscountType"
           },
           "taxRate": {
             "type": "number",

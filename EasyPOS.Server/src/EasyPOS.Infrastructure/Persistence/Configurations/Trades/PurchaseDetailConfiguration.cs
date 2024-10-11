@@ -29,17 +29,17 @@ internal sealed class PurchaseDetailConfiguration : IEntityTypeConfiguration<Pur
                .HasColumnType("decimal(18, 2)")
                .IsRequired();
 
-        //builder.Property(x => x.DiscountAmount)
-        //       .HasColumnType("decimal(18, 2)")
-        //       .IsRequired();
+        builder.Property(x => x.DiscountAmount)
+               .HasColumnType("decimal(18, 2)")
+               .IsRequired();
 
         builder.Property(x => x.Tax)
                .HasColumnType("decimal(18, 2)")
                .IsRequired();
 
-        //builder.Property(x => x.TaxAmount)
-        //      .HasColumnType("decimal(18, 2)")
-        //      .IsRequired();
+        builder.Property(x => x.TaxAmount)
+              .HasColumnType("decimal(18, 2)")
+              .IsRequired();
 
         builder.Property(x => x.SubTotal)
                .HasColumnType("decimal(18, 2)")

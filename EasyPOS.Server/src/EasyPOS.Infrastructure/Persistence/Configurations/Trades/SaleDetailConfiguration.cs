@@ -23,9 +23,41 @@ internal sealed class SaleDetailConfiguration : IEntityTypeConfiguration<SaleDet
                .HasMaxLength(50)
                .IsRequired(false);
 
+        builder.Property(x => x.ProductCode)
+               .HasMaxLength(50)
+               .IsRequired(false);
+
+        builder.Property(x => x.ProductName)
+               .HasMaxLength(250)
+               .IsRequired(false);
+
+        builder.Property(x => x.ProductUnitCost)
+               .HasColumnType("decimal(18, 2)")
+               .IsRequired();
+
+        builder.Property(x => x.ProductUnitPrice)
+               .HasColumnType("decimal(18, 2)")
+               .IsRequired();
+
+       // builder.Property(x => x.UnitPrice)
+       //.HasColumnType("decimal(18, 2)")
+       //.IsRequired();
+
+        builder.Property(x => x.ProductUnitDiscount)
+               .HasColumnType("decimal(18, 2)")
+               .IsRequired();
+
+        builder.Property(x => x.ProductUnit)
+               .HasColumnType("decimal(10, 2)")
+               .IsRequired();
+
         builder.Property(x => x.ExpiredDate);
 
-        builder.Property(x => x.NetUnitCost)
+        builder.Property(x => x.NetUnitPrice)
+               .HasColumnType("decimal(18, 2)")
+               .IsRequired();
+
+        builder.Property(x => x.DiscountAmount)
                .HasColumnType("decimal(18, 2)")
                .IsRequired();
 
@@ -33,8 +65,16 @@ internal sealed class SaleDetailConfiguration : IEntityTypeConfiguration<SaleDet
                .HasColumnType("decimal(18, 2)")
                .IsRequired();
 
-        builder.Property(x => x.SubTotal)
+        builder.Property(x => x.TaxAmount)
                .HasColumnType("decimal(18, 2)")
                .IsRequired();
+
+        builder.Property(x => x.TotalPrice)
+               .HasColumnType("decimal(18, 2)")
+               .IsRequired();
+
+        //builder.Property(x => x.SubTotal)
+        //   .HasColumnType("decimal(18, 2)")
+        //   .IsRequired();
     }
 }

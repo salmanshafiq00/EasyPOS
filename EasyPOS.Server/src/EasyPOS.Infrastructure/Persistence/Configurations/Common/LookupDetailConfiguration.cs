@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace EasyPOS.Infrastructure.Persistence.Configurations;
+namespace EasyPOS.Infrastructure.Persistence.Configurations.Common;
 
 internal sealed class LookupDetailConfiguration : IEntityTypeConfiguration<LookupDetail>
 {

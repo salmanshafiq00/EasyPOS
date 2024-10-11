@@ -6,6 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Persistence\Configurations\Common - Copy\**" />
+    <EmbeddedResource Remove="Persistence\Configurations\Common - Copy\**" />
+    <None Remove="Persistence\Configurations\Common - Copy\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Persistence\Configurations\BrandConfiguration.cs" />
   </ItemGroup>
 

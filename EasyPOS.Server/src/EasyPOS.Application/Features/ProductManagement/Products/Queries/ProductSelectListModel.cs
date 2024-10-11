@@ -10,6 +10,9 @@ public record ProductSelectListModel
     public decimal? CostPrice { get; set; }
     public decimal SalePrice { get; set; }
     public Guid? PurchaseUnit { get; set; }
+    public Guid? SaleUnit { get; set; }
+    public decimal Discount { get; set; }
+    public DiscountType DiscountType { get; set; }
     public decimal TaxRate { get; set; }
     public TaxMethod TaxMethod { get; set; }
 }

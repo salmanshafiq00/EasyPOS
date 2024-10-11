@@ -3743,6 +3743,139 @@ export class PurchasesClient implements IPurchasesClient {
     }
 }
 
+export interface ITreeNodeListsClient {
+    getAllPermissionNodeList(allowCache: boolean | null | undefined): Observable<TreeNodeModel[]>;
+    getAllAppMenuTreeSelectList(allowCache: boolean | null | undefined): Observable<TreeNodeModel[]>;
+}
+
+@Injectable()
+export class TreeNodeListsClient implements ITreeNodeListsClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ?? "";
+    }
+
+    getAllPermissionNodeList(allowCache: boolean | null | undefined): Observable<TreeNodeModel[]> {
+        let url_ = this.baseUrl + "/api/TreeNodeLists/GetAllPermissionNodeList?";
+        if (allowCache !== undefined && allowCache !== null)
+            url_ += "allowCache=" + encodeURIComponent("" + allowCache) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllPermissionNodeList(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllPermissionNodeList(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<TreeNodeModel[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<TreeNodeModel[]>;
+        }));
+    }
+
+    protected processGetAllPermissionNodeList(response: HttpResponseBase): Observable<TreeNodeModel[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(TreeNodeModel.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    getAllAppMenuTreeSelectList(allowCache: boolean | null | undefined): Observable<TreeNodeModel[]> {
+        let url_ = this.baseUrl + "/api/TreeNodeLists/GetAllAppMenuTreeSelectList?";
+        if (allowCache !== undefined && allowCache !== null)
+            url_ += "allowCache=" + encodeURIComponent("" + allowCache) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllAppMenuTreeSelectList(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllAppMenuTreeSelectList(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<TreeNodeModel[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<TreeNodeModel[]>;
+        }));
+    }
+
+    protected processGetAllAppMenuTreeSelectList(response: HttpResponseBase): Observable<TreeNodeModel[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(TreeNodeModel.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
 export interface ISalesClient {
     getAll(query: GetSaleListQuery): Observable<PaginatedResponseOfSaleModel>;
     get(id: string): Observable<SaleModel>;
@@ -4091,139 +4224,6 @@ export class SalesClient implements ISalesClient {
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("A server side error occurred.", status, _responseText, _headers, result400);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-}
-
-export interface ITreeNodeListsClient {
-    getAllPermissionNodeList(allowCache: boolean | null | undefined): Observable<TreeNodeModel[]>;
-    getAllAppMenuTreeSelectList(allowCache: boolean | null | undefined): Observable<TreeNodeModel[]>;
-}
-
-@Injectable()
-export class TreeNodeListsClient implements ITreeNodeListsClient {
-    private http: HttpClient;
-    private baseUrl: string;
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
-
-    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
-        this.http = http;
-        this.baseUrl = baseUrl ?? "";
-    }
-
-    getAllPermissionNodeList(allowCache: boolean | null | undefined): Observable<TreeNodeModel[]> {
-        let url_ = this.baseUrl + "/api/TreeNodeLists/GetAllPermissionNodeList?";
-        if (allowCache !== undefined && allowCache !== null)
-            url_ += "allowCache=" + encodeURIComponent("" + allowCache) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            withCredentials: true,
-            headers: new HttpHeaders({
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetAllPermissionNodeList(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGetAllPermissionNodeList(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<TreeNodeModel[]>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<TreeNodeModel[]>;
-        }));
-    }
-
-    protected processGetAllPermissionNodeList(response: HttpResponseBase): Observable<TreeNodeModel[]> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(TreeNodeModel.fromJS(item));
-            }
-            else {
-                result200 = <any>null;
-            }
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    getAllAppMenuTreeSelectList(allowCache: boolean | null | undefined): Observable<TreeNodeModel[]> {
-        let url_ = this.baseUrl + "/api/TreeNodeLists/GetAllAppMenuTreeSelectList?";
-        if (allowCache !== undefined && allowCache !== null)
-            url_ += "allowCache=" + encodeURIComponent("" + allowCache) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            withCredentials: true,
-            headers: new HttpHeaders({
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetAllAppMenuTreeSelectList(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGetAllAppMenuTreeSelectList(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<TreeNodeModel[]>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<TreeNodeModel[]>;
-        }));
-    }
-
-    protected processGetAllAppMenuTreeSelectList(response: HttpResponseBase): Observable<TreeNodeModel[]> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(TreeNodeModel.fromJS(item));
-            }
-            else {
-                result200 = <any>null;
-            }
-            return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
@@ -11568,734 +11568,6 @@ export interface IUpdatePurchaseCommand {
     cacheKey?: string;
 }
 
-export class PaginatedResponseOfSaleModel implements IPaginatedResponseOfSaleModel {
-    items?: SaleModel[];
-    pageNumber?: number;
-    totalPages?: number;
-    totalCount?: number;
-    hasPreviousPage?: boolean;
-    hasNextPage?: boolean;
-    optionsDataSources?: { [key: string]: any; };
-
-    constructor(data?: IPaginatedResponseOfSaleModel) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            if (Array.isArray(_data["items"])) {
-                this.items = [] as any;
-                for (let item of _data["items"])
-                    this.items!.push(SaleModel.fromJS(item));
-            }
-            this.pageNumber = _data["pageNumber"];
-            this.totalPages = _data["totalPages"];
-            this.totalCount = _data["totalCount"];
-            this.hasPreviousPage = _data["hasPreviousPage"];
-            this.hasNextPage = _data["hasNextPage"];
-            if (_data["optionsDataSources"]) {
-                this.optionsDataSources = {} as any;
-                for (let key in _data["optionsDataSources"]) {
-                    if (_data["optionsDataSources"].hasOwnProperty(key))
-                        (<any>this.optionsDataSources)![key] = _data["optionsDataSources"][key];
-                }
-            }
-        }
-    }
-
-    static fromJS(data: any): PaginatedResponseOfSaleModel {
-        data = typeof data === 'object' ? data : {};
-        let result = new PaginatedResponseOfSaleModel();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.items)) {
-            data["items"] = [];
-            for (let item of this.items)
-                data["items"].push(item.toJSON());
-        }
-        data["pageNumber"] = this.pageNumber;
-        data["totalPages"] = this.totalPages;
-        data["totalCount"] = this.totalCount;
-        data["hasPreviousPage"] = this.hasPreviousPage;
-        data["hasNextPage"] = this.hasNextPage;
-        if (this.optionsDataSources) {
-            data["optionsDataSources"] = {};
-            for (let key in this.optionsDataSources) {
-                if (this.optionsDataSources.hasOwnProperty(key))
-                    (<any>data["optionsDataSources"])[key] = (<any>this.optionsDataSources)[key];
-            }
-        }
-        return data;
-    }
-}
-
-export interface IPaginatedResponseOfSaleModel {
-    items?: SaleModel[];
-    pageNumber?: number;
-    totalPages?: number;
-    totalCount?: number;
-    hasPreviousPage?: boolean;
-    hasNextPage?: boolean;
-    optionsDataSources?: { [key: string]: any; };
-}
-
-export class SaleModel implements ISaleModel {
-    id?: string;
-    saleDate?: Date;
-    referenceNo?: string;
-    warehouseId?: string;
-    customerId?: string;
-    bullerId?: string;
-    attachmentUrl?: string | undefined;
-    orderTax?: number | undefined;
-    orderDiscountTypeId?: string;
-    discount?: number | undefined;
-    shippingCost?: number | undefined;
-    saleStatusId?: string;
-    paymentStatusId?: string;
-    saleNote?: string | undefined;
-    staffNote?: string | undefined;
-    saleDetails?: SaleDetail[];
-    optionsDataSources?: { [key: string]: any; };
-
-    constructor(data?: ISaleModel) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.saleDate = _data["saleDate"] ? new Date(_data["saleDate"].toString()) : <any>undefined;
-            this.referenceNo = _data["referenceNo"];
-            this.warehouseId = _data["warehouseId"];
-            this.customerId = _data["customerId"];
-            this.bullerId = _data["bullerId"];
-            this.attachmentUrl = _data["attachmentUrl"];
-            this.orderTax = _data["orderTax"];
-            this.orderDiscountTypeId = _data["orderDiscountTypeId"];
-            this.discount = _data["discount"];
-            this.shippingCost = _data["shippingCost"];
-            this.saleStatusId = _data["saleStatusId"];
-            this.paymentStatusId = _data["paymentStatusId"];
-            this.saleNote = _data["saleNote"];
-            this.staffNote = _data["staffNote"];
-            if (Array.isArray(_data["saleDetails"])) {
-                this.saleDetails = [] as any;
-                for (let item of _data["saleDetails"])
-                    this.saleDetails!.push(SaleDetail.fromJS(item));
-            }
-            if (_data["optionsDataSources"]) {
-                this.optionsDataSources = {} as any;
-                for (let key in _data["optionsDataSources"]) {
-                    if (_data["optionsDataSources"].hasOwnProperty(key))
-                        (<any>this.optionsDataSources)![key] = _data["optionsDataSources"][key];
-                }
-            }
-        }
-    }
-
-    static fromJS(data: any): SaleModel {
-        data = typeof data === 'object' ? data : {};
-        let result = new SaleModel();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["saleDate"] = this.saleDate ? formatDate(this.saleDate) : <any>undefined;
-        data["referenceNo"] = this.referenceNo;
-        data["warehouseId"] = this.warehouseId;
-        data["customerId"] = this.customerId;
-        data["bullerId"] = this.bullerId;
-        data["attachmentUrl"] = this.attachmentUrl;
-        data["orderTax"] = this.orderTax;
-        data["orderDiscountTypeId"] = this.orderDiscountTypeId;
-        data["discount"] = this.discount;
-        data["shippingCost"] = this.shippingCost;
-        data["saleStatusId"] = this.saleStatusId;
-        data["paymentStatusId"] = this.paymentStatusId;
-        data["saleNote"] = this.saleNote;
-        data["staffNote"] = this.staffNote;
-        if (Array.isArray(this.saleDetails)) {
-            data["saleDetails"] = [];
-            for (let item of this.saleDetails)
-                data["saleDetails"].push(item.toJSON());
-        }
-        if (this.optionsDataSources) {
-            data["optionsDataSources"] = {};
-            for (let key in this.optionsDataSources) {
-                if (this.optionsDataSources.hasOwnProperty(key))
-                    (<any>data["optionsDataSources"])[key] = (<any>this.optionsDataSources)[key];
-            }
-        }
-        return data;
-    }
-}
-
-export interface ISaleModel {
-    id?: string;
-    saleDate?: Date;
-    referenceNo?: string;
-    warehouseId?: string;
-    customerId?: string;
-    bullerId?: string;
-    attachmentUrl?: string | undefined;
-    orderTax?: number | undefined;
-    orderDiscountTypeId?: string;
-    discount?: number | undefined;
-    shippingCost?: number | undefined;
-    saleStatusId?: string;
-    paymentStatusId?: string;
-    saleNote?: string | undefined;
-    staffNote?: string | undefined;
-    saleDetails?: SaleDetail[];
-    optionsDataSources?: { [key: string]: any; };
-}
-
-export abstract class BaseEntity implements IBaseEntity {
-    id?: string;
-    domainEvents?: BaseEvent[];
-
-    constructor(data?: IBaseEntity) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            if (Array.isArray(_data["domainEvents"])) {
-                this.domainEvents = [] as any;
-                for (let item of _data["domainEvents"])
-                    this.domainEvents!.push(BaseEvent.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): BaseEntity {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'BaseEntity' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        if (Array.isArray(this.domainEvents)) {
-            data["domainEvents"] = [];
-            for (let item of this.domainEvents)
-                data["domainEvents"].push(item.toJSON());
-        }
-        return data;
-    }
-}
-
-export interface IBaseEntity {
-    id?: string;
-    domainEvents?: BaseEvent[];
-}
-
-export class SaleDetail extends BaseEntity implements ISaleDetail {
-    saleId?: string;
-    productId?: string;
-    quantity?: number;
-    batchNo?: string;
-    expiredDate?: Date | undefined;
-    netUnitCost?: number;
-    discountAmount?: number;
-    tax?: number;
-    subTotal?: number;
-    sale?: Sale;
-
-    constructor(data?: ISaleDetail) {
-        super(data);
-    }
-
-    override init(_data?: any) {
-        super.init(_data);
-        if (_data) {
-            this.saleId = _data["saleId"];
-            this.productId = _data["productId"];
-            this.quantity = _data["quantity"];
-            this.batchNo = _data["batchNo"];
-            this.expiredDate = _data["expiredDate"] ? new Date(_data["expiredDate"].toString()) : <any>undefined;
-            this.netUnitCost = _data["netUnitCost"];
-            this.discountAmount = _data["discountAmount"];
-            this.tax = _data["tax"];
-            this.subTotal = _data["subTotal"];
-            this.sale = _data["sale"] ? Sale.fromJS(_data["sale"]) : <any>undefined;
-        }
-    }
-
-    static override fromJS(data: any): SaleDetail {
-        data = typeof data === 'object' ? data : {};
-        let result = new SaleDetail();
-        result.init(data);
-        return result;
-    }
-
-    override toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["saleId"] = this.saleId;
-        data["productId"] = this.productId;
-        data["quantity"] = this.quantity;
-        data["batchNo"] = this.batchNo;
-        data["expiredDate"] = this.expiredDate ? formatDate(this.expiredDate) : <any>undefined;
-        data["netUnitCost"] = this.netUnitCost;
-        data["discountAmount"] = this.discountAmount;
-        data["tax"] = this.tax;
-        data["subTotal"] = this.subTotal;
-        data["sale"] = this.sale ? this.sale.toJSON() : <any>undefined;
-        super.toJSON(data);
-        return data;
-    }
-}
-
-export interface ISaleDetail extends IBaseEntity {
-    saleId?: string;
-    productId?: string;
-    quantity?: number;
-    batchNo?: string;
-    expiredDate?: Date | undefined;
-    netUnitCost?: number;
-    discountAmount?: number;
-    tax?: number;
-    subTotal?: number;
-    sale?: Sale;
-}
-
-export abstract class BaseAuditableEntity extends BaseEntity implements IBaseAuditableEntity {
-    created?: Date;
-    createdBy?: string | undefined;
-    lastModified?: Date | undefined;
-    lastModifiedBy?: string | undefined;
-
-    constructor(data?: IBaseAuditableEntity) {
-        super(data);
-    }
-
-    override init(_data?: any) {
-        super.init(_data);
-        if (_data) {
-            this.created = _data["created"] ? new Date(_data["created"].toString()) : <any>undefined;
-            this.createdBy = _data["createdBy"];
-            this.lastModified = _data["lastModified"] ? new Date(_data["lastModified"].toString()) : <any>undefined;
-            this.lastModifiedBy = _data["lastModifiedBy"];
-        }
-    }
-
-    static override fromJS(data: any): BaseAuditableEntity {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'BaseAuditableEntity' cannot be instantiated.");
-    }
-
-    override toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["created"] = this.created ? this.created.toISOString() : <any>undefined;
-        data["createdBy"] = this.createdBy;
-        data["lastModified"] = this.lastModified ? this.lastModified.toISOString() : <any>undefined;
-        data["lastModifiedBy"] = this.lastModifiedBy;
-        super.toJSON(data);
-        return data;
-    }
-}
-
-export interface IBaseAuditableEntity extends IBaseEntity {
-    created?: Date;
-    createdBy?: string | undefined;
-    lastModified?: Date | undefined;
-    lastModifiedBy?: string | undefined;
-}
-
-export class Sale extends BaseAuditableEntity implements ISale {
-    saleDate?: Date;
-    referenceNo?: string;
-    warehouseId?: string;
-    customerId?: string;
-    bullerId?: string;
-    attachmentUrl?: string | undefined;
-    orderTax?: number | undefined;
-    orderDiscountTypeId?: string;
-    discount?: number | undefined;
-    shippingCost?: number | undefined;
-    saleStatusId?: string;
-    paymentStatusId?: string;
-    saleNote?: string | undefined;
-    staffNote?: string | undefined;
-    saleDetails?: SaleDetail[];
-
-    constructor(data?: ISale) {
-        super(data);
-    }
-
-    override init(_data?: any) {
-        super.init(_data);
-        if (_data) {
-            this.saleDate = _data["saleDate"] ? new Date(_data["saleDate"].toString()) : <any>undefined;
-            this.referenceNo = _data["referenceNo"];
-            this.warehouseId = _data["warehouseId"];
-            this.customerId = _data["customerId"];
-            this.bullerId = _data["bullerId"];
-            this.attachmentUrl = _data["attachmentUrl"];
-            this.orderTax = _data["orderTax"];
-            this.orderDiscountTypeId = _data["orderDiscountTypeId"];
-            this.discount = _data["discount"];
-            this.shippingCost = _data["shippingCost"];
-            this.saleStatusId = _data["saleStatusId"];
-            this.paymentStatusId = _data["paymentStatusId"];
-            this.saleNote = _data["saleNote"];
-            this.staffNote = _data["staffNote"];
-            if (Array.isArray(_data["saleDetails"])) {
-                this.saleDetails = [] as any;
-                for (let item of _data["saleDetails"])
-                    this.saleDetails!.push(SaleDetail.fromJS(item));
-            }
-        }
-    }
-
-    static override fromJS(data: any): Sale {
-        data = typeof data === 'object' ? data : {};
-        let result = new Sale();
-        result.init(data);
-        return result;
-    }
-
-    override toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["saleDate"] = this.saleDate ? formatDate(this.saleDate) : <any>undefined;
-        data["referenceNo"] = this.referenceNo;
-        data["warehouseId"] = this.warehouseId;
-        data["customerId"] = this.customerId;
-        data["bullerId"] = this.bullerId;
-        data["attachmentUrl"] = this.attachmentUrl;
-        data["orderTax"] = this.orderTax;
-        data["orderDiscountTypeId"] = this.orderDiscountTypeId;
-        data["discount"] = this.discount;
-        data["shippingCost"] = this.shippingCost;
-        data["saleStatusId"] = this.saleStatusId;
-        data["paymentStatusId"] = this.paymentStatusId;
-        data["saleNote"] = this.saleNote;
-        data["staffNote"] = this.staffNote;
-        if (Array.isArray(this.saleDetails)) {
-            data["saleDetails"] = [];
-            for (let item of this.saleDetails)
-                data["saleDetails"].push(item.toJSON());
-        }
-        super.toJSON(data);
-        return data;
-    }
-}
-
-export interface ISale extends IBaseAuditableEntity {
-    saleDate?: Date;
-    referenceNo?: string;
-    warehouseId?: string;
-    customerId?: string;
-    bullerId?: string;
-    attachmentUrl?: string | undefined;
-    orderTax?: number | undefined;
-    orderDiscountTypeId?: string;
-    discount?: number | undefined;
-    shippingCost?: number | undefined;
-    saleStatusId?: string;
-    paymentStatusId?: string;
-    saleNote?: string | undefined;
-    staffNote?: string | undefined;
-    saleDetails?: SaleDetail[];
-}
-
-export abstract class BaseEvent implements IBaseEvent {
-
-    constructor(data?: IBaseEvent) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-    }
-
-    static fromJS(data: any): BaseEvent {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'BaseEvent' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        return data;
-    }
-}
-
-export interface IBaseEvent {
-}
-
-export class GetSaleListQuery extends DataGridModel implements IGetSaleListQuery {
-    cacheKey?: string;
-
-    constructor(data?: IGetSaleListQuery) {
-        super(data);
-    }
-
-    override init(_data?: any) {
-        super.init(_data);
-        if (_data) {
-            this.cacheKey = _data["cacheKey"];
-        }
-    }
-
-    static override fromJS(data: any): GetSaleListQuery {
-        data = typeof data === 'object' ? data : {};
-        let result = new GetSaleListQuery();
-        result.init(data);
-        return result;
-    }
-
-    override toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["cacheKey"] = this.cacheKey;
-        super.toJSON(data);
-        return data;
-    }
-}
-
-export interface IGetSaleListQuery extends IDataGridModel {
-    cacheKey?: string;
-}
-
-export class CreateSaleCommand implements ICreateSaleCommand {
-    saleDate?: Date;
-    referenceNo?: string;
-    warehouseId?: string;
-    customerId?: string;
-    bullerId?: string;
-    attachmentUrl?: string | undefined;
-    orderTax?: number | undefined;
-    orderDiscountTypeId?: string;
-    discount?: number | undefined;
-    shippingCost?: number | undefined;
-    saleStatusId?: string;
-    paymentStatusId?: string;
-    saleNote?: string | undefined;
-    staffNote?: string | undefined;
-    saleDetails?: SaleDetail[];
-    cacheKey?: string;
-
-    constructor(data?: ICreateSaleCommand) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.saleDate = _data["saleDate"] ? new Date(_data["saleDate"].toString()) : <any>undefined;
-            this.referenceNo = _data["referenceNo"];
-            this.warehouseId = _data["warehouseId"];
-            this.customerId = _data["customerId"];
-            this.bullerId = _data["bullerId"];
-            this.attachmentUrl = _data["attachmentUrl"];
-            this.orderTax = _data["orderTax"];
-            this.orderDiscountTypeId = _data["orderDiscountTypeId"];
-            this.discount = _data["discount"];
-            this.shippingCost = _data["shippingCost"];
-            this.saleStatusId = _data["saleStatusId"];
-            this.paymentStatusId = _data["paymentStatusId"];
-            this.saleNote = _data["saleNote"];
-            this.staffNote = _data["staffNote"];
-            if (Array.isArray(_data["saleDetails"])) {
-                this.saleDetails = [] as any;
-                for (let item of _data["saleDetails"])
-                    this.saleDetails!.push(SaleDetail.fromJS(item));
-            }
-            this.cacheKey = _data["cacheKey"];
-        }
-    }
-
-    static fromJS(data: any): CreateSaleCommand {
-        data = typeof data === 'object' ? data : {};
-        let result = new CreateSaleCommand();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["saleDate"] = this.saleDate ? formatDate(this.saleDate) : <any>undefined;
-        data["referenceNo"] = this.referenceNo;
-        data["warehouseId"] = this.warehouseId;
-        data["customerId"] = this.customerId;
-        data["bullerId"] = this.bullerId;
-        data["attachmentUrl"] = this.attachmentUrl;
-        data["orderTax"] = this.orderTax;
-        data["orderDiscountTypeId"] = this.orderDiscountTypeId;
-        data["discount"] = this.discount;
-        data["shippingCost"] = this.shippingCost;
-        data["saleStatusId"] = this.saleStatusId;
-        data["paymentStatusId"] = this.paymentStatusId;
-        data["saleNote"] = this.saleNote;
-        data["staffNote"] = this.staffNote;
-        if (Array.isArray(this.saleDetails)) {
-            data["saleDetails"] = [];
-            for (let item of this.saleDetails)
-                data["saleDetails"].push(item.toJSON());
-        }
-        data["cacheKey"] = this.cacheKey;
-        return data;
-    }
-}
-
-export interface ICreateSaleCommand {
-    saleDate?: Date;
-    referenceNo?: string;
-    warehouseId?: string;
-    customerId?: string;
-    bullerId?: string;
-    attachmentUrl?: string | undefined;
-    orderTax?: number | undefined;
-    orderDiscountTypeId?: string;
-    discount?: number | undefined;
-    shippingCost?: number | undefined;
-    saleStatusId?: string;
-    paymentStatusId?: string;
-    saleNote?: string | undefined;
-    staffNote?: string | undefined;
-    saleDetails?: SaleDetail[];
-    cacheKey?: string;
-}
-
-export class UpdateSaleCommand implements IUpdateSaleCommand {
-    id?: string;
-    saleDate?: Date;
-    referenceNo?: string;
-    warehouseId?: string;
-    customerId?: string;
-    bullerId?: string;
-    attachmentUrl?: string | undefined;
-    orderTax?: number | undefined;
-    orderDiscountTypeId?: string;
-    discount?: number | undefined;
-    shippingCost?: number | undefined;
-    saleStatusId?: string;
-    paymentStatusId?: string;
-    saleNote?: string | undefined;
-    staffNote?: string | undefined;
-    saleDetails?: SaleDetail[];
-    cacheKey?: string;
-
-    constructor(data?: IUpdateSaleCommand) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.saleDate = _data["saleDate"] ? new Date(_data["saleDate"].toString()) : <any>undefined;
-            this.referenceNo = _data["referenceNo"];
-            this.warehouseId = _data["warehouseId"];
-            this.customerId = _data["customerId"];
-            this.bullerId = _data["bullerId"];
-            this.attachmentUrl = _data["attachmentUrl"];
-            this.orderTax = _data["orderTax"];
-            this.orderDiscountTypeId = _data["orderDiscountTypeId"];
-            this.discount = _data["discount"];
-            this.shippingCost = _data["shippingCost"];
-            this.saleStatusId = _data["saleStatusId"];
-            this.paymentStatusId = _data["paymentStatusId"];
-            this.saleNote = _data["saleNote"];
-            this.staffNote = _data["staffNote"];
-            if (Array.isArray(_data["saleDetails"])) {
-                this.saleDetails = [] as any;
-                for (let item of _data["saleDetails"])
-                    this.saleDetails!.push(SaleDetail.fromJS(item));
-            }
-            this.cacheKey = _data["cacheKey"];
-        }
-    }
-
-    static fromJS(data: any): UpdateSaleCommand {
-        data = typeof data === 'object' ? data : {};
-        let result = new UpdateSaleCommand();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["saleDate"] = this.saleDate ? formatDate(this.saleDate) : <any>undefined;
-        data["referenceNo"] = this.referenceNo;
-        data["warehouseId"] = this.warehouseId;
-        data["customerId"] = this.customerId;
-        data["bullerId"] = this.bullerId;
-        data["attachmentUrl"] = this.attachmentUrl;
-        data["orderTax"] = this.orderTax;
-        data["orderDiscountTypeId"] = this.orderDiscountTypeId;
-        data["discount"] = this.discount;
-        data["shippingCost"] = this.shippingCost;
-        data["saleStatusId"] = this.saleStatusId;
-        data["paymentStatusId"] = this.paymentStatusId;
-        data["saleNote"] = this.saleNote;
-        data["staffNote"] = this.staffNote;
-        if (Array.isArray(this.saleDetails)) {
-            data["saleDetails"] = [];
-            for (let item of this.saleDetails)
-                data["saleDetails"].push(item.toJSON());
-        }
-        data["cacheKey"] = this.cacheKey;
-        return data;
-    }
-}
-
-export interface IUpdateSaleCommand {
-    id?: string;
-    saleDate?: Date;
-    referenceNo?: string;
-    warehouseId?: string;
-    customerId?: string;
-    bullerId?: string;
-    attachmentUrl?: string | undefined;
-    orderTax?: number | undefined;
-    orderDiscountTypeId?: string;
-    discount?: number | undefined;
-    shippingCost?: number | undefined;
-    saleStatusId?: string;
-    paymentStatusId?: string;
-    saleNote?: string | undefined;
-    staffNote?: string | undefined;
-    saleDetails?: SaleDetail[];
-    cacheKey?: string;
-}
-
 export class TreeNodeModel implements ITreeNodeModel {
     key?: any;
     label?: string;
@@ -12382,6 +11654,430 @@ export interface ITreeNodeModel {
     partialSelected?: boolean;
     leaf?: boolean;
     children?: TreeNodeModel[];
+}
+
+export class PaginatedResponseOfSaleModel implements IPaginatedResponseOfSaleModel {
+    items?: SaleModel[];
+    pageNumber?: number;
+    totalPages?: number;
+    totalCount?: number;
+    hasPreviousPage?: boolean;
+    hasNextPage?: boolean;
+    optionsDataSources?: { [key: string]: any; };
+
+    constructor(data?: IPaginatedResponseOfSaleModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(SaleModel.fromJS(item));
+            }
+            this.pageNumber = _data["pageNumber"];
+            this.totalPages = _data["totalPages"];
+            this.totalCount = _data["totalCount"];
+            this.hasPreviousPage = _data["hasPreviousPage"];
+            this.hasNextPage = _data["hasNextPage"];
+            if (_data["optionsDataSources"]) {
+                this.optionsDataSources = {} as any;
+                for (let key in _data["optionsDataSources"]) {
+                    if (_data["optionsDataSources"].hasOwnProperty(key))
+                        (<any>this.optionsDataSources)![key] = _data["optionsDataSources"][key];
+                }
+            }
+        }
+    }
+
+    static fromJS(data: any): PaginatedResponseOfSaleModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new PaginatedResponseOfSaleModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["pageNumber"] = this.pageNumber;
+        data["totalPages"] = this.totalPages;
+        data["totalCount"] = this.totalCount;
+        data["hasPreviousPage"] = this.hasPreviousPage;
+        data["hasNextPage"] = this.hasNextPage;
+        if (this.optionsDataSources) {
+            data["optionsDataSources"] = {};
+            for (let key in this.optionsDataSources) {
+                if (this.optionsDataSources.hasOwnProperty(key))
+                    (<any>data["optionsDataSources"])[key] = (<any>this.optionsDataSources)[key];
+            }
+        }
+        return data;
+    }
+}
+
+export interface IPaginatedResponseOfSaleModel {
+    items?: SaleModel[];
+    pageNumber?: number;
+    totalPages?: number;
+    totalCount?: number;
+    hasPreviousPage?: boolean;
+    hasNextPage?: boolean;
+    optionsDataSources?: { [key: string]: any; };
+}
+
+export class SaleModel implements ISaleModel {
+    id?: string;
+    saleDate?: Date;
+    referenceNo?: string | undefined;
+    warehouseId?: string;
+    customerId?: string;
+    billerId?: string;
+    attachmentUrl?: string | undefined;
+    saleStatusId?: string;
+    paymentStatusId?: string;
+    taxRate?: number | undefined;
+    taxAmount?: number | undefined;
+    discountAmount?: number | undefined;
+    discountRate?: number | undefined;
+    discountType?: DiscountType | undefined;
+    shippingCost?: number | undefined;
+    grandTotal?: number;
+    saleNote?: string | undefined;
+    staffNote?: string | undefined;
+    saleDetails?: SaleDetailModel[];
+    optionsDataSources?: { [key: string]: any; };
+
+    constructor(data?: ISaleModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.saleDate = _data["saleDate"] ? new Date(_data["saleDate"].toString()) : <any>undefined;
+            this.referenceNo = _data["referenceNo"];
+            this.warehouseId = _data["warehouseId"];
+            this.customerId = _data["customerId"];
+            this.billerId = _data["billerId"];
+            this.attachmentUrl = _data["attachmentUrl"];
+            this.saleStatusId = _data["saleStatusId"];
+            this.paymentStatusId = _data["paymentStatusId"];
+            this.taxRate = _data["taxRate"];
+            this.taxAmount = _data["taxAmount"];
+            this.discountAmount = _data["discountAmount"];
+            this.discountRate = _data["discountRate"];
+            this.discountType = _data["discountType"];
+            this.shippingCost = _data["shippingCost"];
+            this.grandTotal = _data["grandTotal"];
+            this.saleNote = _data["saleNote"];
+            this.staffNote = _data["staffNote"];
+            if (Array.isArray(_data["saleDetails"])) {
+                this.saleDetails = [] as any;
+                for (let item of _data["saleDetails"])
+                    this.saleDetails!.push(SaleDetailModel.fromJS(item));
+            }
+            if (_data["optionsDataSources"]) {
+                this.optionsDataSources = {} as any;
+                for (let key in _data["optionsDataSources"]) {
+                    if (_data["optionsDataSources"].hasOwnProperty(key))
+                        (<any>this.optionsDataSources)![key] = _data["optionsDataSources"][key];
+                }
+            }
+        }
+    }
+
+    static fromJS(data: any): SaleModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new SaleModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["saleDate"] = this.saleDate ? formatDate(this.saleDate) : <any>undefined;
+        data["referenceNo"] = this.referenceNo;
+        data["warehouseId"] = this.warehouseId;
+        data["customerId"] = this.customerId;
+        data["billerId"] = this.billerId;
+        data["attachmentUrl"] = this.attachmentUrl;
+        data["saleStatusId"] = this.saleStatusId;
+        data["paymentStatusId"] = this.paymentStatusId;
+        data["taxRate"] = this.taxRate;
+        data["taxAmount"] = this.taxAmount;
+        data["discountAmount"] = this.discountAmount;
+        data["discountRate"] = this.discountRate;
+        data["discountType"] = this.discountType;
+        data["shippingCost"] = this.shippingCost;
+        data["grandTotal"] = this.grandTotal;
+        data["saleNote"] = this.saleNote;
+        data["staffNote"] = this.staffNote;
+        if (Array.isArray(this.saleDetails)) {
+            data["saleDetails"] = [];
+            for (let item of this.saleDetails)
+                data["saleDetails"].push(item.toJSON());
+        }
+        if (this.optionsDataSources) {
+            data["optionsDataSources"] = {};
+            for (let key in this.optionsDataSources) {
+                if (this.optionsDataSources.hasOwnProperty(key))
+                    (<any>data["optionsDataSources"])[key] = (<any>this.optionsDataSources)[key];
+            }
+        }
+        return data;
+    }
+}
+
+export interface ISaleModel {
+    id?: string;
+    saleDate?: Date;
+    referenceNo?: string | undefined;
+    warehouseId?: string;
+    customerId?: string;
+    billerId?: string;
+    attachmentUrl?: string | undefined;
+    saleStatusId?: string;
+    paymentStatusId?: string;
+    taxRate?: number | undefined;
+    taxAmount?: number | undefined;
+    discountAmount?: number | undefined;
+    discountRate?: number | undefined;
+    discountType?: DiscountType | undefined;
+    shippingCost?: number | undefined;
+    grandTotal?: number;
+    saleNote?: string | undefined;
+    staffNote?: string | undefined;
+    saleDetails?: SaleDetailModel[];
+    optionsDataSources?: { [key: string]: any; };
+}
+
+export enum DiscountType {
+    Percentage = 1,
+    Fixed = 2,
+}
+
+export class SaleDetailModel implements ISaleDetailModel {
+    id?: string;
+    saleId?: string;
+    productId?: string;
+    productCode?: string;
+    productName?: string;
+    productUnitCost?: number;
+    productUnitPrice?: number;
+    productUnitId?: string;
+    productUnit?: number;
+    productUnitDiscount?: number;
+    quantity?: number;
+    batchNo?: string;
+    expiredDate?: Date | undefined;
+    netUnitPrice?: number;
+    discountAmount?: number;
+    tax?: number;
+    taxAmount?: number;
+    taxMethod?: TaxMethod;
+    totalPrice?: number;
+
+    constructor(data?: ISaleDetailModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.saleId = _data["saleId"];
+            this.productId = _data["productId"];
+            this.productCode = _data["productCode"];
+            this.productName = _data["productName"];
+            this.productUnitCost = _data["productUnitCost"];
+            this.productUnitPrice = _data["productUnitPrice"];
+            this.productUnitId = _data["productUnitId"];
+            this.productUnit = _data["productUnit"];
+            this.productUnitDiscount = _data["productUnitDiscount"];
+            this.quantity = _data["quantity"];
+            this.batchNo = _data["batchNo"];
+            this.expiredDate = _data["expiredDate"] ? new Date(_data["expiredDate"].toString()) : <any>undefined;
+            this.netUnitPrice = _data["netUnitPrice"];
+            this.discountAmount = _data["discountAmount"];
+            this.tax = _data["tax"];
+            this.taxAmount = _data["taxAmount"];
+            this.taxMethod = _data["taxMethod"];
+            this.totalPrice = _data["totalPrice"];
+        }
+    }
+
+    static fromJS(data: any): SaleDetailModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new SaleDetailModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["saleId"] = this.saleId;
+        data["productId"] = this.productId;
+        data["productCode"] = this.productCode;
+        data["productName"] = this.productName;
+        data["productUnitCost"] = this.productUnitCost;
+        data["productUnitPrice"] = this.productUnitPrice;
+        data["productUnitId"] = this.productUnitId;
+        data["productUnit"] = this.productUnit;
+        data["productUnitDiscount"] = this.productUnitDiscount;
+        data["quantity"] = this.quantity;
+        data["batchNo"] = this.batchNo;
+        data["expiredDate"] = this.expiredDate ? formatDate(this.expiredDate) : <any>undefined;
+        data["netUnitPrice"] = this.netUnitPrice;
+        data["discountAmount"] = this.discountAmount;
+        data["tax"] = this.tax;
+        data["taxAmount"] = this.taxAmount;
+        data["taxMethod"] = this.taxMethod;
+        data["totalPrice"] = this.totalPrice;
+        return data;
+    }
+}
+
+export interface ISaleDetailModel {
+    id?: string;
+    saleId?: string;
+    productId?: string;
+    productCode?: string;
+    productName?: string;
+    productUnitCost?: number;
+    productUnitPrice?: number;
+    productUnitId?: string;
+    productUnit?: number;
+    productUnitDiscount?: number;
+    quantity?: number;
+    batchNo?: string;
+    expiredDate?: Date | undefined;
+    netUnitPrice?: number;
+    discountAmount?: number;
+    tax?: number;
+    taxAmount?: number;
+    taxMethod?: TaxMethod;
+    totalPrice?: number;
+}
+
+export class GetSaleListQuery extends DataGridModel implements IGetSaleListQuery {
+    cacheKey?: string;
+
+    constructor(data?: IGetSaleListQuery) {
+        super(data);
+    }
+
+    override init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.cacheKey = _data["cacheKey"];
+        }
+    }
+
+    static override fromJS(data: any): GetSaleListQuery {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetSaleListQuery();
+        result.init(data);
+        return result;
+    }
+
+    override toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["cacheKey"] = this.cacheKey;
+        super.toJSON(data);
+        return data;
+    }
+}
+
+export interface IGetSaleListQuery extends IDataGridModel {
+    cacheKey?: string;
+}
+
+export class CreateSaleCommand extends SaleModel implements ICreateSaleCommand {
+    cacheKey?: string;
+
+    constructor(data?: ICreateSaleCommand) {
+        super(data);
+    }
+
+    override init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.cacheKey = _data["cacheKey"];
+        }
+    }
+
+    static override fromJS(data: any): CreateSaleCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateSaleCommand();
+        result.init(data);
+        return result;
+    }
+
+    override toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["cacheKey"] = this.cacheKey;
+        super.toJSON(data);
+        return data;
+    }
+}
+
+export interface ICreateSaleCommand extends ISaleModel {
+    cacheKey?: string;
+}
+
+export class UpdateSaleCommand extends SaleModel implements IUpdateSaleCommand {
+    cacheKey?: string;
+
+    constructor(data?: IUpdateSaleCommand) {
+        super(data);
+    }
+
+    override init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.cacheKey = _data["cacheKey"];
+        }
+    }
+
+    static override fromJS(data: any): UpdateSaleCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateSaleCommand();
+        result.init(data);
+        return result;
+    }
+
+    override toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["cacheKey"] = this.cacheKey;
+        super.toJSON(data);
+        return data;
+    }
+}
+
+export interface IUpdateSaleCommand extends ISaleModel {
+    cacheKey?: string;
 }
 
 export class PaginatedResponseOfBrandModel implements IPaginatedResponseOfBrandModel {
@@ -13170,11 +12866,6 @@ export interface IProductModel {
     optionsDataSources?: { [key: string]: any; };
 }
 
-export enum DiscountType {
-    Percentage = 1,
-    Fixed = 2,
-}
-
 export class GetProductListQuery extends DataGridModel implements IGetProductListQuery {
     cacheKey?: string;
 
@@ -13393,6 +13084,9 @@ export class ProductSelectListModel implements IProductSelectListModel {
     costPrice?: number | undefined;
     salePrice?: number;
     purchaseUnit?: string | undefined;
+    saleUnit?: string | undefined;
+    discount?: number;
+    discountType?: DiscountType;
     taxRate?: number;
     taxMethod?: TaxMethod;
 
@@ -13413,6 +13107,9 @@ export class ProductSelectListModel implements IProductSelectListModel {
             this.costPrice = _data["costPrice"];
             this.salePrice = _data["salePrice"];
             this.purchaseUnit = _data["purchaseUnit"];
+            this.saleUnit = _data["saleUnit"];
+            this.discount = _data["discount"];
+            this.discountType = _data["discountType"];
             this.taxRate = _data["taxRate"];
             this.taxMethod = _data["taxMethod"];
         }
@@ -13433,6 +13130,9 @@ export class ProductSelectListModel implements IProductSelectListModel {
         data["costPrice"] = this.costPrice;
         data["salePrice"] = this.salePrice;
         data["purchaseUnit"] = this.purchaseUnit;
+        data["saleUnit"] = this.saleUnit;
+        data["discount"] = this.discount;
+        data["discountType"] = this.discountType;
         data["taxRate"] = this.taxRate;
         data["taxMethod"] = this.taxMethod;
         return data;
@@ -13446,6 +13146,9 @@ export interface IProductSelectListModel {
     costPrice?: number | undefined;
     salePrice?: number;
     purchaseUnit?: string | undefined;
+    saleUnit?: string | undefined;
+    discount?: number;
+    discountType?: DiscountType;
     taxRate?: number;
     taxMethod?: TaxMethod;
 }

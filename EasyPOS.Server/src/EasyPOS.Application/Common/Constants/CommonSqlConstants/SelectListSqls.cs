@@ -109,6 +109,13 @@ public static class SelectListSqls
         ORDER BY Name
         """;
 
+    public const string UnitWithOperatorSelectListSql = """
+        SELECT Id, Name, BaseUnit, Operator, OperatorValue
+        FROM dbo.Units t
+        WHERE 1 = 1
+        ORDER BY Name
+        """;
+
     public const string WarehouseSelectListSql = """
         SELECT Id, Name 
         FROM dbo.Warehouses c

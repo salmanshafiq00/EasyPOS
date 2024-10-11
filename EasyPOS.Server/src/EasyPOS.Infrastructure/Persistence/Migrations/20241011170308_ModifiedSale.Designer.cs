@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EasyPOS.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241008012454_Morning")]
-    partial class Morning
+    [Migration("20241011170308_ModifiedSale")]
+    partial class ModifiedSale
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -545,7 +545,7 @@ namespace EasyPOS.Infrastructure.Persistence.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("EasyPOS.Domain.Products.Tax", b =>
+            modelBuilder.Entity("EasyPOS.Domain.Products.TaxRate", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -842,7 +842,7 @@ namespace EasyPOS.Infrastructure.Persistence.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("GrantTotal")
+                    b.Property<decimal>("GrandTotal")
                         .HasColumnType("decimal(18, 2)");
 
                     b.Property<DateTime?>("LastModified")
@@ -904,7 +904,7 @@ namespace EasyPOS.Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<decimal>("DiscountAmount")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<DateOnly?>("ExpiredDate")
                         .HasColumnType("date");
@@ -924,11 +924,11 @@ namespace EasyPOS.Infrastructure.Persistence.Migrations
                     b.Property<decimal>("SubTotal")
                         .HasColumnType("decimal(18, 2)");
 
-                    b.Property<decimal>("Tax")
+                    b.Property<decimal>("TaxRate")
                         .HasColumnType("decimal(18, 2)");
 
                     b.Property<decimal>("TaxAmount")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<int>("TaxMethod")
                         .HasColumnType("int");
@@ -951,7 +951,7 @@ namespace EasyPOS.Infrastructure.Persistence.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<Guid>("BullerId")
+                    b.Property<Guid>("BillerId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("Created")
@@ -963,7 +963,16 @@ namespace EasyPOS.Infrastructure.Persistence.Migrations
                     b.Property<Guid>("CustomerId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<decimal?>("Discount")
+                    b.Property<decimal>("DiscountAmount")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<decimal?>("DiscountRate")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<int>("DiscountType")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("GrandTotal")
                         .HasColumnType("decimal(18, 2)");
 
                     b.Property<DateTime?>("LastModified")
@@ -971,12 +980,6 @@ namespace EasyPOS.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("OrderDiscountTypeId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal?>("OrderTax")
-                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<Guid>("PaymentStatusId")
                         .HasColumnType("uniqueidentifier");
@@ -1000,7 +1003,14 @@ namespace EasyPOS.Infrastructure.Persistence.Migrations
                         .HasColumnType("decimal(18, 2)");
 
                     b.Property<string>("StaffNote")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<decimal?>("TaxAmount")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<decimal?>("TaxRate")
+                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<Guid>("WarehouseId")
                         .HasColumnType("uniqueidentifier");
@@ -1022,16 +1032,39 @@ namespace EasyPOS.Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<decimal>("DiscountAmount")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<DateOnly?>("ExpiredDate")
                         .HasColumnType("date");
 
-                    b.Property<decimal>("NetUnitCost")
+                    b.Property<decimal>("NetUnitPrice")
                         .HasColumnType("decimal(18, 2)");
+
+                    b.Property<string>("ProductCode")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<Guid>("ProductId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ProductName")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<decimal>("ProductUnit")
+                        .HasColumnType("decimal(10, 2)");
+
+                    b.Property<decimal>("ProductUnitCost")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<decimal>("ProductUnitDiscount")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<Guid>("ProductUnitId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("ProductUnitPrice")
+                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
@@ -1039,10 +1072,16 @@ namespace EasyPOS.Infrastructure.Persistence.Migrations
                     b.Property<Guid>("SaleId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<decimal>("SubTotal")
+                    b.Property<decimal>("TaxRate")
                         .HasColumnType("decimal(18, 2)");
 
-                    b.Property<decimal>("Tax")
+                    b.Property<decimal>("TaxAmount")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<int>("TaxMethod")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(18, 2)");
 
                     b.HasKey("Id");

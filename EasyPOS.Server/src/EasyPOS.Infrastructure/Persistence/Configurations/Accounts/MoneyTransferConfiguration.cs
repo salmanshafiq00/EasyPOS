@@ -12,6 +12,9 @@ public class MoneyTransferConfiguration : IEntityTypeConfiguration<MoneyTransfer
                .HasDefaultValueSql("NEWSEQUENTIALID()")
                .ValueGeneratedOnAdd();
 
+        builder.Property(x => x.Amount)
+            .HasColumnType("decimal(18, 2)");
+
         //builder.Ignore(e => e.DomainEvents);
     }
 }

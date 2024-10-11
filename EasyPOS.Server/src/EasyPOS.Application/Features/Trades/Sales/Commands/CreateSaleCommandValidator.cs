@@ -2,26 +2,20 @@
 
 public class CreateSaleCommandValidator : AbstractValidator<CreateSaleCommand>
 {
-    private readonly ICommonQueryService _commonQuery;
-
-    public CreateSaleCommandValidator(ICommonQueryService commonQuery)
+    public CreateSaleCommandValidator()
     {
-        _commonQuery = commonQuery;
 
         //RuleFor(v => v.Name)
         //    .NotEmpty()
-        //    .MaximumLength(250)
+        //    .MaximumLength(200)
         //    .MustAsync(BeUniqueName)
         //        .WithMessage("'{PropertyName}' must be unique.")
         //        .WithErrorCode("Unique");
+        //public async Task<bool> BeUniqueName(string name, CancellationToken cancellationToken)
+        //{
+            //return !await _commonQuery.IsExist("dbo.Sales", ["Name"], new { Name = name });
+        //}
 
-        //RuleFor(v => v.Address)
-        //    .MaximumLength(500)
-        //    .WithMessage("{0} can not exceed max {1} chars.");
-    }
-
-    public async Task<bool> BeUniqueName(string name, CancellationToken cancellationToken)
-    {
-        return !await _commonQuery.IsExist("dbo.Sales", ["Name"], new { Name = name });
     }
 }
+
