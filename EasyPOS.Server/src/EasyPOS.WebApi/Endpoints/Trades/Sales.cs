@@ -73,6 +73,14 @@ public class Sales : EndpointGroupBase
             AllowCacheList: false)
         );
 
+        var paymentStatusSelectList = await sender.Send(new GetSelectListQuery(
+            Sql: SelectListSqls.GetLookupDetailSelectListByDevCodeSql,
+            Parameters: new { DevCode = LookupDevCode.PaymentStatus },
+            Key: $"{CacheKeys.LookupDetail}_{LookupDevCode.PaymentStatus}",
+            AllowCacheList: false)
+        );
+
+
         var taxesSelectList = await sender.Send(new GetSelectListQuery(
            Sql: SelectListSqls.TaxesSelectListSql,
            Parameters: new { },
@@ -91,6 +99,7 @@ public class Sales : EndpointGroupBase
         result.Value.OptionsDataSources.Add("customersSelectList", customersSelectList.Value);
         result.Value.OptionsDataSources.Add("warehousesSelectList", warehousesSelectList.Value);
         result.Value.OptionsDataSources.Add("saleStatusSelectList", saleStatusSelectList.Value);
+        result.Value.OptionsDataSources.Add("paymentStatusSelectList", paymentStatusSelectList.Value);
         result.Value.OptionsDataSources.Add("productsSelectList", productsSelectList.Value);
         result.Value.OptionsDataSources.Add("taxesSelectList", taxesSelectList.Value);
         result.Value.OptionsDataSources.Add("productUnitSelectList", productUnitSelectList.Value);

@@ -10,18 +10,18 @@ public class UpdateLookupDetailCommandValidator : AbstractValidator<UpdateLookup
     {
         _commonQuery = commonQuery;
 
-        RuleFor(v => v.Code)
-          .NotEmpty()
-          .MaximumLength(10)
-          .MinimumLength(3)
-          .MustAsync(async (v, code, cancellation) => await BeUniqueCodeSkipCurrent(code, v.Id, cancellation))
-                .WithMessage("'{PropertyName}' must be unique.")
-                .WithErrorCode("Unique");
+        //RuleFor(v => v.Code)
+        //  .NotEmpty()
+        //  .MaximumLength(10)
+        //  .MinimumLength(3)
+        //  .MustAsync(async (v, code, cancellation) => await BeUniqueCodeSkipCurrent(code, v.Id, cancellation))
+        //        .WithMessage("'{PropertyName}' must be unique.")
+        //        .WithErrorCode("Unique");
 
         RuleFor(v => v.Name)
             .NotEmpty()
             .MaximumLength(200)
-            .MustAsync(async (v, name, cancellation) => await BeUniqueNameSkipCurrent(name, v.Id, cancellation))
+            .MustAsync(async (v, name, cancellation) => await BeUniqueNameSkipCurrent(name, v, cancellation))
                 .WithMessage("'{PropertyName}' must be unique.")
                 .WithErrorCode("Unique");
 
@@ -35,13 +35,17 @@ public class UpdateLookupDetailCommandValidator : AbstractValidator<UpdateLookup
 
     }
 
-    public async Task<bool> BeUniqueNameSkipCurrent(string name, Guid id, CancellationToken cancellationToken)
+    public async Task<bool> BeUniqueNameSkipCurrent(string name, UpdateLookupDetailCommand command, CancellationToken cancellationToken)
     {
-        return !await _commonQuery.IsExist("dbo.LookupDetails", ["Name"], new { Name = name, Id = id }, ["Id"]);
+        return !await _commonQuery.IsExistAsync(
+            "dbo.LookupDetails", 
+            ["Name"], 
+            new { Name = name, command.Id, command.LookupId }, 
+            ["Id"]);
     }
     public async Task<bool> BeUniqueCodeSkipCurrent(string code, Guid id, CancellationToken cancellationToken)
     {
-        return !await _commonQuery.IsExist("dbo.LookupDetails", ["Code"], new { Code = code, Id = id }, ["Id"]);
+        return !await _commonQuery.IsExistAsync("dbo.LookupDetails", ["Code"], new { Code = code, Id = id }, ["Id"]);
     }
 
 }

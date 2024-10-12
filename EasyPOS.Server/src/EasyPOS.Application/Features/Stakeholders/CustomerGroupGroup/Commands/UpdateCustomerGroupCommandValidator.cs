@@ -19,6 +19,6 @@ public class UpdateCustomerGroupCommandValidator : AbstractValidator<UpdateCusto
 
     public async Task<bool> BeUniqueNameSkipCurrent(string name, Guid id, CancellationToken cancellationToken)
     {
-        return !await _commonQuery.IsExist("dbo.CustomerGroups", ["Name"], new { Name = name, Id = id }, ["Id"]);
+        return !await _commonQuery.IsExistAsync("dbo.CustomerGroups", ["Name"], new { Name = name, Id = id }, ["Id"]);
     }
 }

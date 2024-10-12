@@ -1,4 +1,5 @@
-﻿using EasyPOS.Domain.Enums;
+﻿using EasyPOS.Application.Common.Enums;
+using EasyPOS.Domain.Enums;
 
 namespace EasyPOS.Application.Features.Trades.Sales.Queries;
 
@@ -8,10 +9,10 @@ public record GetSaleByIdQuery(Guid Id) : ICacheableQuery<SaleModel>
     public string CacheKey => $"{CacheKeys.Sale}_{Id}";
     [JsonIgnore]
     public TimeSpan? Expiration => null;
-    public bool? AllowCache => true;
+    public bool? AllowCache => false;
 }
 
-internal sealed class GetSaleByIdQueryHandler(ISqlConnectionFactory sqlConnection)
+internal sealed class GetSaleByIdQueryHandler(ISqlConnectionFactory sqlConnection, ICommonQueryService commonQueryService)
     : IQueryHandler<GetSaleByIdQuery, SaleModel>
 {
     public async Task<Result<SaleModel>> Handle(GetSaleByIdQuery request, CancellationToken cancellationToken)
@@ -22,7 +23,10 @@ internal sealed class GetSaleByIdQueryHandler(ISqlConnectionFactory sqlConnectio
             {
                 DiscountType = DiscountType.Fixed,
                 ShippingCost = 0,
-                //DiscountAmount = 0
+                DiscountAmount = 0,
+                SaleStatusId = await commonQueryService.GetLookupDetailIdAsync((int)SaleSatus.Completed) ,
+                PaymentStatusId = await commonQueryService.GetLookupDetailIdAsync((int)PaymentStatus.Pending),
+                TaxRate = 0
             };
         }
 
@@ -32,6 +36,7 @@ internal sealed class GetSaleByIdQueryHandler(ISqlConnectionFactory sqlConnectio
             SELECT
                 -- SaleModel fields (master)
                 s.Id AS {nameof(SaleModel.Id)},
+                s.SaleDate AS {nameof(SaleModel.SaleDate)},
                 s.ReferenceNo AS {nameof(SaleModel.ReferenceNo)},
                 s.WarehouseId AS {nameof(SaleModel.WarehouseId)},
                 s.CustomerId AS {nameof(SaleModel.CustomerId)},
@@ -41,6 +46,8 @@ internal sealed class GetSaleByIdQueryHandler(ISqlConnectionFactory sqlConnectio
                 s.PaymentStatusId AS {nameof(SaleModel.PaymentStatusId)},
                 s.TaxRate AS {nameof(SaleModel.TaxRate)},
                 s.TaxAmount AS {nameof(SaleModel.TaxAmount)},
+                s.DiscountType AS {nameof(SaleModel.DiscountType)},
+                s.DiscountRate AS {nameof(SaleModel.DiscountRate)},
                 s.DiscountAmount AS {nameof(SaleModel.DiscountAmount)},
                 s.ShippingCost AS {nameof(SaleModel.ShippingCost)},
                 s.GrandTotal AS {nameof(SaleModel.GrandTotal)},
@@ -63,7 +70,7 @@ internal sealed class GetSaleByIdQueryHandler(ISqlConnectionFactory sqlConnectio
                 d.ExpiredDate AS {nameof(SaleDetailModel.ExpiredDate)},
                 d.NetUnitPrice AS {nameof(SaleDetailModel.NetUnitPrice)},
                 d.DiscountAmount AS {nameof(SaleDetailModel.DiscountAmount)},
-                d.TaxRate AS {nameof(SaleDetailModel.Tax)},
+                d.Tax AS {nameof(SaleDetailModel.Tax)},
                 d.TaxAmount AS {nameof(SaleDetailModel.TaxAmount)},
                 d.TaxMethod AS {nameof(SaleDetailModel.TaxMethod)},
                 d.TotalPrice AS {nameof(SaleDetailModel.TotalPrice)}

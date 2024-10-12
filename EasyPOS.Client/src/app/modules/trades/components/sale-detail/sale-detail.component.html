@@ -29,13 +29,13 @@
         <!-- Biller -->
         <div class="field col-12 md:col-4">
           <app-input-select label="Biller" [(ngModel)]="item.billerId" name="billerId"
-            [options]="optionsDataSources?.bullersSelectList" />
+            [options]="optionsDataSources?.customersSelectList" />
         </div>
 
         <!-- product select  -->
         <div class="col-12">
           <app-input-select label="" [optionValue]="null" name="selectedProduct" [(ngModel)]="selectedProduct"
-            (ngModelChange)="onProductSelect()" [options]="optionsDataSources?.['productsSelectList']" />
+            (ngModelChange)="onProductSelect()" [options]="optionsDataSources?.productsSelectList" />
         </div>
 
         <!-- Sale Details List -->
@@ -96,13 +96,13 @@
         <!-- Tax -->
         <div class="field col-12 md:col-4">
           <app-input-select label="Order Tax" name="taxRate" [(ngModel)]="item.taxRate"
-            [options]="optionsDataSources?.['taxesSelectList']" [required]="true"
+            [options]="optionsDataSources?.taxesSelectList" [required]="true" [showClear]="false"
             (ngModelChange)="onOrderTaxChange()" />
         </div>
 
         <div class="field col-12 md:col-4">
           <app-input-select label="Discount Type" [(ngModel)]="item.discountType" name="discountType"
-            [options]="discountTypes" (ngModelChange)="onDiscountTypeChange()" />
+            [options]="discountTypes" (ngModelChange)="onDiscountTypeChange()" [showClear]="false" />
         </div>
 
         <!-- Discount Rate -->
@@ -122,13 +122,13 @@
 
         <!-- Sale Status -->
         <div class="field col-12 md:col-4">
-          <app-input-select label="Sale Status" [(ngModel)]="item.saleStatusId" name="saleStatusId"
+          <app-input-select label="Sale Status" [(ngModel)]="item.saleStatusId" name="saleStatusId" [showClear]="false"
             [options]="optionsDataSources?.saleStatusSelectList" />
         </div>
 
         <!-- Payment Status -->
         <div class="field col-12 md:col-4">
-          <app-input-select label="Payment Status" [(ngModel)]="item.paymentStatusId" name="paymentStatusId"
+          <app-input-select label="Payment Status" [(ngModel)]="item.paymentStatusId" name="paymentStatusId" [showClear]="false"
             [options]="optionsDataSources?.paymentStatusSelectList" />
         </div>
 

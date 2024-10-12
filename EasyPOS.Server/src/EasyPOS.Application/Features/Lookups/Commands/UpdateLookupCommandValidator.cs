@@ -32,11 +32,11 @@ public class UpdateLookupCommandValidator : AbstractValidator<UpdateLookupComman
 
     public async Task<bool> BeUniqueNameSkipCurrent(string name, Guid id, CancellationToken cancellationToken)
     {
-        return !await _commonQuery.IsExist("dbo.Lookups", ["Name"], new { Name = name, Id = id }, ["Id"]);
+        return !await _commonQuery.IsExistAsync("dbo.Lookups", ["Name"], new { Name = name, Id = id }, ["Id"]);
     }
     public async Task<bool> BeUniqueCodeSkipCurrent(string code, Guid id, CancellationToken cancellationToken)
     {
-        return !await _commonQuery.IsExist("dbo.Lookups", ["Code"], new { Code = code, Id = id }, ["Id"]);
+        return !await _commonQuery.IsExistAsync("dbo.Lookups", ["Code"], new { Code = code, Id = id }, ["Id"]);
     }
 
 }

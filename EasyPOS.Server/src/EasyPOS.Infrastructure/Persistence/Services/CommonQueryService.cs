@@ -2,12 +2,30 @@
 using Dapper;
 using EasyPOS.Application.Common.Abstractions;
 using EasyPOS.Application.Common.DapperQueries;
+using EasyPOS.Application.Features.LookupDetails.Queries;
 
 namespace EasyPOS.Infrastructure.Persistence.Services;
 
 internal sealed class CommonQueryService(ISqlConnectionFactory sqlConnection) : ICommonQueryService
 {
-    public async Task<bool> IsExist(
+    public async Task<Guid?> GetLookupDetailIdAsync(int lookupDetailDevCode)
+    {
+        var connection = sqlConnection.GetOpenConnection();
+
+        var sql = """
+            SELECT TOP 1 Id
+            FROM dbo.LookupDetails
+            WHERE DevCode = @DevCode
+            """;
+        return await connection.QueryFirstOrDefaultAsync<Guid?>(sql, new {DevCode = lookupDetailDevCode});
+    }
+
+    public Task<List<LookupDetailModel>> GetLookupDetailsAsync(int lookupDetailDevCode)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<bool> IsExistAsync(
         string tableName,
         string[]? equalFilters,
         object? param = null,

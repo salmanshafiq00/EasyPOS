@@ -4,12 +4,13 @@ import { ActivatedRoute } from '@angular/router';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { CommonConstants } from 'src/app/core/contants/common';
 import { CommonUtils } from 'src/app/shared/Utilities/common-utilities';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-sale-detail',
   templateUrl: './sale-detail.component.html',
   styleUrl: './sale-detail.component.scss',
-  providers: [SalesClient]
+  providers: [SalesClient, DatePipe]
 })
 export class SaleDetailComponent implements OnInit {
 
@@ -27,7 +28,7 @@ export class SaleDetailComponent implements OnInit {
   constructor(private entityClient: SalesClient,
     private activatedRoute: ActivatedRoute,
     private toast: ToastService,
-    // private datePipe: DatePipe
+    private datePipe: DatePipe
   ) {
   }
 
@@ -65,6 +66,9 @@ export class SaleDetailComponent implements OnInit {
   // #region CRUDS
 
   onSubmit() {
+    if(this.saleDate){
+      this.item.saleDate = new Date(this.saleDate);
+    }
     if (!this.id || this.id === this.CommonConstant.EmptyGuid) {
       this.save();
     } else {
@@ -79,7 +83,8 @@ export class SaleDetailComponent implements OnInit {
         //   this.item = res;
         // }
         this.item = res;
-
+        console.log(this.datePipe.transform(this.item.saleDate, 'dd/MM/yyyy'))
+        this.saleDate =  this.datePipe.transform(this.item.saleDate, 'dd/MM/yyyy')
         this.optionsDataSources = res.optionsDataSources;
 
         this.calculateGrandTotal();

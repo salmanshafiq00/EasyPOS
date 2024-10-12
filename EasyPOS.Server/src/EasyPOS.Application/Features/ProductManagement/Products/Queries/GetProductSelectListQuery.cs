@@ -23,6 +23,8 @@ internal sealed class ProductSelectListQueryHandler(
                 t.Id AS {nameof(ProductSelectListModel.Id)},
                 t.Name AS {nameof(ProductSelectListModel.Name)},
                 t.Code AS {nameof(ProductSelectListModel.Code)},
+                t.PurchaseUnit AS {nameof(ProductSelectListModel.PurchaseUnit)},
+                t.SaleUnit AS {nameof(ProductSelectListModel.SaleUnit)},
                 t.CostPrice AS {nameof(ProductSelectListModel.CostPrice)},
                 t.SalePrice AS {nameof(ProductSelectListModel.SalePrice)},
                 t.TaxRate AS {nameof(ProductSelectListModel.TaxRate)},

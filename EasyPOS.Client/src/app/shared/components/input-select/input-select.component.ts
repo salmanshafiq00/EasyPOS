@@ -60,7 +60,7 @@ export class InputSelectComponent implements ControlValueAccessor, Validator {
   }
 
   validate(control: AbstractControl): ValidationErrors | null {
-    return this.required && (!this.value || this.value.length === 0) ? { required: true } : null;
+    return this.required && (this.value === '' || this.value === null || this.value.length === 0) ? { required: true } : null;
   }
 
   onInputChange(event: any): void {

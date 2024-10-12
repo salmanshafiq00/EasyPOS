@@ -22,8 +22,8 @@ export class LookupDetailDetailComponent extends BaseDetailComponent {
   override initializeFormGroup() {
     this.form = this.fb.group({
       id: [''],
-      name: ['', Validators.required],
-      code: ['', Validators.required],
+      name: [''],
+      code: [''],
       description: [''],
       status: [true],
       parentId: [null],

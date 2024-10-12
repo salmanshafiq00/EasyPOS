@@ -2,7 +2,7 @@
   <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
     <div class="p-fluid p-formgrid grid">
       <div class="field col-12 md:col-6">
-        <app-input-text label="Code" formControlName="code" [required]="true" [readonly]="false" />
+        <app-input-text label="Code" formControlName="code" [required]="false" [readonly]="false" />
         <app-validator-msg [control]="f['code']"></app-validator-msg>
       </div>
       <div class="field col-12 md:col-6">

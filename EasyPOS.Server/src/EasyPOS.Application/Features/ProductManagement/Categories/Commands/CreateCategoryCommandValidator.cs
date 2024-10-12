@@ -22,6 +22,6 @@ public class CreateCategoryCommandValidator : AbstractValidator<CreateCategoryCo
 
     public async Task<bool> BeUniqueName(string name, CancellationToken cancellationToken)
     {
-        return !await _commonQuery.IsExist("dbo.Categories", ["Name"], new { Name = name });
+        return !await _commonQuery.IsExistAsync("dbo.Categories", ["Name"], new { Name = name });
     }
 }

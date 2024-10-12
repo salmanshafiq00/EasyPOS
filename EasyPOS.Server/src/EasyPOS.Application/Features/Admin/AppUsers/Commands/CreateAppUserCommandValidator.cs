@@ -34,10 +34,10 @@ internal sealed class CreateAppUserCommandValidator : AbstractValidator<CreateAp
 
     private async Task<bool> BeUniqueUsername(string username, CancellationToken cancellationToken)
     {
-        return !await _commonQuery.IsExist("[identity].Users", ["Username"], new { Username = username });
+        return !await _commonQuery.IsExistAsync("[identity].Users", ["Username"], new { Username = username });
     }
     private async Task<bool> BeUniqueEmail(string email, CancellationToken cancellationToken)
     {
-        return !await _commonQuery.IsExist("[identity].Users", ["Email"], new { Email = email });
+        return !await _commonQuery.IsExistAsync("[identity].Users", ["Email"], new { Email = email });
     }
 }

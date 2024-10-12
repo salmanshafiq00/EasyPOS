@@ -6206,8 +6206,7 @@
         "type": "object",
         "additionalProperties": false,
         "required": [
-          "name",
-          "code"
+          "name"
         ],
         "properties": {
           "name": {
@@ -6217,7 +6216,7 @@
           },
           "code": {
             "type": "string",
-            "maxLength": 10,
+            "maxLength": 20,
             "minLength": 0
           },
           "description": {
@@ -6247,7 +6246,6 @@
         "additionalProperties": false,
         "required": [
           "name",
-          "code",
           "lookupId"
         ],
         "properties": {
@@ -6261,9 +6259,7 @@
             "minLength": 0
           },
           "code": {
-            "type": "string",
-            "maxLength": 10,
-            "minLength": 0
+            "type": "string"
           },
           "description": {
             "type": "string",
@@ -7497,11 +7493,13 @@
           },
           "saleStatusId": {
             "type": "string",
-            "format": "guid"
+            "format": "guid",
+            "nullable": true
           },
           "paymentStatusId": {
             "type": "string",
-            "format": "guid"
+            "format": "guid",
+            "nullable": true
           },
           "taxRate": {
             "type": "number",
@@ -7547,6 +7545,18 @@
           "staffNote": {
             "type": "string",
             "nullable": true
+          },
+          "warehouseName": {
+            "type": "string"
+          },
+          "customerName": {
+            "type": "string"
+          },
+          "saleStatus": {
+            "type": "string"
+          },
+          "paymentStatus": {
+            "type": "string"
           },
           "saleDetails": {
             "type": "array",

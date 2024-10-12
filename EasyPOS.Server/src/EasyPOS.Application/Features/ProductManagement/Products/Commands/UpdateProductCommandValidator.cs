@@ -23,6 +23,6 @@ public class UpdateProductCommandValidator : AbstractValidator<UpdateProductComm
 
     public async Task<bool> BeUniqueNameSkipCurrent(string name, Guid id, CancellationToken cancellationToken)
     {
-        return !await _commonQuery.IsExist("dbo.Products", ["Name"], new { Name = name, Id = id }, ["Id"]);
+        return !await _commonQuery.IsExistAsync("dbo.Products", ["Name"], new { Name = name, Id = id }, ["Id"]);
     }
 }

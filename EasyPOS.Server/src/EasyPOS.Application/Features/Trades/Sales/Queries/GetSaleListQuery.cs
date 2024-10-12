@@ -18,6 +18,7 @@ internal sealed class GetSaleQueryHandler(ISqlConnectionFactory sqlConnection)
         var sql = $"""
             SELECT
                 t.Id AS {nameof(SaleModel.Id)},
+                t.SaleDate As {nameof(SaleModel.SaleDate)},
                 t.ReferenceNo AS {nameof(SaleModel.ReferenceNo)},
                 t.WarehouseId AS {nameof(SaleModel.WarehouseId)},
                 t.CustomerId AS {nameof(SaleModel.CustomerId)},
@@ -30,8 +31,16 @@ internal sealed class GetSaleQueryHandler(ISqlConnectionFactory sqlConnection)
                 t.ShippingCost AS {nameof(SaleModel.ShippingCost)},
                 t.GrandTotal AS {nameof(SaleModel.GrandTotal)},
                 t.SaleNote AS {nameof(SaleModel.SaleNote)},
-                t.StaffNote AS {nameof(SaleModel.StaffNote)}
+                t.StaffNote AS {nameof(SaleModel.StaffNote)},
+                w.Name AS {nameof(SaleModel.WarehouseName)},
+                c.Name AS {nameof(SaleModel.CustomerName)},
+                ss.Name AS {nameof(SaleModel.SaleStatus)},
+                ps.Name AS {nameof(SaleModel.PaymentStatus)}
             FROM dbo.Sales AS t
+            LEFT JOIN dbo.Warehouses w ON w.Id = t.WarehouseId
+            LEFT JOIN dbo.Customers c ON c.Id = t.CustomerId
+            LEFT JOIN dbo.LookupDetails ss ON ss.Id = t.SaleStatusId
+            LEFT JOIN dbo.LookupDetails ps ON ps.Id = t.PaymentStatusId
             WHERE 1 = 1
             """;
 

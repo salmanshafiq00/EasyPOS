@@ -29,7 +29,7 @@ public class UpdateAppMenuCommandValidator : AbstractValidator<UpdateAppMenuComm
 
     public async Task<bool> BeUniqueLabelSkipCurrent(string label, Guid id, CancellationToken cancellationToken)
     {
-        return !await _commonQuery.IsExist("dbo.AppMenus", ["Label"], new { Label = label, Id = id }, ["Id"]);
+        return !await _commonQuery.IsExistAsync("dbo.AppMenus", ["Label"], new { Label = label, Id = id }, ["Id"]);
     }
 
 }

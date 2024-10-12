@@ -4,6 +4,7 @@ using EasyPOS.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EasyPOS.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241012061237_LookupDetailSchemaChanged")]
+    partial class LookupDetailSchemaChanged
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -370,10 +373,10 @@ namespace EasyPOS.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("LookupId");
 
-                    b.HasIndex("ParentId");
-
-                    b.HasIndex("LookupId", "Name")
+                    b.HasIndex("Name")
                         .IsUnique();
+
+                    b.HasIndex("ParentId");
 
                     b.ToTable("LookupDetails");
                 });

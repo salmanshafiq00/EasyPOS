@@ -22,6 +22,6 @@ public class CreateWarehouseCommandValidator : AbstractValidator<CreateWarehouse
 
     public async Task<bool> BeUniqueName(string name, CancellationToken cancellationToken)
     {
-        return !await _commonQuery.IsExist("dbo.Warehouses", ["Name"], new { Name = name });
+        return !await _commonQuery.IsExistAsync("dbo.Warehouses", ["Name"], new { Name = name });
     }
 }

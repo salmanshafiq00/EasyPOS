@@ -11,8 +11,8 @@ public record SaleModel
     public Guid CustomerId {get;set;} 
     public Guid BillerId {get;set;} 
     public string? AttachmentUrl {get;set;} 
-    public Guid SaleStatusId {get;set;} 
-    public Guid PaymentStatusId {get;set;} 
+    public Guid? SaleStatusId {get;set;} 
+    public Guid? PaymentStatusId {get;set;} 
     public decimal? TaxRate {get;set;} 
     public decimal? TaxAmount {get;set;} 
     public decimal? DiscountAmount {get;set;} 
@@ -22,6 +22,11 @@ public record SaleModel
     public decimal GrandTotal {get;set;} 
     public string? SaleNote {get;set;} 
     public string? StaffNote {get;set;}
+
+    public string  WarehouseName { get; set; }
+    public string  CustomerName { get; set; }
+    public string SaleStatus { get; set; }
+    public string PaymentStatus { get; set; }
 
     public List<SaleDetailModel> SaleDetails { get; set; } = [];
 

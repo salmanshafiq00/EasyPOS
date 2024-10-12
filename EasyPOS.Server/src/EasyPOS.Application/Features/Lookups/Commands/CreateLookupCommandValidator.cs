@@ -35,11 +35,11 @@ public class CreateLookupCommandValidator : AbstractValidator<CreateLookupComman
 
     public async Task<bool> BeUniqueName(string name, CancellationToken cancellationToken)
     {
-        return !await _commonQuery.IsExist("dbo.Lookups", ["Name"], new { Name = name });
+        return !await _commonQuery.IsExistAsync("dbo.Lookups", ["Name"], new { Name = name });
     }
     public async Task<bool> BeUniqueCode(string code, CancellationToken cancellationToken)
     {
-        return !await _commonQuery.IsExist("dbo.Lookups", ["Code"], new { Code = code });
+        return !await _commonQuery.IsExistAsync("dbo.Lookups", ["Code"], new { Code = code });
     }
 
 }

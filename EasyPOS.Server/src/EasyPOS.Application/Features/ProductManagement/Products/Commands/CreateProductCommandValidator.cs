@@ -31,6 +31,6 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
 
     public async Task<bool> BeUniqueName(string name, CancellationToken cancellationToken)
     {
-        return !await _commonQuery.IsExist("dbo.Products", ["Name"], new { Name = name });
+        return !await _commonQuery.IsExistAsync("dbo.Products", ["Name"], new { Name = name });
     }
 }

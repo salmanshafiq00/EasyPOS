@@ -11,20 +11,19 @@ public class CreateLookupDetailCommandValidator : AbstractValidator<CreateLookup
         _commonQuery = commonQuery;
 
         RuleFor(v => v.Code)
-            .NotEmpty()
-            .MaximumLength(10)
-            .MinimumLength(3)
-              .WithMessage("'{PropertyName}' must be 3 - 10 characters.");
+            .MaximumLength(20)
+            //.MinimumLength(3)
+              .WithMessage("'{PropertyName}' allow max 20 characters.");
 
-        RuleFor(v => v.Code)
-            .MustAsync(BeUniqueCode)
-                .WithMessage("'{PropertyName}' must be unique.")
-                .WithErrorCode("Unique");
+        //RuleFor(v => v.Code)
+        //    .MustAsync(BeUniqueCode)
+        //        .WithMessage("'{PropertyName}' must be unique.")
+        //        .WithErrorCode("Unique");
 
         RuleFor(v => v.Name)
             .NotEmpty()
             .MaximumLength(200)
-            .MustAsync(BeUniqueName)
+            .MustAsync(async(command, name, cancellationToken) => await BeUniqueName(name, command.LookupId, cancellationToken ))
                 .WithMessage("'{PropertyName}' must be unique.")
                 .WithErrorCode("Unique");
 
@@ -33,13 +32,13 @@ public class CreateLookupDetailCommandValidator : AbstractValidator<CreateLookup
             .WithMessage("{0} can not exceed max 500 chars.");
     }
 
-    public async Task<bool> BeUniqueName(string name, CancellationToken cancellationToken)
+    public async Task<bool> BeUniqueName(string name, Guid lookupId, CancellationToken cancellationToken = default)
     {
-        return !await _commonQuery.IsExist("dbo.LookupDetails", ["Name"], new { Name = name });
+        return !await _commonQuery.IsExistAsync("dbo.LookupDetails", ["Name", "lookupId"], new { Name = name, LookupId =  lookupId});
     }
-    public async Task<bool> BeUniqueCode(string code, CancellationToken cancellationToken)
+    public async Task<bool> BeUniqueCode(string code, CancellationToken cancellationToken = default)
     {
-        return !await _commonQuery.IsExist("dbo.LookupDetails", ["Code"], new { Code = code });
+        return !await _commonQuery.IsExistAsync("dbo.LookupDetails", ["Code"], new { Code = code });
     }
 
 }

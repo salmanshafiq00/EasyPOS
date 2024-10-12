@@ -9,5 +9,5 @@ public enum LookupDevCode
     ProductUnit = 105,
     PurchaseStatus = 106,
     SaleStatus = 107,
-    OrderTax = 108
+    PaymentStatus = 108
 }

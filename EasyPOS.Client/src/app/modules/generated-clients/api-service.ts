@@ -9530,7 +9530,7 @@ export interface IGetLookupDetailListQuery extends IDataGridModel {
 
 export class CreateLookupDetailCommand implements ICreateLookupDetailCommand {
     name!: string;
-    code!: string;
+    code?: string;
     description?: string;
     status?: boolean;
     lookupId?: string;
@@ -9580,7 +9580,7 @@ export class CreateLookupDetailCommand implements ICreateLookupDetailCommand {
 
 export interface ICreateLookupDetailCommand {
     name: string;
-    code: string;
+    code?: string;
     description?: string;
     status?: boolean;
     lookupId?: string;
@@ -9591,7 +9591,7 @@ export interface ICreateLookupDetailCommand {
 export class UpdateLookupDetailCommand implements IUpdateLookupDetailCommand {
     id?: string;
     name!: string;
-    code!: string;
+    code?: string;
     description?: string;
     status?: boolean;
     lookupId!: string;
@@ -9644,7 +9644,7 @@ export class UpdateLookupDetailCommand implements IUpdateLookupDetailCommand {
 export interface IUpdateLookupDetailCommand {
     id?: string;
     name: string;
-    code: string;
+    code?: string;
     description?: string;
     status?: boolean;
     lookupId: string;
@@ -11744,8 +11744,8 @@ export class SaleModel implements ISaleModel {
     customerId?: string;
     billerId?: string;
     attachmentUrl?: string | undefined;
-    saleStatusId?: string;
-    paymentStatusId?: string;
+    saleStatusId?: string | undefined;
+    paymentStatusId?: string | undefined;
     taxRate?: number | undefined;
     taxAmount?: number | undefined;
     discountAmount?: number | undefined;
@@ -11755,6 +11755,10 @@ export class SaleModel implements ISaleModel {
     grandTotal?: number;
     saleNote?: string | undefined;
     staffNote?: string | undefined;
+    warehouseName?: string;
+    customerName?: string;
+    saleStatus?: string;
+    paymentStatus?: string;
     saleDetails?: SaleDetailModel[];
     optionsDataSources?: { [key: string]: any; };
 
@@ -11787,6 +11791,10 @@ export class SaleModel implements ISaleModel {
             this.grandTotal = _data["grandTotal"];
             this.saleNote = _data["saleNote"];
             this.staffNote = _data["staffNote"];
+            this.warehouseName = _data["warehouseName"];
+            this.customerName = _data["customerName"];
+            this.saleStatus = _data["saleStatus"];
+            this.paymentStatus = _data["paymentStatus"];
             if (Array.isArray(_data["saleDetails"])) {
                 this.saleDetails = [] as any;
                 for (let item of _data["saleDetails"])
@@ -11829,6 +11837,10 @@ export class SaleModel implements ISaleModel {
         data["grandTotal"] = this.grandTotal;
         data["saleNote"] = this.saleNote;
         data["staffNote"] = this.staffNote;
+        data["warehouseName"] = this.warehouseName;
+        data["customerName"] = this.customerName;
+        data["saleStatus"] = this.saleStatus;
+        data["paymentStatus"] = this.paymentStatus;
         if (Array.isArray(this.saleDetails)) {
             data["saleDetails"] = [];
             for (let item of this.saleDetails)
@@ -11853,8 +11865,8 @@ export interface ISaleModel {
     customerId?: string;
     billerId?: string;
     attachmentUrl?: string | undefined;
-    saleStatusId?: string;
-    paymentStatusId?: string;
+    saleStatusId?: string | undefined;
+    paymentStatusId?: string | undefined;
     taxRate?: number | undefined;
     taxAmount?: number | undefined;
     discountAmount?: number | undefined;
@@ -11864,6 +11876,10 @@ export interface ISaleModel {
     grandTotal?: number;
     saleNote?: string | undefined;
     staffNote?: string | undefined;
+    warehouseName?: string;
+    customerName?: string;
+    saleStatus?: string;
+    paymentStatus?: string;
     saleDetails?: SaleDetailModel[];
     optionsDataSources?: { [key: string]: any; };
 }

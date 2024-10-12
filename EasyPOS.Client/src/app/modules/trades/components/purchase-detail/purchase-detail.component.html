@@ -37,14 +37,6 @@
             [options]="optionsDataSources?.['productsSelectList']" [(ngModel)]="selectedProduct"
             [ngModelOptions]="{standalone: true}" />
         </div>
-        <!-- <div class="col-12">
-          <app-input-select 
-            label="Select Product" 
-            [(ngModel)]="selectedProduct" 
-            (onChange)="onProductSelect($event)" 
-            [options]="optionsDataSources?.['productsSelectList']" 
-          />
-        </div> -->
 
         <div class="col-12">
           <p-table [value]="purchaseDetails.controls" [scrollable]="true" scrollHeight="600px">

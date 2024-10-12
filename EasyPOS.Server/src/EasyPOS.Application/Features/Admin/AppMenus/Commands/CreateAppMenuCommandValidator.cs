@@ -29,7 +29,7 @@ public class CreateAppMenuCommandValidator : AbstractValidator<CreateAppMenuComm
 
     public async Task<bool> BeUniqueLabel(string label, CancellationToken cancellationToken)
     {
-        return !await _commonQuery.IsExist("dbo.AppMenus", ["Label"], new { Label = label });
+        return !await _commonQuery.IsExistAsync("dbo.AppMenus", ["Label"], new { Label = label });
     }
 
 }
