@@ -2657,7 +2657,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SaleModel"
+                  "$ref": "#/components/schemas/UpsertSaleModel"
                 }
               }
             }
@@ -7644,7 +7644,7 @@
             "type": "number",
             "format": "decimal"
           },
-          "tax": {
+          "taxRate": {
             "type": "number",
             "format": "decimal"
           },
@@ -7677,10 +7677,113 @@
           }
         ]
       },
+      "UpsertSaleModel": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "saleDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "referenceNo": {
+            "type": "string",
+            "nullable": true
+          },
+          "warehouseId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "customerId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "billerId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "attachmentUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "saleStatusId": {
+            "type": "string",
+            "format": "guid",
+            "nullable": true
+          },
+          "paymentStatusId": {
+            "type": "string",
+            "format": "guid",
+            "nullable": true
+          },
+          "subTotal": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "taxRate": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "taxAmount": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "discountAmount": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "discountRate": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "discountType": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/DiscountType"
+              }
+            ]
+          },
+          "shippingCost": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "grandTotal": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "saleNote": {
+            "type": "string",
+            "nullable": true
+          },
+          "staffNote": {
+            "type": "string",
+            "nullable": true
+          },
+          "saleDetails": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SaleDetailModel"
+            }
+          },
+          "optionsDataSources": {
+            "type": "object",
+            "additionalProperties": {}
+          }
+        }
+      },
       "CreateSaleCommand": {
         "allOf": [
           {
-            "$ref": "#/components/schemas/SaleModel"
+            "$ref": "#/components/schemas/UpsertSaleModel"
           },
           {
             "type": "object",
@@ -7696,7 +7799,7 @@
       "UpdateSaleCommand": {
         "allOf": [
           {
-            "$ref": "#/components/schemas/SaleModel"
+            "$ref": "#/components/schemas/UpsertSaleModel"
           },
           {
             "type": "object",

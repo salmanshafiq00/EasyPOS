@@ -1,5 +1,5 @@
 ﻿import { Component, OnInit } from '@angular/core';
-import { DiscountType, ProductSelectListModel, SaleDetailModel, SaleModel, SalesClient, TaxMethod } from 'src/app/modules/generated-clients/api-service';
+import { DiscountType, ProductSelectListModel, SaleDetailModel, SaleModel, SalesClient, TaxMethod, UpsertSaleModel } from 'src/app/modules/generated-clients/api-service';
 import { ActivatedRoute } from '@angular/router';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { CommonConstants } from 'src/app/core/contants/common';
@@ -15,10 +15,10 @@ import { DatePipe } from '@angular/common';
 export class SaleDetailComponent implements OnInit {
 
   id: string;
-  item: SaleModel;
+  item: UpsertSaleModel;
   DiscountType = DiscountType;
   optionsDataSources: any;
-  saleDate: string;
+  saleDate: string | null = null;
   CommonConstant = CommonConstants;
   totalItems: any;
   discountTypes: { id: number, name: string }[] = [];
@@ -83,8 +83,9 @@ export class SaleDetailComponent implements OnInit {
         //   this.item = res;
         // }
         this.item = res;
-        console.log(this.datePipe.transform(this.item.saleDate, 'dd/MM/yyyy'))
-        this.saleDate =  this.datePipe.transform(this.item.saleDate, 'dd/MM/yyyy')
+        if(id && id !== CommonConstants.EmptyGuid){
+          this.saleDate =  this.datePipe.transform(this.item.saleDate, 'dd/MM/yyyy')
+        }
         this.optionsDataSources = res.optionsDataSources;
 
         this.calculateGrandTotal();
@@ -147,7 +148,7 @@ export class SaleDetailComponent implements OnInit {
       productUnitId: product.saleUnit,
       productUnitDiscount: product.discount,
       quantity: quantity,
-      tax: product.taxRate || 0,
+      taxRate: product.taxRate || 0,
       taxMethod: product.taxMethod,
       discountAmount: parseFloat(totalDiscountAmount.toFixed(2)),
     });
@@ -181,15 +182,15 @@ export class SaleDetailComponent implements OnInit {
       // Exclusive tax method
       netUnitPrice = productDetail.productUnitPrice - (productDetail.productUnitDiscount || 0);
       const taxableTotalPrice = netUnitPrice * productDetail.quantity;
-      const taxRateDecimal = productDetail.tax / 100;
+      const taxRateDecimal = productDetail.taxRate / 100;
       taxAmount = taxableTotalPrice * taxRateDecimal;
       totalPrice = taxableTotalPrice + taxAmount;
     } else if (productDetail.taxMethod === TaxMethod.Inclusive) {
       // Inclusive tax method
       const priceAfterDiscount = productDetail.productUnitPrice - (productDetail.productUnitDiscount || 0);
-      const taxRateFactor = 1 + (productDetail.tax / 100);
+      const taxRateFactor = 1 + (productDetail.taxRate / 100);
       netUnitPrice = priceAfterDiscount / taxRateFactor;
-      taxAmount = (netUnitPrice * productDetail.quantity) * (productDetail.tax / 100);
+      taxAmount = (netUnitPrice * productDetail.quantity) * (productDetail.taxRate / 100);
       totalPrice = (netUnitPrice * productDetail.quantity) + taxAmount;
     }
 
@@ -223,6 +224,7 @@ export class SaleDetailComponent implements OnInit {
     const subTotal = this.item.saleDetails.reduce((total, saleDetail) => {
       return total + saleDetail.totalPrice;
     }, 0) || 0;
+    this.item.subTotal = subTotal;
     return parseFloat(subTotal.toFixed(2));
   }
 

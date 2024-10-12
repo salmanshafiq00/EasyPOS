@@ -2,7 +2,7 @@
 
 namespace EasyPOS.Application.Features.Trades.Sales.Commands;
 
-public record UpdateSaleCommand: SaleModel, ICacheInvalidatorCommand
+public record UpdateSaleCommand: UpsertSaleModel, ICacheInvalidatorCommand
 {
     public string CacheKey => CacheKeys.Sale;
 }

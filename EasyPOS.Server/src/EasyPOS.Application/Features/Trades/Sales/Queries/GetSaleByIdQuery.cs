@@ -3,7 +3,7 @@ using EasyPOS.Domain.Enums;
 
 namespace EasyPOS.Application.Features.Trades.Sales.Queries;
 
-public record GetSaleByIdQuery(Guid Id) : ICacheableQuery<SaleModel>
+public record GetSaleByIdQuery(Guid Id) : ICacheableQuery<UpsertSaleModel>
 {
     [JsonIgnore]
     public string CacheKey => $"{CacheKeys.Sale}_{Id}";
@@ -13,13 +13,13 @@ public record GetSaleByIdQuery(Guid Id) : ICacheableQuery<SaleModel>
 }
 
 internal sealed class GetSaleByIdQueryHandler(ISqlConnectionFactory sqlConnection, ICommonQueryService commonQueryService)
-    : IQueryHandler<GetSaleByIdQuery, SaleModel>
+    : IQueryHandler<GetSaleByIdQuery, UpsertSaleModel>
 {
-    public async Task<Result<SaleModel>> Handle(GetSaleByIdQuery request, CancellationToken cancellationToken)
+    public async Task<Result<UpsertSaleModel>> Handle(GetSaleByIdQuery request, CancellationToken cancellationToken)
     {
         if (request.Id.IsNullOrEmpty())
         {
-            return new SaleModel()
+            return new UpsertSaleModel()
             {
                 DiscountType = DiscountType.Fixed,
                 ShippingCost = 0,
@@ -34,25 +34,26 @@ internal sealed class GetSaleByIdQueryHandler(ISqlConnectionFactory sqlConnectio
 
         var sql = $"""
             SELECT
-                -- SaleModel fields (master)
-                s.Id AS {nameof(SaleModel.Id)},
-                s.SaleDate AS {nameof(SaleModel.SaleDate)},
-                s.ReferenceNo AS {nameof(SaleModel.ReferenceNo)},
-                s.WarehouseId AS {nameof(SaleModel.WarehouseId)},
-                s.CustomerId AS {nameof(SaleModel.CustomerId)},
-                s.BillerId AS {nameof(SaleModel.BillerId)},
-                s.AttachmentUrl AS {nameof(SaleModel.AttachmentUrl)},
-                s.SaleStatusId AS {nameof(SaleModel.SaleStatusId)},
-                s.PaymentStatusId AS {nameof(SaleModel.PaymentStatusId)},
-                s.TaxRate AS {nameof(SaleModel.TaxRate)},
-                s.TaxAmount AS {nameof(SaleModel.TaxAmount)},
-                s.DiscountType AS {nameof(SaleModel.DiscountType)},
-                s.DiscountRate AS {nameof(SaleModel.DiscountRate)},
-                s.DiscountAmount AS {nameof(SaleModel.DiscountAmount)},
-                s.ShippingCost AS {nameof(SaleModel.ShippingCost)},
-                s.GrandTotal AS {nameof(SaleModel.GrandTotal)},
-                s.SaleNote AS {nameof(SaleModel.SaleNote)},
-                s.StaffNote AS {nameof(SaleModel.StaffNote)},
+                -- UpsertSaleModel fields (master)
+                s.Id AS {nameof(UpsertSaleModel.Id)},
+                s.SaleDate AS {nameof(UpsertSaleModel.SaleDate)},
+                s.ReferenceNo AS {nameof(UpsertSaleModel.ReferenceNo)},
+                s.WarehouseId AS {nameof(UpsertSaleModel.WarehouseId)},
+                s.CustomerId AS {nameof(UpsertSaleModel.CustomerId)},
+                s.BillerId AS {nameof(UpsertSaleModel.BillerId)},
+                s.AttachmentUrl AS {nameof(UpsertSaleModel.AttachmentUrl)},
+                s.SaleStatusId AS {nameof(UpsertSaleModel.SaleStatusId)},
+                s.PaymentStatusId AS {nameof(UpsertSaleModel.PaymentStatusId)},
+                s.SubTotal AS {nameof(UpsertSaleModel.SubTotal)},
+                s.TaxRate AS {nameof(UpsertSaleModel.TaxRate)},
+                s.TaxAmount AS {nameof(UpsertSaleModel.TaxAmount)},
+                s.DiscountType AS {nameof(UpsertSaleModel.DiscountType)},
+                s.DiscountRate AS {nameof(UpsertSaleModel.DiscountRate)},
+                s.DiscountAmount AS {nameof(UpsertSaleModel.DiscountAmount)},
+                s.ShippingCost AS {nameof(UpsertSaleModel.ShippingCost)},
+                s.GrandTotal AS {nameof(UpsertSaleModel.GrandTotal)},
+                s.SaleNote AS {nameof(UpsertSaleModel.SaleNote)},
+                s.StaffNote AS {nameof(UpsertSaleModel.StaffNote)},
 
                 -- SaleDetailModel fields (detail)
                 d.Id AS {nameof(SaleDetailModel.Id)},
@@ -70,7 +71,7 @@ internal sealed class GetSaleByIdQueryHandler(ISqlConnectionFactory sqlConnectio
                 d.ExpiredDate AS {nameof(SaleDetailModel.ExpiredDate)},
                 d.NetUnitPrice AS {nameof(SaleDetailModel.NetUnitPrice)},
                 d.DiscountAmount AS {nameof(SaleDetailModel.DiscountAmount)},
-                d.Tax AS {nameof(SaleDetailModel.Tax)},
+                d.TaxRate AS {nameof(SaleDetailModel.TaxRate)},
                 d.TaxAmount AS {nameof(SaleDetailModel.TaxAmount)},
                 d.TaxMethod AS {nameof(SaleDetailModel.TaxMethod)},
                 d.TotalPrice AS {nameof(SaleDetailModel.TotalPrice)}
@@ -79,9 +80,9 @@ internal sealed class GetSaleByIdQueryHandler(ISqlConnectionFactory sqlConnectio
             WHERE s.Id = @Id
         """;
 
-        var saleDictionary = new Dictionary<Guid, SaleModel>();
+        var saleDictionary = new Dictionary<Guid, UpsertSaleModel>();
 
-        var saleModel = await connection.QueryAsync<SaleModel, SaleDetailModel, SaleModel>(
+        var saleModel = await connection.QueryAsync<UpsertSaleModel, SaleDetailModel, UpsertSaleModel>(
             sql,
             (sale, saleDetail) =>
             {
@@ -106,7 +107,7 @@ internal sealed class GetSaleByIdQueryHandler(ISqlConnectionFactory sqlConnectio
         var result = saleModel.FirstOrDefault();
 
         return result == null 
-            ? Result.Failure<SaleModel>(Error.Failure(nameof(SaleModel), ErrorMessages.NotFound)) 
+            ? Result.Failure<UpsertSaleModel>(Error.Failure(nameof(UpsertSaleModel), ErrorMessages.NotFound)) 
             : Result.Success(result);
     }
 }

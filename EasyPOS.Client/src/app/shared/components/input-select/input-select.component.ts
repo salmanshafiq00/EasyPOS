@@ -64,7 +64,6 @@ export class InputSelectComponent implements ControlValueAccessor, Validator {
   }
 
   onInputChange(event: any): void {
-    console.log(event)
     this.value = event.value;
     this.onChangeFn(this.value);
     this.onChange.emit(event.value);

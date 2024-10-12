@@ -1,5 +1,6 @@
 ﻿<div class="card">
-  <h3>Add Sale</h3>
+  <h3 *ngIf="!id">Add Sale</h3>
+  <h3 *ngIf="id">Update Sale</h3>
   <div class="col-12">
     <form #saleForm="ngForm" (ngSubmit)="onSubmit()">
       <div class="p-fluid p-formgrid grid">
@@ -58,22 +59,26 @@
                 <td>{{ detail.productName }}</td>
                 <td>{{ detail.productCode }}</td>
                 <td>
-                  <app-input-number [(ngModel)]="detail.quantity" name="quantity-{{i}}" [showButtons]="true" [min]="1"
+                  <app-input-number [(ngModel)]="detail.quantity" name="quantity-{{i}}" [showButtons]="true" [min]="1" textAlign="center"
                     (ngModelChange)="onItemPropsChange(detail)" />
                 </td>
                 <td>
-                  <app-input-decimal [(ngModel)]="detail.netUnitPrice" name="unitPrice-{{i}}" />
+                  <app-input-decimal [(ngModel)]="detail.netUnitPrice" name="unitPrice-{{i}}" textAlign="center" />
                 </td>
                 <td>
                   <app-input-decimal [(ngModel)]="detail.productUnitDiscount" name="productUnitDiscount-{{i}}"
-                    (ngModelChange)="onItemPropsChange(detail)" />
+                    (ngModelChange)="onItemPropsChange(detail)" textAlign="center" />
                   {{ detail.discountAmount }}
                 </td>
                 <td>
-                  <app-input-decimal [(ngModel)]="detail.taxAmount" name="taxAmount-{{i}}"
+                  <app-input-decimal [(ngModel)]="detail.taxAmount" name="taxAmount-{{i}}" textAlign="center"
                     (ngModelChange)="onItemPropsChange(detail)" />
                 </td>
-                <td>{{ detail.totalPrice }}</td>
+                <td>
+                  <div class="text-right mr-2">
+                    {{ detail.totalPrice }}
+                  </div>
+                </td>
                 <td>
                   <app-button type="button" severity="danger" icon="pi pi-trash" (click)="onRemoveSaleDetail(i)" />
                 </td>
@@ -82,11 +87,11 @@
             <ng-template pTemplate="footer">
               <tr class="text-center">
                 <td colspan="2" class="text-left">Total</td>
-                <td>{{ getTotalQuantity() }}</td>
-                <td></td>
-                <td>{{ getTotalDiscount() }}</td>
-                <td>{{ getTotalTax() }}</td>
-                <td>{{ getSubTotalOfTotal() }}</td>
+                <td class="text-center">{{ getTotalQuantity() }}</td>
+                <td ></td>
+                <td class="text-center">{{ getTotalDiscount() }}</td>
+                <td class="text-center">{{ getTotalTax() }}</td>
+                <td class="text-right">{{ getSubTotalOfTotal() }}</td>
                 <td></td>
               </tr>
             </ng-template>
@@ -107,17 +112,17 @@
 
         <!-- Discount Rate -->
         <div class="field col-12 md:col-4" *ngIf="item.discountType === DiscountType.Percentage">
-          <app-input-decimal label="Discount Rate" [(ngModel)]="item.discountRate" name="discountRate" (ngModelChange)="onDiscountRateChange()" />
+          <app-input-decimal label="Discount Rate" textAlign="right" [(ngModel)]="item.discountRate" name="discountRate" (ngModelChange)="onDiscountRateChange()" />
         </div>
 
         <!-- Discount Amount -->
         <div class="field col-12 md:col-4" *ngIf="item.discountType === DiscountType.Fixed">
-          <app-input-decimal label="Discount Amount" [(ngModel)]="item.discountAmount" name="discountAmount" (ngModelChange)="onDiscountAmountChange()" />
+          <app-input-decimal label="Discount Amount" textAlign="right" [(ngModel)]="item.discountAmount" name="discountAmount" (ngModelChange)="onDiscountAmountChange()" />
         </div>
 
         <!-- Shipping Cost -->
         <div class="field col-12 md:col-4">
-          <app-input-decimal label="Shipping Cost" [(ngModel)]="item.shippingCost" name="shippingCost" (ngModelChange)="onShippingCostChange()" />
+          <app-input-decimal label="Shipping Cost" textAlign="right" [(ngModel)]="item.shippingCost" name="shippingCost" (ngModelChange)="onShippingCostChange()" />
         </div>
 
         <!-- Sale Status -->

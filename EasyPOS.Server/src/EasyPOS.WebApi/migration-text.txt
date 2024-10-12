@@ -2,6 +2,6 @@ Add-Migration AppPageAdded -Context ApplicationDbContext
 
 Update-Database -Context ApplicationDbContext
 
-Remove-Database -Context ApplicationDbContext
+Remove-Migration -Context ApplicationDbContext
 
 Add-Migration Initial -Context ApplicationDbContext -o Persistence/Migrations

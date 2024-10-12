@@ -3878,7 +3878,7 @@ export class TreeNodeListsClient implements ITreeNodeListsClient {
 
 export interface ISalesClient {
     getAll(query: GetSaleListQuery): Observable<PaginatedResponseOfSaleModel>;
-    get(id: string): Observable<SaleModel>;
+    get(id: string): Observable<UpsertSaleModel>;
     create(command: CreateSaleCommand): Observable<string>;
     update(command: UpdateSaleCommand): Observable<void>;
     delete(id: string): Observable<void>;
@@ -3949,7 +3949,7 @@ export class SalesClient implements ISalesClient {
         return _observableOf(null as any);
     }
 
-    get(id: string): Observable<SaleModel> {
+    get(id: string): Observable<UpsertSaleModel> {
         let url_ = this.baseUrl + "/api/Sales/Get/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -3972,14 +3972,14 @@ export class SalesClient implements ISalesClient {
                 try {
                     return this.processGet(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<SaleModel>;
+                    return _observableThrow(e) as any as Observable<UpsertSaleModel>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<SaleModel>;
+                return _observableThrow(response_) as any as Observable<UpsertSaleModel>;
         }));
     }
 
-    protected processGet(response: HttpResponseBase): Observable<SaleModel> {
+    protected processGet(response: HttpResponseBase): Observable<UpsertSaleModel> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3990,7 +3990,7 @@ export class SalesClient implements ISalesClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = SaleModel.fromJS(resultData200);
+            result200 = UpsertSaleModel.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -11905,7 +11905,7 @@ export class SaleDetailModel implements ISaleDetailModel {
     expiredDate?: Date | undefined;
     netUnitPrice?: number;
     discountAmount?: number;
-    tax?: number;
+    taxRate?: number;
     taxAmount?: number;
     taxMethod?: TaxMethod;
     totalPrice?: number;
@@ -11936,7 +11936,7 @@ export class SaleDetailModel implements ISaleDetailModel {
             this.expiredDate = _data["expiredDate"] ? new Date(_data["expiredDate"].toString()) : <any>undefined;
             this.netUnitPrice = _data["netUnitPrice"];
             this.discountAmount = _data["discountAmount"];
-            this.tax = _data["tax"];
+            this.taxRate = _data["taxRate"];
             this.taxAmount = _data["taxAmount"];
             this.taxMethod = _data["taxMethod"];
             this.totalPrice = _data["totalPrice"];
@@ -11967,7 +11967,7 @@ export class SaleDetailModel implements ISaleDetailModel {
         data["expiredDate"] = this.expiredDate ? formatDate(this.expiredDate) : <any>undefined;
         data["netUnitPrice"] = this.netUnitPrice;
         data["discountAmount"] = this.discountAmount;
-        data["tax"] = this.tax;
+        data["taxRate"] = this.taxRate;
         data["taxAmount"] = this.taxAmount;
         data["taxMethod"] = this.taxMethod;
         data["totalPrice"] = this.totalPrice;
@@ -11991,7 +11991,7 @@ export interface ISaleDetailModel {
     expiredDate?: Date | undefined;
     netUnitPrice?: number;
     discountAmount?: number;
-    tax?: number;
+    taxRate?: number;
     taxAmount?: number;
     taxMethod?: TaxMethod;
     totalPrice?: number;
@@ -12030,7 +12030,143 @@ export interface IGetSaleListQuery extends IDataGridModel {
     cacheKey?: string;
 }
 
-export class CreateSaleCommand extends SaleModel implements ICreateSaleCommand {
+export class UpsertSaleModel implements IUpsertSaleModel {
+    id?: string;
+    saleDate?: Date;
+    referenceNo?: string | undefined;
+    warehouseId?: string;
+    customerId?: string;
+    billerId?: string;
+    attachmentUrl?: string | undefined;
+    saleStatusId?: string | undefined;
+    paymentStatusId?: string | undefined;
+    subTotal?: number;
+    taxRate?: number | undefined;
+    taxAmount?: number | undefined;
+    discountAmount?: number | undefined;
+    discountRate?: number | undefined;
+    discountType?: DiscountType | undefined;
+    shippingCost?: number | undefined;
+    grandTotal?: number;
+    saleNote?: string | undefined;
+    staffNote?: string | undefined;
+    saleDetails?: SaleDetailModel[];
+    optionsDataSources?: { [key: string]: any; };
+
+    constructor(data?: IUpsertSaleModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.saleDate = _data["saleDate"] ? new Date(_data["saleDate"].toString()) : <any>undefined;
+            this.referenceNo = _data["referenceNo"];
+            this.warehouseId = _data["warehouseId"];
+            this.customerId = _data["customerId"];
+            this.billerId = _data["billerId"];
+            this.attachmentUrl = _data["attachmentUrl"];
+            this.saleStatusId = _data["saleStatusId"];
+            this.paymentStatusId = _data["paymentStatusId"];
+            this.subTotal = _data["subTotal"];
+            this.taxRate = _data["taxRate"];
+            this.taxAmount = _data["taxAmount"];
+            this.discountAmount = _data["discountAmount"];
+            this.discountRate = _data["discountRate"];
+            this.discountType = _data["discountType"];
+            this.shippingCost = _data["shippingCost"];
+            this.grandTotal = _data["grandTotal"];
+            this.saleNote = _data["saleNote"];
+            this.staffNote = _data["staffNote"];
+            if (Array.isArray(_data["saleDetails"])) {
+                this.saleDetails = [] as any;
+                for (let item of _data["saleDetails"])
+                    this.saleDetails!.push(SaleDetailModel.fromJS(item));
+            }
+            if (_data["optionsDataSources"]) {
+                this.optionsDataSources = {} as any;
+                for (let key in _data["optionsDataSources"]) {
+                    if (_data["optionsDataSources"].hasOwnProperty(key))
+                        (<any>this.optionsDataSources)![key] = _data["optionsDataSources"][key];
+                }
+            }
+        }
+    }
+
+    static fromJS(data: any): UpsertSaleModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpsertSaleModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["saleDate"] = this.saleDate ? formatDate(this.saleDate) : <any>undefined;
+        data["referenceNo"] = this.referenceNo;
+        data["warehouseId"] = this.warehouseId;
+        data["customerId"] = this.customerId;
+        data["billerId"] = this.billerId;
+        data["attachmentUrl"] = this.attachmentUrl;
+        data["saleStatusId"] = this.saleStatusId;
+        data["paymentStatusId"] = this.paymentStatusId;
+        data["subTotal"] = this.subTotal;
+        data["taxRate"] = this.taxRate;
+        data["taxAmount"] = this.taxAmount;
+        data["discountAmount"] = this.discountAmount;
+        data["discountRate"] = this.discountRate;
+        data["discountType"] = this.discountType;
+        data["shippingCost"] = this.shippingCost;
+        data["grandTotal"] = this.grandTotal;
+        data["saleNote"] = this.saleNote;
+        data["staffNote"] = this.staffNote;
+        if (Array.isArray(this.saleDetails)) {
+            data["saleDetails"] = [];
+            for (let item of this.saleDetails)
+                data["saleDetails"].push(item.toJSON());
+        }
+        if (this.optionsDataSources) {
+            data["optionsDataSources"] = {};
+            for (let key in this.optionsDataSources) {
+                if (this.optionsDataSources.hasOwnProperty(key))
+                    (<any>data["optionsDataSources"])[key] = (<any>this.optionsDataSources)[key];
+            }
+        }
+        return data;
+    }
+}
+
+export interface IUpsertSaleModel {
+    id?: string;
+    saleDate?: Date;
+    referenceNo?: string | undefined;
+    warehouseId?: string;
+    customerId?: string;
+    billerId?: string;
+    attachmentUrl?: string | undefined;
+    saleStatusId?: string | undefined;
+    paymentStatusId?: string | undefined;
+    subTotal?: number;
+    taxRate?: number | undefined;
+    taxAmount?: number | undefined;
+    discountAmount?: number | undefined;
+    discountRate?: number | undefined;
+    discountType?: DiscountType | undefined;
+    shippingCost?: number | undefined;
+    grandTotal?: number;
+    saleNote?: string | undefined;
+    staffNote?: string | undefined;
+    saleDetails?: SaleDetailModel[];
+    optionsDataSources?: { [key: string]: any; };
+}
+
+export class CreateSaleCommand extends UpsertSaleModel implements ICreateSaleCommand {
     cacheKey?: string;
 
     constructor(data?: ICreateSaleCommand) {
@@ -12059,11 +12195,11 @@ export class CreateSaleCommand extends SaleModel implements ICreateSaleCommand {
     }
 }
 
-export interface ICreateSaleCommand extends ISaleModel {
+export interface ICreateSaleCommand extends IUpsertSaleModel {
     cacheKey?: string;
 }
 
-export class UpdateSaleCommand extends SaleModel implements IUpdateSaleCommand {
+export class UpdateSaleCommand extends UpsertSaleModel implements IUpdateSaleCommand {
     cacheKey?: string;
 
     constructor(data?: IUpdateSaleCommand) {
@@ -12092,7 +12228,7 @@ export class UpdateSaleCommand extends SaleModel implements IUpdateSaleCommand {
     }
 }
 
-export interface IUpdateSaleCommand extends ISaleModel {
+export interface IUpdateSaleCommand extends IUpsertSaleModel {
     cacheKey?: string;
 }
 

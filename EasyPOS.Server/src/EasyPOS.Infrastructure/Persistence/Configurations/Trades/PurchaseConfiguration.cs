@@ -33,13 +33,13 @@ internal sealed class PurchaseConfiguration : IEntityTypeConfiguration<Purchase>
                .HasColumnType("decimal(18, 2)")
                .IsRequired();
 
-        builder.Property(x => x.OrderTax)
+        builder.Property(x => x.TaxRate)
                .HasColumnType("decimal(18, 2)");
 
-        builder.Property(x => x.OrderTaxAmount)
+        builder.Property(x => x.TaxAmount)
                .HasColumnType("decimal(18, 2)");
 
-        builder.Property(x => x.OrderDiscount)
+        builder.Property(x => x.DiscountAmount)
                .HasColumnType("decimal(18, 2)");
 
         builder.Property(x => x.ShippingCost)

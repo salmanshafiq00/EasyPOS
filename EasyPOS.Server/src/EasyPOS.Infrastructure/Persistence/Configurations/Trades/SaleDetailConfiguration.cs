@@ -39,10 +39,6 @@ internal sealed class SaleDetailConfiguration : IEntityTypeConfiguration<SaleDet
                .HasColumnType("decimal(18, 2)")
                .IsRequired();
 
-       // builder.Property(x => x.UnitPrice)
-       //.HasColumnType("decimal(18, 2)")
-       //.IsRequired();
-
         builder.Property(x => x.ProductUnitDiscount)
                .HasColumnType("decimal(18, 2)")
                .IsRequired();
@@ -61,7 +57,7 @@ internal sealed class SaleDetailConfiguration : IEntityTypeConfiguration<SaleDet
                .HasColumnType("decimal(18, 2)")
                .IsRequired();
 
-        builder.Property(x => x.Tax)
+        builder.Property(x => x.TaxRate)
                .HasColumnType("decimal(18, 2)")
                .IsRequired();
 
@@ -73,8 +69,5 @@ internal sealed class SaleDetailConfiguration : IEntityTypeConfiguration<SaleDet
                .HasColumnType("decimal(18, 2)")
                .IsRequired();
 
-        //builder.Property(x => x.SubTotal)
-        //   .HasColumnType("decimal(18, 2)")
-        //   .IsRequired();
     }
 }

@@ -29,6 +29,10 @@ internal sealed class SaleConfiguration : IEntityTypeConfiguration<Sale>
         builder.Property(x => x.AttachmentUrl)
                .HasMaxLength(255);
 
+        builder.Property(x => x.SubTotal)
+               .HasColumnType("decimal(18, 2)")
+               .IsRequired();
+
         builder.Property(x => x.TaxRate)
                .HasColumnType("decimal(18, 2)");
 

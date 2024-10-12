@@ -10,6 +10,7 @@ public class Sale : BaseAuditableEntity
     public string? AttachmentUrl { get; set; }
     public Guid SaleStatusId { get; set; }
     public Guid PaymentStatusId { get; set; }
+    public decimal SubTotal { get; set; }
     public decimal? TaxRate { get; set; }
     public decimal? TaxAmount { get; set; }
     public DiscountType DiscountType { get; set; }

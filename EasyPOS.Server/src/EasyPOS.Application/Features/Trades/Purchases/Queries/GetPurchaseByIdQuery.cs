@@ -33,7 +33,7 @@ internal sealed class GetPurchaseByIdQueryHandler(ISqlConnectionFactory sqlConne
                 t.TotalPrice AS {nameof(PurchaseModel.SubTotal)},
                 t.TaxRate AS {nameof(PurchaseModel.OrderTax)},
                 t.TaxAmount AS {nameof(PurchaseModel.OrderTaxAmount)},
-                t.OrderDiscount AS {nameof(PurchaseModel.OrderDiscount)},
+                t.DiscountAmount AS {nameof(PurchaseModel.OrderDiscount)},
                 t.ShippingCost AS {nameof(PurchaseModel.ShippingCost)},
                 t.GrandTotal AS {nameof(PurchaseModel.GrandTotal)},
                 t.Note AS {nameof(PurchaseModel.Note)},

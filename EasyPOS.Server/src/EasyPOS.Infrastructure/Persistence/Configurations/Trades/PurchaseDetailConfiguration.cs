@@ -14,7 +14,7 @@ internal sealed class PurchaseDetailConfiguration : IEntityTypeConfiguration<Pur
                .IsRequired();
 
         builder.Property(x => x.ProductId)
-               .IsRequired();
+              .IsRequired();
 
         builder.Property(x => x.Quantity)
                .IsRequired();
@@ -23,9 +23,33 @@ internal sealed class PurchaseDetailConfiguration : IEntityTypeConfiguration<Pur
                .HasMaxLength(50)
                .IsRequired(false);
 
+        builder.Property(x => x.ProductCode)
+               .HasMaxLength(50)
+               .IsRequired(false);
+
+        builder.Property(x => x.ProductName)
+               .HasMaxLength(250)
+               .IsRequired(false);
+
+        builder.Property(x => x.ProductUnitCost)
+               .HasColumnType("decimal(18, 2)")
+               .IsRequired();
+
+        builder.Property(x => x.ProductUnitPrice)
+               .HasColumnType("decimal(18, 2)")
+               .IsRequired();
+
+        builder.Property(x => x.ProductUnitDiscount)
+               .HasColumnType("decimal(18, 2)")
+               .IsRequired();
+
+        builder.Property(x => x.ProductUnit)
+               .HasColumnType("decimal(10, 2)")
+               .IsRequired();
+
         builder.Property(x => x.ExpiredDate);
 
-        builder.Property(x => x.NetUnitCost)
+        builder.Property(x => x.NetUnitPrice)
                .HasColumnType("decimal(18, 2)")
                .IsRequired();
 
@@ -33,15 +57,15 @@ internal sealed class PurchaseDetailConfiguration : IEntityTypeConfiguration<Pur
                .HasColumnType("decimal(18, 2)")
                .IsRequired();
 
-        builder.Property(x => x.Tax)
+        builder.Property(x => x.TaxRate)
                .HasColumnType("decimal(18, 2)")
                .IsRequired();
 
         builder.Property(x => x.TaxAmount)
-              .HasColumnType("decimal(18, 2)")
-              .IsRequired();
+               .HasColumnType("decimal(18, 2)")
+               .IsRequired();
 
-        builder.Property(x => x.SubTotal)
+        builder.Property(x => x.TotalPrice)
                .HasColumnType("decimal(18, 2)")
                .IsRequired();
     }

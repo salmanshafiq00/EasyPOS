@@ -18,7 +18,7 @@ public class Sales : EndpointGroupBase
 
         group.MapGet("Get/{id:Guid}", Get)
              .WithName("GetSale")
-             .Produces<SaleModel>(StatusCodes.Status200OK);
+             .Produces<UpsertSaleModel>(StatusCodes.Status200OK);
 
         group.MapPost("Create", Create)
              .WithName("CreateSale")

@@ -18,7 +18,7 @@ public class SaleDetail: BaseEntity
     public DateOnly? ExpiredDate { get; set; }
     public decimal NetUnitPrice { get; set; }
     public decimal DiscountAmount { get; set; }
-    public decimal Tax { get; set; }
+    public decimal TaxRate { get; set; }
     public decimal TaxAmount { get; set; }
     public TaxMethod TaxMethod { get; set; }
     public decimal TotalPrice { get; set; }
