@@ -11124,16 +11124,16 @@ export class PurchaseModel implements IPurchaseModel {
     referenceNo?: string;
     warehouseId?: string;
     supplierId?: string;
-    supplierName?: string;
     purchaseStatusId?: string;
     attachmentUrl?: string | undefined;
     subTotal?: number;
-    orderTax?: number | undefined;
-    orderTaxAmount?: number | undefined;
-    orderDiscount?: number | undefined;
+    taxRate?: number | undefined;
+    taxAmount?: number | undefined;
+    discountAmount?: number | undefined;
     shippingCost?: number | undefined;
     grandTotal?: number;
     note?: string | undefined;
+    supplierName?: string;
     purchaseDetails?: PurchaseDetailModel[];
     optionsDataSources?: { [key: string]: any; };
 
@@ -11153,16 +11153,16 @@ export class PurchaseModel implements IPurchaseModel {
             this.referenceNo = _data["referenceNo"];
             this.warehouseId = _data["warehouseId"];
             this.supplierId = _data["supplierId"];
-            this.supplierName = _data["supplierName"];
             this.purchaseStatusId = _data["purchaseStatusId"];
             this.attachmentUrl = _data["attachmentUrl"];
             this.subTotal = _data["subTotal"];
-            this.orderTax = _data["orderTax"];
-            this.orderTaxAmount = _data["orderTaxAmount"];
-            this.orderDiscount = _data["orderDiscount"];
+            this.taxRate = _data["taxRate"];
+            this.taxAmount = _data["taxAmount"];
+            this.discountAmount = _data["discountAmount"];
             this.shippingCost = _data["shippingCost"];
             this.grandTotal = _data["grandTotal"];
             this.note = _data["note"];
+            this.supplierName = _data["supplierName"];
             if (Array.isArray(_data["purchaseDetails"])) {
                 this.purchaseDetails = [] as any;
                 for (let item of _data["purchaseDetails"])
@@ -11192,16 +11192,16 @@ export class PurchaseModel implements IPurchaseModel {
         data["referenceNo"] = this.referenceNo;
         data["warehouseId"] = this.warehouseId;
         data["supplierId"] = this.supplierId;
-        data["supplierName"] = this.supplierName;
         data["purchaseStatusId"] = this.purchaseStatusId;
         data["attachmentUrl"] = this.attachmentUrl;
         data["subTotal"] = this.subTotal;
-        data["orderTax"] = this.orderTax;
-        data["orderTaxAmount"] = this.orderTaxAmount;
-        data["orderDiscount"] = this.orderDiscount;
+        data["taxRate"] = this.taxRate;
+        data["taxAmount"] = this.taxAmount;
+        data["discountAmount"] = this.discountAmount;
         data["shippingCost"] = this.shippingCost;
         data["grandTotal"] = this.grandTotal;
         data["note"] = this.note;
+        data["supplierName"] = this.supplierName;
         if (Array.isArray(this.purchaseDetails)) {
             data["purchaseDetails"] = [];
             for (let item of this.purchaseDetails)
@@ -11224,35 +11224,40 @@ export interface IPurchaseModel {
     referenceNo?: string;
     warehouseId?: string;
     supplierId?: string;
-    supplierName?: string;
     purchaseStatusId?: string;
     attachmentUrl?: string | undefined;
     subTotal?: number;
-    orderTax?: number | undefined;
-    orderTaxAmount?: number | undefined;
-    orderDiscount?: number | undefined;
+    taxRate?: number | undefined;
+    taxAmount?: number | undefined;
+    discountAmount?: number | undefined;
     shippingCost?: number | undefined;
     grandTotal?: number;
     note?: string | undefined;
+    supplierName?: string;
     purchaseDetails?: PurchaseDetailModel[];
     optionsDataSources?: { [key: string]: any; };
 }
 
 export class PurchaseDetailModel implements IPurchaseDetailModel {
     id?: string;
-    code?: string;
-    name?: string;
     purchaseId?: string;
     productId?: string;
+    productCode?: string;
+    productName?: string;
+    productUnitCost?: number;
+    productUnitPrice?: number;
+    productUnitId?: string;
+    productUnit?: number;
+    productUnitDiscount?: number;
     quantity?: number;
     batchNo?: string;
     expiredDate?: Date | undefined;
     netUnitCost?: number;
-    tax?: number;
+    discountAmount?: number;
+    taxRate?: number;
     taxAmount?: number;
     taxMethod?: TaxMethod;
-    discountAmount?: number;
-    subTotal?: number;
+    totalPrice?: number;
 
     constructor(data?: IPurchaseDetailModel) {
         if (data) {
@@ -11266,19 +11271,24 @@ export class PurchaseDetailModel implements IPurchaseDetailModel {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
-            this.code = _data["code"];
-            this.name = _data["name"];
             this.purchaseId = _data["purchaseId"];
             this.productId = _data["productId"];
+            this.productCode = _data["productCode"];
+            this.productName = _data["productName"];
+            this.productUnitCost = _data["productUnitCost"];
+            this.productUnitPrice = _data["productUnitPrice"];
+            this.productUnitId = _data["productUnitId"];
+            this.productUnit = _data["productUnit"];
+            this.productUnitDiscount = _data["productUnitDiscount"];
             this.quantity = _data["quantity"];
             this.batchNo = _data["batchNo"];
             this.expiredDate = _data["expiredDate"] ? new Date(_data["expiredDate"].toString()) : <any>undefined;
             this.netUnitCost = _data["netUnitCost"];
-            this.tax = _data["tax"];
+            this.discountAmount = _data["discountAmount"];
+            this.taxRate = _data["taxRate"];
             this.taxAmount = _data["taxAmount"];
             this.taxMethod = _data["taxMethod"];
-            this.discountAmount = _data["discountAmount"];
-            this.subTotal = _data["subTotal"];
+            this.totalPrice = _data["totalPrice"];
         }
     }
 
@@ -11292,38 +11302,48 @@ export class PurchaseDetailModel implements IPurchaseDetailModel {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["code"] = this.code;
-        data["name"] = this.name;
         data["purchaseId"] = this.purchaseId;
         data["productId"] = this.productId;
+        data["productCode"] = this.productCode;
+        data["productName"] = this.productName;
+        data["productUnitCost"] = this.productUnitCost;
+        data["productUnitPrice"] = this.productUnitPrice;
+        data["productUnitId"] = this.productUnitId;
+        data["productUnit"] = this.productUnit;
+        data["productUnitDiscount"] = this.productUnitDiscount;
         data["quantity"] = this.quantity;
         data["batchNo"] = this.batchNo;
         data["expiredDate"] = this.expiredDate ? formatDate(this.expiredDate) : <any>undefined;
         data["netUnitCost"] = this.netUnitCost;
-        data["tax"] = this.tax;
+        data["discountAmount"] = this.discountAmount;
+        data["taxRate"] = this.taxRate;
         data["taxAmount"] = this.taxAmount;
         data["taxMethod"] = this.taxMethod;
-        data["discountAmount"] = this.discountAmount;
-        data["subTotal"] = this.subTotal;
+        data["totalPrice"] = this.totalPrice;
         return data;
     }
 }
 
 export interface IPurchaseDetailModel {
     id?: string;
-    code?: string;
-    name?: string;
     purchaseId?: string;
     productId?: string;
+    productCode?: string;
+    productName?: string;
+    productUnitCost?: number;
+    productUnitPrice?: number;
+    productUnitId?: string;
+    productUnit?: number;
+    productUnitDiscount?: number;
     quantity?: number;
     batchNo?: string;
     expiredDate?: Date | undefined;
     netUnitCost?: number;
-    tax?: number;
+    discountAmount?: number;
+    taxRate?: number;
     taxAmount?: number;
     taxMethod?: TaxMethod;
-    discountAmount?: number;
-    subTotal?: number;
+    totalPrice?: number;
 }
 
 export enum TaxMethod {
@@ -11372,9 +11392,9 @@ export class CreatePurchaseCommand implements ICreatePurchaseCommand {
     purchaseStatusId?: string;
     attachmentUrl?: string | undefined;
     subTotal?: number;
-    orderTax?: number | undefined;
-    orderTaxAmount?: number | undefined;
-    orderDiscount?: number | undefined;
+    taxRate?: number | undefined;
+    taxAmount?: number | undefined;
+    discountAmount?: number | undefined;
     shippingCost?: number | undefined;
     grandTotal?: number;
     note?: string | undefined;
@@ -11399,9 +11419,9 @@ export class CreatePurchaseCommand implements ICreatePurchaseCommand {
             this.purchaseStatusId = _data["purchaseStatusId"];
             this.attachmentUrl = _data["attachmentUrl"];
             this.subTotal = _data["subTotal"];
-            this.orderTax = _data["orderTax"];
-            this.orderTaxAmount = _data["orderTaxAmount"];
-            this.orderDiscount = _data["orderDiscount"];
+            this.taxRate = _data["taxRate"];
+            this.taxAmount = _data["taxAmount"];
+            this.discountAmount = _data["discountAmount"];
             this.shippingCost = _data["shippingCost"];
             this.grandTotal = _data["grandTotal"];
             this.note = _data["note"];
@@ -11430,9 +11450,9 @@ export class CreatePurchaseCommand implements ICreatePurchaseCommand {
         data["purchaseStatusId"] = this.purchaseStatusId;
         data["attachmentUrl"] = this.attachmentUrl;
         data["subTotal"] = this.subTotal;
-        data["orderTax"] = this.orderTax;
-        data["orderTaxAmount"] = this.orderTaxAmount;
-        data["orderDiscount"] = this.orderDiscount;
+        data["taxRate"] = this.taxRate;
+        data["taxAmount"] = this.taxAmount;
+        data["discountAmount"] = this.discountAmount;
         data["shippingCost"] = this.shippingCost;
         data["grandTotal"] = this.grandTotal;
         data["note"] = this.note;
@@ -11454,9 +11474,9 @@ export interface ICreatePurchaseCommand {
     purchaseStatusId?: string;
     attachmentUrl?: string | undefined;
     subTotal?: number;
-    orderTax?: number | undefined;
-    orderTaxAmount?: number | undefined;
-    orderDiscount?: number | undefined;
+    taxRate?: number | undefined;
+    taxAmount?: number | undefined;
+    discountAmount?: number | undefined;
     shippingCost?: number | undefined;
     grandTotal?: number;
     note?: string | undefined;
@@ -11473,9 +11493,9 @@ export class UpdatePurchaseCommand implements IUpdatePurchaseCommand {
     purchaseStatusId?: string;
     attachmentUrl?: string | undefined;
     subTotal?: number;
-    orderTax?: number | undefined;
-    orderTaxAmount?: number | undefined;
-    orderDiscount?: number | undefined;
+    taxRate?: number | undefined;
+    taxAmount?: number | undefined;
+    discountAmount?: number | undefined;
     shippingCost?: number | undefined;
     grandTotal?: number;
     note?: string | undefined;
@@ -11501,9 +11521,9 @@ export class UpdatePurchaseCommand implements IUpdatePurchaseCommand {
             this.purchaseStatusId = _data["purchaseStatusId"];
             this.attachmentUrl = _data["attachmentUrl"];
             this.subTotal = _data["subTotal"];
-            this.orderTax = _data["orderTax"];
-            this.orderTaxAmount = _data["orderTaxAmount"];
-            this.orderDiscount = _data["orderDiscount"];
+            this.taxRate = _data["taxRate"];
+            this.taxAmount = _data["taxAmount"];
+            this.discountAmount = _data["discountAmount"];
             this.shippingCost = _data["shippingCost"];
             this.grandTotal = _data["grandTotal"];
             this.note = _data["note"];
@@ -11533,9 +11553,9 @@ export class UpdatePurchaseCommand implements IUpdatePurchaseCommand {
         data["purchaseStatusId"] = this.purchaseStatusId;
         data["attachmentUrl"] = this.attachmentUrl;
         data["subTotal"] = this.subTotal;
-        data["orderTax"] = this.orderTax;
-        data["orderTaxAmount"] = this.orderTaxAmount;
-        data["orderDiscount"] = this.orderDiscount;
+        data["taxRate"] = this.taxRate;
+        data["taxAmount"] = this.taxAmount;
+        data["discountAmount"] = this.discountAmount;
         data["shippingCost"] = this.shippingCost;
         data["grandTotal"] = this.grandTotal;
         data["note"] = this.note;
@@ -11558,9 +11578,9 @@ export interface IUpdatePurchaseCommand {
     purchaseStatusId?: string;
     attachmentUrl?: string | undefined;
     subTotal?: number;
-    orderTax?: number | undefined;
-    orderTaxAmount?: number | undefined;
-    orderDiscount?: number | undefined;
+    taxRate?: number | undefined;
+    taxAmount?: number | undefined;
+    discountAmount?: number | undefined;
     shippingCost?: number | undefined;
     grandTotal?: number;
     note?: string | undefined;

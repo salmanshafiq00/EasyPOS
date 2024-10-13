@@ -7096,9 +7096,6 @@
             "type": "string",
             "format": "guid"
           },
-          "supplierName": {
-            "type": "string"
-          },
           "purchaseStatusId": {
             "type": "string",
             "format": "guid"
@@ -7111,17 +7108,17 @@
             "type": "number",
             "format": "decimal"
           },
-          "orderTax": {
+          "taxRate": {
             "type": "number",
             "format": "decimal",
             "nullable": true
           },
-          "orderTaxAmount": {
+          "taxAmount": {
             "type": "number",
             "format": "decimal",
             "nullable": true
           },
-          "orderDiscount": {
+          "discountAmount": {
             "type": "number",
             "format": "decimal",
             "nullable": true
@@ -7138,6 +7135,9 @@
           "note": {
             "type": "string",
             "nullable": true
+          },
+          "supplierName": {
+            "type": "string"
           },
           "purchaseDetails": {
             "type": "array",
@@ -7159,12 +7159,6 @@
             "type": "string",
             "format": "guid"
           },
-          "code": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
           "purchaseId": {
             "type": "string",
             "format": "guid"
@@ -7172,6 +7166,32 @@
           "productId": {
             "type": "string",
             "format": "guid"
+          },
+          "productCode": {
+            "type": "string"
+          },
+          "productName": {
+            "type": "string"
+          },
+          "productUnitCost": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "productUnitPrice": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "productUnitId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "productUnit": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "productUnitDiscount": {
+            "type": "number",
+            "format": "decimal"
           },
           "quantity": {
             "type": "integer",
@@ -7189,7 +7209,11 @@
             "type": "number",
             "format": "decimal"
           },
-          "tax": {
+          "discountAmount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "taxRate": {
             "type": "number",
             "format": "decimal"
           },
@@ -7200,11 +7224,7 @@
           "taxMethod": {
             "$ref": "#/components/schemas/TaxMethod"
           },
-          "discountAmount": {
-            "type": "number",
-            "format": "decimal"
-          },
-          "subTotal": {
+          "totalPrice": {
             "type": "number",
             "format": "decimal"
           }
@@ -7269,17 +7289,17 @@
             "type": "number",
             "format": "decimal"
           },
-          "orderTax": {
+          "taxRate": {
             "type": "number",
             "format": "decimal",
             "nullable": true
           },
-          "orderTaxAmount": {
+          "taxAmount": {
             "type": "number",
             "format": "decimal",
             "nullable": true
           },
-          "orderDiscount": {
+          "discountAmount": {
             "type": "number",
             "format": "decimal",
             "nullable": true
@@ -7343,17 +7363,17 @@
             "type": "number",
             "format": "decimal"
           },
-          "orderTax": {
+          "taxRate": {
             "type": "number",
             "format": "decimal",
             "nullable": true
           },
-          "orderTaxAmount": {
+          "taxAmount": {
             "type": "number",
             "format": "decimal",
             "nullable": true
           },
-          "orderDiscount": {
+          "discountAmount": {
             "type": "number",
             "format": "decimal",
             "nullable": true

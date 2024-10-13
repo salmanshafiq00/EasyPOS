@@ -38,6 +38,12 @@
             [ngModelOptions]="{standalone: true}" />
         </div>
 
+        <!-- <div class="col-12">
+          <app-input-select label="" (ngModelChange)="onProductSelect()" [optionValue]="null"
+            [options]="optionsDataSources?.['productsSelectList']" [(ngModel)]="selectedProduct"
+            [ngModelOptions]="{standalone: true}" />
+        </div> -->
+
         <div class="col-12">
           <p-table [value]="purchaseDetails.controls" [scrollable]="true" scrollHeight="600px">
             <ng-template pTemplate="header">
@@ -56,10 +62,10 @@
             </ng-template>
             <ng-template pTemplate="body" let-field let-i="rowIndex">
               <tr [formGroup]="field">
-                <td>{{ field.get('name').value }}</td>
-                <td>{{ field.get('code').value }}</td>
+                <td>{{ field.get('productName').value }}</td>
+                <td>{{ field.get('productCode').value }}</td>
                 <td>
-                  <app-input-number formControlName="quantity" textAlign="center" (ngModelChange)="onItemPropsChange(i)" [showButtons]="true" [min]="1" />
+                  <app-input-number formControlName="quantity" textAlign="center" (onChange)="onItemPropsChange(i)" [showButtons]="true" [min]="1" />
                 </td>
                 <td>
                   <app-input-text formControlName="batchNo" />
@@ -68,21 +74,21 @@
                   <app-input-decimal formControlName="expiredDate" textAlign="center" (ngModelChange)="onItemPropsChange(i)" />
                 </td> -->
                 <td>
-                  <app-input-decimal formControlName="netUnitCost" textAlign="center" (ngModelChange)="onItemPropsChange(i)" />
+                  <app-input-decimal formControlName="netUnitCost" textAlign="center" (onChange)="onItemPropsChange(i)"  />
                 </td>
                 <td>
-                  <app-input-decimal formControlName="discountAmount" textAlign="center" (ngModelChange)="onItemPropsChange(i)" />
+                  <app-input-decimal formControlName="discountAmount" textAlign="center" (onChange)="onItemPropsChange(i)"  />
                 </td>
                 <td>
-                  <app-input-decimal formControlName="taxAmount" textAlign="center" (ngModelChange)="onItemPropsChange(i)" />
+                  <app-input-decimal formControlName="taxAmount" textAlign="center" (onChange)="onItemPropsChange(i)"  />
                 </td>
                 <td >
                   <div class="text-right mr-2">
-                    {{ field.get('subTotal').value }}
+                    {{ field.get('totalPrice').value }}
                   </div>
                 </td>
                 <td>
-                  <app-button type="button" severity="danger" icon="pi pi-trash" (click)="removeProductFromPurchaseDetails(i)" />
+                  <app-button type="button" severity="danger" icon="pi pi-trash" (click)="removePurchaseDetail(i)" />
                 </td>
               </tr>
             </ng-template>
@@ -91,10 +97,11 @@
                 <td colspan="2" class="text-left">Total</td>
                 <td class="text-center">{{ totalQuantity }}</td>
                 <td></td>
-                <td class="text-center">{{ totalNetUnitCost }}</td>
+                <td></td>
+                <!-- <td class="text-center">{{ getTotalUnitNetCost() }}</td> -->
                 <td class="text-center">{{ totalDiscount }}</td>
                 <td class="text-center">{{ totalTaxAmount }}</td>
-                <td class="text-left">{{ totalSubTotal }}</td>
+                <td class="text-right mr-2">{{ subTotal }}</td>
                 <td></td>
               </tr>
             </ng-template>
@@ -102,15 +109,15 @@
         </div>
 
         <div class="field col-12 md:col-4">
-          <app-input-select label="Order Tax" formControlName="orderTax"
+          <app-input-select label="Order Tax" formControlName="taxRate"
             [options]="optionsDataSources?.['taxesSelectList']" [required]="true"
             (ngModelChange)="onOrderTaxChange()" />
         </div>
 
         <div class="field col-12 md:col-4">
-          <app-input-decimal label="Discount" formControlName="orderDiscount" textAlign="right" [showButtons]="false"
+          <app-input-decimal label="Discount" formControlName="discountAmount" textAlign="right" [showButtons]="false"
             [required]="false" (ngModelChange)="onOrderDiscountChange()" />
-          <app-validator-msg [control]="f['orderDiscount']" />
+          <app-validator-msg [control]="f['discountAmount']" />
         </div>
 
         <div class="field col-12 md:col-4">
@@ -141,7 +148,7 @@
                 <strong>Total</strong>
               </td>
               <td class="">
-                <span>{{ totalSubTotal }}</span>
+                <span>{{ subTotal }}</span>
               </td>
             </tr>
             <tr>

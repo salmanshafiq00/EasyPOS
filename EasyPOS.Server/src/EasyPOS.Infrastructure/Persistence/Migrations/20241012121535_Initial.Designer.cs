@@ -908,7 +908,7 @@ namespace EasyPOS.Infrastructure.Persistence.Migrations
                     b.Property<DateOnly?>("ExpiredDate")
                         .HasColumnType("date");
 
-                    b.Property<decimal>("NetUnitPrice")
+                    b.Property<decimal>("NetUnitCost")
                         .HasColumnType("decimal(18, 2)");
 
                     b.Property<string>("ProductCode")
@@ -1062,7 +1062,7 @@ namespace EasyPOS.Infrastructure.Persistence.Migrations
                     b.Property<DateOnly?>("ExpiredDate")
                         .HasColumnType("date");
 
-                    b.Property<decimal>("NetUnitPrice")
+                    b.Property<decimal>("NetUnitCost")
                         .HasColumnType("decimal(18, 2)");
 
                     b.Property<string>("ProductCode")

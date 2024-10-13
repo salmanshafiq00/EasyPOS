@@ -60,19 +60,19 @@
                 <td>{{ detail.productCode }}</td>
                 <td>
                   <app-input-number [(ngModel)]="detail.quantity" name="quantity-{{i}}" [showButtons]="true" [min]="1" textAlign="center"
-                    (ngModelChange)="onItemPropsChange(detail)" />
+                    (onChange)="onItemPropsChange(detail)" />
                 </td>
                 <td>
                   <app-input-decimal [(ngModel)]="detail.netUnitPrice" name="unitPrice-{{i}}" textAlign="center" />
                 </td>
                 <td>
-                  <app-input-decimal [(ngModel)]="detail.productUnitDiscount" name="productUnitDiscount-{{i}}"
-                    (ngModelChange)="onItemPropsChange(detail)" textAlign="center" />
-                  {{ detail.discountAmount }}
+                  <app-input-decimal [(ngModel)]="detail.discountAmount" name="discountAmount-{{i}}"
+                    (onChange)="onItemPropsChange(detail)" textAlign="center" />
+                  <!-- {{ detail.discountAmount }} -->
                 </td>
                 <td>
                   <app-input-decimal [(ngModel)]="detail.taxAmount" name="taxAmount-{{i}}" textAlign="center"
-                    (ngModelChange)="onItemPropsChange(detail)" />
+                    (onChange)="onItemPropsChange(detail)" />
                 </td>
                 <td>
                   <div class="text-right mr-2">
@@ -87,11 +87,11 @@
             <ng-template pTemplate="footer">
               <tr class="text-center">
                 <td colspan="2" class="text-left">Total</td>
-                <td class="text-center">{{ getTotalQuantity() }}</td>
+                <td class="text-center">{{ totalQuantity }}</td>
                 <td ></td>
-                <td class="text-center">{{ getTotalDiscount() }}</td>
-                <td class="text-center">{{ getTotalTax() }}</td>
-                <td class="text-right">{{ getSubTotalOfTotal() }}</td>
+                <td class="text-center">{{ totalDiscount }}</td>
+                <td class="text-center">{{ totalTaxAmount }}</td>
+                <td class="text-right">{{ item.subTotal }}</td>
                 <td></td>
               </tr>
             </ng-template>
@@ -171,7 +171,7 @@
                 <strong>Total</strong>
               </td>
               <td class="">
-                <span>{{ getSubTotalOfTotal() }}</span>
+                <span>{{ item.subTotal }}</span>
               </td>
             </tr>
             <tr>

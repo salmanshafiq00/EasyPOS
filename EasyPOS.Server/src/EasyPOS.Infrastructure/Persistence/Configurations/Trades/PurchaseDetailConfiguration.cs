@@ -49,9 +49,13 @@ internal sealed class PurchaseDetailConfiguration : IEntityTypeConfiguration<Pur
 
         builder.Property(x => x.ExpiredDate);
 
-        builder.Property(x => x.NetUnitPrice)
+        builder.Property(x => x.NetUnitCost)
                .HasColumnType("decimal(18, 2)")
                .IsRequired();
+
+        //builder.Property(x => x.NetUnitPrice)
+        //       .HasColumnType("decimal(18, 2)")
+        //       .IsRequired();
 
         builder.Property(x => x.DiscountAmount)
                .HasColumnType("decimal(18, 2)")

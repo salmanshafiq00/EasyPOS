@@ -9,18 +9,25 @@ public record GetPurchaseByIdQuery(Guid Id) : ICacheableQuery<PurchaseModel>
     public bool? AllowCache => false;
 }
 
-internal sealed class GetPurchaseByIdQueryHandler(ISqlConnectionFactory sqlConnectionFactory) : IQueryHandler<GetPurchaseByIdQuery, PurchaseModel>
+internal sealed class GetPurchaseByIdQueryHandler : IQueryHandler<GetPurchaseByIdQuery, PurchaseModel>
 {
+    private readonly ISqlConnectionFactory _sqlConnectionFactory;
+
+    public GetPurchaseByIdQueryHandler(ISqlConnectionFactory sqlConnectionFactory)
+    {
+        _sqlConnectionFactory = sqlConnectionFactory;
+    }
+
     public async Task<Result<PurchaseModel>> Handle(GetPurchaseByIdQuery request, CancellationToken cancellationToken)
     {
-        if (request.Id.IsNullOrEmpty())
+        if (request.Id == Guid.Empty)
         {
             return new PurchaseModel();
         }
 
-        var connection = sqlConnectionFactory.GetOpenConnection();
+        var connection = _sqlConnectionFactory.GetOpenConnection();
 
-        // SQL query to get both Purchase and PurchaseDetails
+        // SQL query to get both Purchase and PurchaseDetails with necessary fields
         var sql = $"""
             SELECT 
                 t.Id AS {nameof(PurchaseModel.Id)},
@@ -30,38 +37,40 @@ internal sealed class GetPurchaseByIdQueryHandler(ISqlConnectionFactory sqlConne
                 t.SupplierId AS {nameof(PurchaseModel.SupplierId)},
                 t.PurchaseStatusId AS {nameof(PurchaseModel.PurchaseStatusId)},
                 t.AttachmentUrl AS {nameof(PurchaseModel.AttachmentUrl)},
-                t.TotalPrice AS {nameof(PurchaseModel.SubTotal)},
-                t.TaxRate AS {nameof(PurchaseModel.OrderTax)},
-                t.TaxAmount AS {nameof(PurchaseModel.OrderTaxAmount)},
-                t.DiscountAmount AS {nameof(PurchaseModel.OrderDiscount)},
+                t.SubTotal AS {nameof(PurchaseModel.SubTotal)},
+                t.TaxRate AS {nameof(PurchaseModel.TaxRate)},
+                t.TaxAmount AS {nameof(PurchaseModel.TaxAmount)},
+                t.DiscountAmount AS {nameof(PurchaseModel.DiscountAmount)},
                 t.ShippingCost AS {nameof(PurchaseModel.ShippingCost)},
                 t.GrandTotal AS {nameof(PurchaseModel.GrandTotal)},
                 t.Note AS {nameof(PurchaseModel.Note)},
 
-                -- Child record: PurchaseDetails
+                -- PurchaseDetails
                 pd.Id AS {nameof(PurchaseDetailModel.Id)},
                 pd.PurchaseId AS {nameof(PurchaseDetailModel.PurchaseId)},
                 pd.ProductId AS {nameof(PurchaseDetailModel.ProductId)},
+                pd.ProductCode AS {nameof(PurchaseDetailModel.ProductCode)},
+                pd.ProductName AS {nameof(PurchaseDetailModel.ProductName)},
+                pd.ProductUnitCost AS {nameof(PurchaseDetailModel.ProductUnitCost)},
+                pd.ProductUnitPrice AS {nameof(PurchaseDetailModel.ProductUnitPrice)},
+                pd.ProductUnitId AS {nameof(PurchaseDetailModel.ProductUnitId)},
+                pd.ProductUnitDiscount AS {nameof(PurchaseDetailModel.ProductUnitDiscount)},
                 pd.Quantity AS {nameof(PurchaseDetailModel.Quantity)},
                 pd.BatchNo AS {nameof(PurchaseDetailModel.BatchNo)},
                 pd.ExpiredDate AS {nameof(PurchaseDetailModel.ExpiredDate)},
-                pd.UnitPrice AS {nameof(PurchaseDetailModel.NetUnitCost)},
-                pd.TaxRate AS {nameof(PurchaseDetailModel.Tax)},
+                pd.NetUnitCost AS {nameof(PurchaseDetailModel.NetUnitCost)},
+                pd.DiscountAmount AS {nameof(PurchaseDetailModel.DiscountAmount)},
+                pd.TaxRate AS {nameof(PurchaseDetailModel.TaxRate)},
                 pd.TaxAmount AS {nameof(PurchaseDetailModel.TaxAmount)},
                 pd.TaxMethod AS {nameof(PurchaseDetailModel.TaxMethod)},
-                pd.DiscountAmount AS {nameof(PurchaseDetailModel.DiscountAmount)},
-                pd.TotalPrice AS {nameof(PurchaseDetailModel.SubTotal)},
-                p.Code AS {nameof(PurchaseDetailModel.Code)},
-                p.Name AS {nameof(PurchaseDetailModel.Name)}
+                pd.TotalPrice AS {nameof(PurchaseDetailModel.TotalPrice)}
             FROM dbo.Purchases t
             LEFT JOIN dbo.PurchaseDetails pd ON pd.PurchaseId = t.Id
-            LEFT JOIN dbo.Products p ON p.Id = pd.ProductId
             WHERE t.Id = @Id
             """;
 
         var purchaseDictionary = new Dictionary<Guid, PurchaseModel>();
 
-        // Using multi-mapping to map both PurchaseModel and PurchaseDetailModel
         var result = await connection.QueryAsync<PurchaseModel, PurchaseDetailModel, PurchaseModel>(
             sql,
             (purchase, detail) =>
@@ -81,9 +90,11 @@ internal sealed class GetPurchaseByIdQueryHandler(ISqlConnectionFactory sqlConne
                 return purchaseEntry;
             },
             new { request.Id },
-            splitOn: "Id" // Specifies the column to split the result set between master and child
+            splitOn: "Id"
         );
 
-        return purchaseDictionary.Values.FirstOrDefault();
+        var purchase = purchaseDictionary.Values.FirstOrDefault();
+        return purchase != null ? Result.Success(purchase) : Result.Failure<PurchaseModel>(Error.Failure(nameof(PurchaseModel),ErrorMessages.NotFound));
     }
 }
+

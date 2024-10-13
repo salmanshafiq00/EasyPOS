@@ -1,4 +1,4 @@
-import { Component, Input, forwardRef } from '@angular/core';
+import { Component, EventEmitter, Input, Output, forwardRef } from '@angular/core';
 import { NG_VALUE_ACCESSOR, NG_VALIDATORS, ControlValueAccessor, Validator, AbstractControl, ValidationErrors } from '@angular/forms';
 
 @Component({
@@ -48,6 +48,7 @@ export class InputNumberComponent implements ControlValueAccessor, Validator {
   // @Input() incrementButtonClass: string =  '';
   // @Input() incrementButtonIcon: string =  '';
   // @Input() decrementButtonIcon: string =  '';
+  @Output() onChange = new EventEmitter<any>();
 
   value: number | null = null;
   onTouched: any = () => {};
@@ -79,8 +80,9 @@ export class InputNumberComponent implements ControlValueAccessor, Validator {
   onInputChange(event: any): void {
     this.value = event !== '' && event !== null ? parseInt(event) : null;
     this.onChangeFn(this.value);
+    this.onChange.emit(this.value);
   }
-
+  
   onBlurEvent(): void {
     this.onTouched();
   }

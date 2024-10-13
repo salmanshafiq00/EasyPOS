@@ -2,31 +2,24 @@ import { DatePipe } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { CommonConstants } from 'src/app/core/contants/common';
 import { ProductSelectListModel, PurchaseDetailModel, PurchaseModel, PurchasesClient, TaxMethod } from 'src/app/modules/generated-clients/api-service';
 import { ToastService } from 'src/app/shared/services/toast.service';
 
 @Component({
   selector: 'app-purchase-detail',
-  templateUrl: './purchase-detail.component.html',
+  // templateUrl: './purchase-detail.component.html',
+  template: `<h2>Hello</h2>`,
   styleUrl: './purchase-detail.component.scss',
   providers: [PurchasesClient, DatePipe]
 })
-export class PurchaseDetailComponent implements OnInit {
-  emptyGuid = CommonConstants.EmptyGuid;
+export class PurchaseDetailComponentOld implements OnInit {
+  emptyGuid = '00000000-0000-0000-0000-000000000000';
   id: string = '';
   optionsDataSources = {};
   form: FormGroup;
   item: PurchaseModel;
 
-  // Table footer section
-  totalQuantity: number = 0;
-  totalDiscount: number = 0;
-  totalTaxAmount: number = 0;
-  subTotal: number = 0;
-
-  // Grand total Section
-  totalItems: string = '0'; 
+  totalItems: string = '0'; // Format: 4(5) -> 4 unique products, 5 total quantity
   orderTaxAmount: number = 0;
   orderDiscountAmount: number = 0;
   shippingCostAmount: number = 0;
@@ -43,6 +36,7 @@ export class PurchaseDetailComponent implements OnInit {
   }
 
   protected toast: ToastService = inject(ToastService);
+  // protected customDialogService: CustomDialogService = inject(CustomDialogService)
   protected fb: FormBuilder = inject(FormBuilder);
   protected datePipe: DatePipe = inject(DatePipe);
 
@@ -84,11 +78,7 @@ export class PurchaseDetailComponent implements OnInit {
         }
         this.optionsDataSources = res.optionsDataSources;
         this.form.patchValue(this.item);
-        this.calculateFooterSection();
         this.calculateGrandTotal();
-
-        console.log(this.form.value)
-        console.log(res)
       },
       error: (error) => {
         this.toast.showError(this.getErrorMessage(error));
@@ -145,9 +135,9 @@ export class PurchaseDetailComponent implements OnInit {
   
   private addPurchaseDetailFormGroup(): FormGroup {
     return this.fb.group({
-      id: [CommonConstants.EmptyGuid],
+      id: [null],
       productId: [null],
-      purchaseId: [CommonConstants.EmptyGuid],
+      purchaseId: [null],
       productCode: [null],
       productName: [null],
       productUnitCost: [0],
@@ -178,20 +168,11 @@ export class PurchaseDetailComponent implements OnInit {
     }
   }
 
-  removePurchaseDetail(index: number) {
-
-    const product = this.purchaseDetails.at(index).value;
-
-    this.purchaseDetails.removeAt(index);
-
-    this.deletePurchaseDelete(product?.id)
-
-    this.calculateGrandTotal();
-  }
-
   private addProductToPurchaseDetails(product: ProductSelectListModel) {
+    // Get the default form group structure
     const productFormGroup = this.addPurchaseDetailFormGroup();
-    const quantity = 1; 
+
+    const quantity = 1; // Default quantity
     const totalDiscountAmount = (product.discount || 0) * quantity;
 
     // Set the values in the form group
@@ -209,9 +190,21 @@ export class PurchaseDetailComponent implements OnInit {
       discountAmount: totalDiscountAmount
     });
 
+    // Add the form group to the purchaseDetails array
     this.purchaseDetails.push(productFormGroup);
 
-    this.calculateTaxAndTotalPrice(this.purchaseDetails.length - 1, productFormGroup.value);
+    this.calculateTaxAndTotalPrice(productFormGroup.value, this.purchaseDetails.length - 1);
+  }
+
+  removePurchaseDetail(index: number) {
+
+    const product = this.purchaseDetails.at(index).value;
+
+    this.purchaseDetails.removeAt(index);
+
+    this.deletePurchaseDelete(product?.id)
+
+    this.calculateGrandTotal();
   }
 
   private deletePurchaseDelete(id: string) {
@@ -231,52 +224,16 @@ export class PurchaseDetailComponent implements OnInit {
   onItemPropsChange(index: number) {
     const purchaseDetailFormGroup = this.purchaseDetails.at(index) as FormGroup;
     const purchaseDetail = purchaseDetailFormGroup.value;
-    this.calculateTaxAndTotalPrice(index, purchaseDetail);
+
+    console.log(index)
+
+    const updatedValue = this.calculateTaxAndTotalPrice2(purchaseDetail, index);
+    // purchaseDetailFormGroup.patchValue(updatedValue, {emitEvent: false});
+    purchaseDetailFormGroup.get('netUnitCost').setValue(updatedValue.netUnitCost);
+    purchaseDetailFormGroup.get('taxAmount').setValue(updatedValue.taxAmount);
+    purchaseDetailFormGroup.get('totalPrice').setValue(updatedValue.totalPrice);
+    console.log(updatedValue)
   }
-
-
-  private calculateTaxAndTotalPrice(index: number, purchaseDetail: PurchaseDetailModel) {
-    let netUnitCost: number;
-    let taxAmount: number;
-    let totalPrice: number;
-    const taxRateDecimal = purchaseDetail.taxRate / 100;
-  
-    if (purchaseDetail.taxMethod === TaxMethod.Exclusive) {
-      netUnitCost = parseFloat(purchaseDetail.productUnitCost.toFixed(2));
-      taxAmount = parseFloat(((purchaseDetail.productUnitCost * taxRateDecimal) * purchaseDetail.quantity).toFixed(2));
-      totalPrice = parseFloat(((netUnitCost * purchaseDetail.quantity) - purchaseDetail.discountAmount + taxAmount).toFixed(2));
-    } else if(purchaseDetail.taxMethod === TaxMethod.Inclusive){
-      const taxRateFactor = 1 + taxRateDecimal;
-      netUnitCost = parseFloat((purchaseDetail.productUnitCost / taxRateFactor).toFixed(2));
-      taxAmount = parseFloat(((purchaseDetail.productUnitCost - netUnitCost) * purchaseDetail.quantity).toFixed(2));
-      totalPrice = parseFloat(((netUnitCost * purchaseDetail.quantity) - purchaseDetail.discountAmount + taxAmount).toFixed(2));
-    }
-  
-    this.purchaseDetails.at(index).patchValue({
-      netUnitCost: netUnitCost,
-      taxAmount: taxAmount,
-      totalPrice: totalPrice
-    }, { emitEvent: false });
-  
-    this.calculateFooterSection();
-    this.calculateGrandTotal();
-  }
-
-  // #endregion
-
-  // #region PurchaseOrder Footer
-
-  calculateFooterSection(){
-    this.totalQuantity = this.purchaseDetails.controls.reduce((acc, curr) => acc + (curr.get('quantity').value || 0), 0);
-    this.totalDiscount = parseFloat(this.purchaseDetails.controls.reduce((acc, curr) => acc + (curr.get('discountAmount').value || 0), 0).toFixed(2));
-    this.totalTaxAmount = parseFloat(this.purchaseDetails.controls.reduce((acc, curr) => acc + (curr.get('taxAmount').value || 0), 0).toFixed(2));
-    this.subTotal = parseFloat(this.purchaseDetails.controls.reduce((acc, curr) => acc + (curr.get('totalPrice').value || 0), 0).toFixed(2));
-    this.form.get('subTotal').setValue(this.subTotal, { emitEvent: false })
-  }
-
-  // #endregion
-
-  // #region Grand Total Section
 
   onOrderTaxChange() {
     this.calculateGrandTotal();
@@ -290,33 +247,136 @@ export class PurchaseDetailComponent implements OnInit {
     this.calculateGrandTotal();
   }
 
-  private calculateGrandTotal() {
-    const taxRate = parseFloat(this.f['taxRate'].value || 0);
-    
-    this.orderDiscountAmount = parseFloat(this.f['discountAmount'].value || 0);
-    this.shippingCostAmount = parseFloat(this.f['shippingCost'].value || 0);
+  
 
-    const taxableAmount = this.subTotal - this.orderDiscountAmount;
-    this.orderTaxAmount = parseFloat(((taxableAmount * taxRate) / 100).toFixed(2));
 
-    const totalProducts = this.purchaseDetails.length;
-    this.totalItems = totalProducts > 0 ? `${this.purchaseDetails.length}(${this.totalQuantity})` : '0';
+  private calculateTaxAndTotalPrice(purchaseDetail: PurchaseDetailModel, index: number) {
+    console.log(purchaseDetail)
+    let netUnitCost: number;
+    let taxAmount: number;
+    let totalPrice: number;
+    const taxRateDecimal = purchaseDetail.taxRate / 100;
 
-    // Calculate grand total
-    this.grandTotalAmount = parseFloat(
-      (this.subTotal + this.orderTaxAmount + this.shippingCostAmount - this.orderDiscountAmount).toFixed(2)
-    );
+    if (purchaseDetail.taxMethod === TaxMethod.Inclusive) {
+      const taxRateFactor = 1 + taxRateDecimal;
+      netUnitCost = purchaseDetail.productUnitCost / taxRateFactor;
+      taxAmount = (purchaseDetail.productUnitCost - netUnitCost) * purchaseDetail.quantity;
+      totalPrice = (netUnitCost * purchaseDetail.quantity) - purchaseDetail.discountAmount + taxAmount;
+    } else if (purchaseDetail.taxMethod === TaxMethod.Exclusive) {
+      netUnitCost = parseFloat(purchaseDetail.productUnitCost.toFixed(2));
+      taxAmount = (purchaseDetail.productUnitCost * taxRateDecimal) * purchaseDetail.quantity;
+      totalPrice = (netUnitCost * purchaseDetail.quantity) - purchaseDetail.discountAmount + taxAmount;
+    }
 
-    this.f['taxAmount'].setValue(this.orderTaxAmount, { emitEvent: false });
-    this.f['grandTotal'].setValue(this.grandTotalAmount, { emitEvent: false });
+    this.purchaseDetails.at(index).patchValue({
+      netUnitCost: netUnitCost,
+      taxAmount: taxAmount,
+      totalPrice: totalPrice
+    }, { emitEvent: false });
+
+    this.calculateGrandTotal();
+
+  }
+
+  private calculateTaxAndTotalPrice2(purchaseDetail: PurchaseDetailModel, index: number) {
+    console.log(purchaseDetail)
+    let netUnitCost: number = 0;
+    let taxAmount: number;
+    let totalPrice: number;
+    const taxRateDecimal = purchaseDetail.taxRate / 100;
+
+    if (purchaseDetail.taxMethod === TaxMethod.Inclusive) {
+      const taxRateFactor = 1 + taxRateDecimal;
+      netUnitCost = purchaseDetail.productUnitCost / taxRateFactor;
+      taxAmount = (purchaseDetail.productUnitCost - netUnitCost) * purchaseDetail.quantity;
+      totalPrice = (netUnitCost * purchaseDetail.quantity) - purchaseDetail.discountAmount + taxAmount;
+    } else if (purchaseDetail.taxMethod === TaxMethod.Exclusive) {
+      netUnitCost = parseFloat(purchaseDetail.productUnitCost.toFixed(2));
+      taxAmount = (purchaseDetail.productUnitCost * taxRateDecimal) * purchaseDetail.quantity;
+      totalPrice = (netUnitCost * purchaseDetail.quantity) - purchaseDetail.discountAmount + taxAmount;
+    }
+    // this.calculateGrandTotal();
+
+    return {
+      netUnitCost: parseFloat(netUnitCost.toFixed(2)),
+      taxAmount: parseFloat(taxAmount.toFixed(2)),
+      totalPrice: parseFloat(totalPrice.toFixed(2))
+    }
+
   }
 
   // #endregion
 
 
+  // #region PurchaseOrder Footer
+
+  getTotalQuantity(): number {
+    return this.purchaseDetails.controls.reduce((acc, curr) => acc + (curr.get('quantity').value || 0), 0);
+  }
+
+  // getTotalUnitNetCost(): number {
+  //   return this.purchaseDetails.controls.reduce((acc, curr) => acc + (curr.get('netUnitCost').value || 0), 0);
+  // }
+
+
+  // Function to calculate the total discount amount
+  getTotalDiscount(): number {
+    const totalDiscount = parseFloat(this.purchaseDetails.controls.reduce((acc, curr) => acc + (curr.get('discountAmount').value || 0), 0).toFixed(2));
+    return parseFloat(totalDiscount.toFixed(2));
+  }
+
+  getTotalTax(): number {
+    const totalTaxAmount = parseFloat(this.purchaseDetails.controls.reduce((acc, curr) => acc + (curr.get('taxAmount').value || 0), 0).toFixed(2));
+    return parseFloat(totalTaxAmount.toFixed(2));
+  }
+
+  // Function to calculate the grand total
+  getSubTotalOfTotal(): number {
+    const subTotal = parseFloat(this.purchaseDetails.controls.reduce((acc, curr) => acc + (curr.get('totalPrice').value || 0), 0).toFixed(2));
+    this.form.get('subTotal').setValue(subTotal, { emitEvent: false });
+    return parseFloat(subTotal.toFixed(2));
+  }
+
+  // #endregion
+
+  // #region Grand Total Section
+  private calculateGrandTotal() {
+    console.log('grand Total')
+    const subTotal = this.getSubTotalOfTotal();
+
+    // Get order tax, discount, and shipping cost from the form
+    const taxRate = parseFloat(this.f['taxRate'].value || 0);
+    this.orderDiscountAmount = parseFloat(this.f['discountAmount'].value || 0);
+    this.shippingCostAmount = parseFloat(this.f['shippingCost'].value || 0);
+
+    const taxableAmount = subTotal - this.orderDiscountAmount;
+    this.orderTaxAmount = parseFloat(((taxableAmount * taxRate) / 100).toFixed(2));
+
+    this.f['taxAmount'].setValue(this.orderTaxAmount, { emitEvent: false });
+
+    // Calculate grand total
+    this.grandTotalAmount = parseFloat(
+      (subTotal + this.orderTaxAmount + this.shippingCostAmount - this.orderDiscountAmount).toFixed(2)
+    );
+
+    this.f['grandTotal'].setValue(this.grandTotalAmount, { emitEvent: false });
+
+    const totalProducts = this.purchaseDetails.length;
+    this.totalItems = totalProducts > 0 ? `${this.purchaseDetails.length}(${this.getTotalQuantity()})` : '0';
+
+  }
+
+  // #endregion
+
+
+
+
+
+
   onFileUpload(fileUrl) {
 
   }
+
 
   protected getErrorMessage(error: any): string {
     return error?.errors?.[0]?.description || 'An unexpected error occurred';

@@ -1,4 +1,4 @@
-import { Component, Input, forwardRef } from '@angular/core';
+import { Component, EventEmitter, Input, Output, forwardRef } from '@angular/core';
 import { NG_VALUE_ACCESSOR, NG_VALIDATORS, ControlValueAccessor, Validator, AbstractControl, ValidationErrors } from '@angular/forms';
 
 @Component({
@@ -47,6 +47,7 @@ export class InputDecimalComponent implements ControlValueAccessor, Validator {
   @Input() incrementButtonClass: string = 'p-button-success';
   @Input() incrementButtonIcon: string = 'pi pi-plus';
   @Input() decrementButtonIcon: string = 'pi pi-minus';
+  @Output() onChange = new EventEmitter<any>();
 
   value: number | null = null;
   onTouched: any = () => {};
@@ -78,6 +79,7 @@ export class InputDecimalComponent implements ControlValueAccessor, Validator {
   onInputChange(event: any): void {
     this.value = event !== '' && event !== null ? parseFloat(event) : null;
     this.onChangeFn(this.value);
+    this.onChange.emit(this.value);
   }
   
 

@@ -69,7 +69,7 @@ internal sealed class GetSaleByIdQueryHandler(ISqlConnectionFactory sqlConnectio
                 d.Quantity AS {nameof(SaleDetailModel.Quantity)},
                 d.BatchNo AS {nameof(SaleDetailModel.BatchNo)},
                 d.ExpiredDate AS {nameof(SaleDetailModel.ExpiredDate)},
-                d.NetUnitPrice AS {nameof(SaleDetailModel.NetUnitPrice)},
+                d.NetUnitCost AS {nameof(SaleDetailModel.NetUnitPrice)},
                 d.DiscountAmount AS {nameof(SaleDetailModel.DiscountAmount)},
                 d.TaxRate AS {nameof(SaleDetailModel.TaxRate)},
                 d.TaxAmount AS {nameof(SaleDetailModel.TaxAmount)},

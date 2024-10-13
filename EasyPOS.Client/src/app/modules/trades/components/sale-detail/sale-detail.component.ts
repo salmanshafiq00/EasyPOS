@@ -20,10 +20,18 @@ export class SaleDetailComponent implements OnInit {
   optionsDataSources: any;
   saleDate: string | null = null;
   CommonConstant = CommonConstants;
-  totalItems: any;
+
   discountTypes: { id: number, name: string }[] = [];
   selectedProduct: ProductSelectListModel | null = null;
 
+  // Table footer section
+  totalQuantity: number = 0;
+  totalDiscount: number = 0;
+  totalTaxAmount: number = 0;
+  subTotal: number = 0;
+
+  // Grand total Section
+  totalItems: string = '0';
 
   constructor(private entityClient: SalesClient,
     private activatedRoute: ActivatedRoute,
@@ -66,7 +74,7 @@ export class SaleDetailComponent implements OnInit {
   // #region CRUDS
 
   onSubmit() {
-    if(this.saleDate){
+    if (this.saleDate) {
       this.item.saleDate = new Date(this.saleDate);
     }
     if (!this.id || this.id === this.CommonConstant.EmptyGuid) {
@@ -83,8 +91,8 @@ export class SaleDetailComponent implements OnInit {
         //   this.item = res;
         // }
         this.item = res;
-        if(id && id !== CommonConstants.EmptyGuid){
-          this.saleDate =  this.datePipe.transform(this.item.saleDate, 'dd/MM/yyyy')
+        if (id && id !== CommonConstants.EmptyGuid) {
+          this.saleDate = this.datePipe.transform(this.item.saleDate, 'dd/MM/yyyy')
         }
         this.optionsDataSources = res.optionsDataSources;
 
@@ -203,12 +211,20 @@ export class SaleDetailComponent implements OnInit {
 
   // #region SalesOrder Footer 
 
-  // Function to calculate the total quantity of products
+  calculateFooterSection(){
+    this.totalQuantity = this.item.saleDetails.reduce((total, detail) => total + detail.quantity, 0);
+    this.totalDiscount = this.item.saleDetails.reduce((total, detail) => total + (detail.discountAmount || 0), 0);
+    this.totalTaxAmount = this.item.saleDetails.reduce((total, detail) => total + (detail.taxAmount || 0), 0);
+    const subTotal = this.item.saleDetails.reduce((total, saleDetail) => {
+      return total + saleDetail.totalPrice;
+    }, 0) || 0;
+    this.item.subTotal = subTotal;
+  }
+
   getTotalQuantity(): number {
     return this.item.saleDetails.reduce((total, detail) => total + detail.quantity, 0);
   }
 
-  // Function to calculate the total discount amount
   getTotalDiscount(): number {
     const totalDiscount = this.item.saleDetails.reduce((total, detail) => total + (detail.discountAmount || 0), 0);
     return parseFloat(totalDiscount.toFixed(2));
@@ -243,19 +259,19 @@ export class SaleDetailComponent implements OnInit {
     this.calculateGrandTotal();
   }
 
-  onDiscountRateChange(){
+  onDiscountRateChange() {
     this.calculateGrandTotal();
   }
 
-  onDiscountAmountChange(){
-    if(!this.item.discountAmount){
+  onDiscountAmountChange() {
+    if (!this.item.discountAmount) {
       this.item.discountAmount = 0;
     }
     this.calculateGrandTotal();
   }
 
-  onShippingCostChange(){
-    if(!this.item.shippingCost){
+  onShippingCostChange() {
+    if (!this.item.shippingCost) {
       this.item.shippingCost = 0;
     }
     this.calculateGrandTotal();
@@ -263,7 +279,7 @@ export class SaleDetailComponent implements OnInit {
 
   private calculateGrandTotal() {
     const subTotalOfTotal = this.getSubTotalOfTotal();
-    if(this.item.discountType === DiscountType.Percentage ){
+    if (this.item.discountType === DiscountType.Percentage) {
       const discountAmount = subTotalOfTotal * (this.item.discountRate / 100)
       this.item.discountAmount = parseFloat(discountAmount.toFixed(2)) || 0;
     }
@@ -276,8 +292,7 @@ export class SaleDetailComponent implements OnInit {
       (subTotalOfTotal + this.item.taxAmount + (this.item.shippingCost || 0) - this.item.discountAmount).toFixed(2)
     );
     const totalProducts = this.item.saleDetails.length;
-    const totalQuantity = this.item.saleDetails.reduce((total, detail) => total + detail.quantity, 0);
-    this.totalItems = totalProducts > 0 ? `${totalProducts}(${totalQuantity})`: '0';
+    this.totalItems = totalProducts > 0 ? `${this.item.saleDetails.length}(${this.getTotalQuantity()})` : '0';
   }
 
   // #endregion
