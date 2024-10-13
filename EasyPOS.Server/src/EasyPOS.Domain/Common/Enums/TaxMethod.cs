@@ -6,8 +6,3 @@ public enum TaxMethod
     Inclusive = 2
 }
 
-public enum DiscountType
-{
-    Percentage = 1,
-    Fixed = 2
-}

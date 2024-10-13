@@ -1,4 +1,6 @@
-﻿namespace EasyPOS.Domain.Trades;
+﻿using EasyPOS.Domain.Common.Enums;
+
+namespace EasyPOS.Domain.Trades;
 
 public class Sale : BaseAuditableEntity
 {

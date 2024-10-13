@@ -2478,12 +2478,12 @@
         ]
       }
     },
-    "/api/Purchases/DeleteDetail": {
+    "/api/Purchases/DeletePurchaseDetail": {
       "post": {
         "tags": [
           "Purchases"
         ],
-        "operationId": "DeleteDetail",
+        "operationId": "DeletePurchaseDetail",
         "parameters": [
           {
             "name": "id",
@@ -2823,6 +2823,46 @@
           "required": true,
           "x-position": 1
         },
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
+    "/api/Sales/DeleteSaleDetail": {
+      "post": {
+        "tags": [
+          "Sales"
+        ],
+        "operationId": "DeleteSaleDetail",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
         "responses": {
           "204": {
             "description": ""
@@ -7118,6 +7158,14 @@
             "format": "decimal",
             "nullable": true
           },
+          "discountType": {
+            "$ref": "#/components/schemas/DiscountType"
+          },
+          "discountRate": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
           "discountAmount": {
             "type": "number",
             "format": "decimal",
@@ -7150,6 +7198,18 @@
             "additionalProperties": {}
           }
         }
+      },
+      "DiscountType": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Fixed",
+          "Percentage"
+        ],
+        "enum": [
+          1,
+          2
+        ]
       },
       "PurchaseDetailModel": {
         "type": "object",
@@ -7209,9 +7269,20 @@
             "type": "number",
             "format": "decimal"
           },
+          "discountType": {
+            "$ref": "#/components/schemas/DiscountType"
+          },
+          "discountRate": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
           "discountAmount": {
             "type": "number",
             "format": "decimal"
+          },
+          "taxMethod": {
+            "$ref": "#/components/schemas/TaxMethod"
           },
           "taxRate": {
             "type": "number",
@@ -7221,12 +7292,13 @@
             "type": "number",
             "format": "decimal"
           },
-          "taxMethod": {
-            "$ref": "#/components/schemas/TaxMethod"
-          },
           "totalPrice": {
             "type": "number",
             "format": "decimal"
+          },
+          "remarks": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -7295,6 +7367,14 @@
             "nullable": true
           },
           "taxAmount": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "discountType": {
+            "$ref": "#/components/schemas/DiscountType"
+          },
+          "discountRate": {
             "type": "number",
             "format": "decimal",
             "nullable": true
@@ -7369,6 +7449,14 @@
             "nullable": true
           },
           "taxAmount": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "discountType": {
+            "$ref": "#/components/schemas/DiscountType"
+          },
+          "discountRate": {
             "type": "number",
             "format": "decimal",
             "nullable": true
@@ -7542,12 +7630,7 @@
             "nullable": true
           },
           "discountType": {
-            "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/DiscountType"
-              }
-            ]
+            "$ref": "#/components/schemas/DiscountType"
           },
           "shippingCost": {
             "type": "number",
@@ -7589,18 +7672,6 @@
             "additionalProperties": {}
           }
         }
-      },
-      "DiscountType": {
-        "type": "integer",
-        "description": "",
-        "x-enumNames": [
-          "Percentage",
-          "Fixed"
-        ],
-        "enum": [
-          1,
-          2
-        ]
       },
       "SaleDetailModel": {
         "type": "object",
@@ -7660,9 +7731,20 @@
             "type": "number",
             "format": "decimal"
           },
+          "discountType": {
+            "$ref": "#/components/schemas/DiscountType"
+          },
+          "discountRate": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
           "discountAmount": {
             "type": "number",
             "format": "decimal"
+          },
+          "taxMethod": {
+            "$ref": "#/components/schemas/TaxMethod"
           },
           "taxRate": {
             "type": "number",
@@ -7672,12 +7754,13 @@
             "type": "number",
             "format": "decimal"
           },
-          "taxMethod": {
-            "$ref": "#/components/schemas/TaxMethod"
-          },
           "totalPrice": {
             "type": "number",
             "format": "decimal"
+          },
+          "remarks": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -7753,6 +7836,14 @@
             "format": "decimal",
             "nullable": true
           },
+          "discountType": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/DiscountType"
+              }
+            ]
+          },
           "discountAmount": {
             "type": "number",
             "format": "decimal",
@@ -7762,14 +7853,6 @@
             "type": "number",
             "format": "decimal",
             "nullable": true
-          },
-          "discountType": {
-            "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/DiscountType"
-              }
-            ]
           },
           "shippingCost": {
             "type": "number",
@@ -8413,12 +8496,18 @@
             "format": "guid",
             "nullable": true
           },
-          "discount": {
-            "type": "number",
-            "format": "decimal"
-          },
           "discountType": {
             "$ref": "#/components/schemas/DiscountType"
+          },
+          "discountAmount": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "discountRate": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
           },
           "taxRate": {
             "type": "number",

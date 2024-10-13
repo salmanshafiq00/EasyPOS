@@ -110,13 +110,24 @@
 
         <div class="field col-12 md:col-4">
           <app-input-select label="Order Tax" formControlName="taxRate"
-            [options]="optionsDataSources?.['taxesSelectList']" [required]="true"
+            [options]="optionsDataSources?.['taxesSelectList']" [required]="true" [showClear]="false"
             (ngModelChange)="onOrderTaxChange()" />
         </div>
 
         <div class="field col-12 md:col-4">
-          <app-input-decimal label="Discount" formControlName="discountAmount" textAlign="right" [showButtons]="false"
+          <app-input-select label="Discount Type" formControlName="discountType"
+            [options]="discountTypes" (ngModelChange)="onDiscountTypeChange()" [showClear]="false" />
+        </div>
+
+        <div class="field col-12 md:col-4" *ngIf="f['discountType'].value === DiscountType.Percentage">
+          <app-input-decimal label="Discount Rate" formControlName="discountRate" suffix="%" textAlign="right" [showButtons]="false"
             [required]="false" (ngModelChange)="onOrderDiscountChange()" />
+          <app-validator-msg [control]="f['discountRate']" />
+        </div>
+
+        <div class="field col-12 md:col-4" *ngIf="f['discountType'].value === DiscountType.Fixed">
+          <app-input-decimal label="Discount" formControlName="discountAmount" textAlign="right" [showButtons]="false"
+            [required]="false" (ngModelChange)="onOrderDiscountChange()"  />
           <app-validator-msg [control]="f['discountAmount']" />
         </div>
 

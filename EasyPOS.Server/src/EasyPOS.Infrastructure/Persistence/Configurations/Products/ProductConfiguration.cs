@@ -36,11 +36,14 @@ internal sealed class ProductConfiguration : IEntityTypeConfiguration<Product>
             .HasColumnType("decimal(18, 2)")
             .IsRequired(false);
 
-        builder.Property(t => t.Discount)
-            .HasColumnType("decimal(18, 2)");
+        builder.Property(t => t.DiscountAmount)
+            .HasColumnType("decimal(12, 2)");
+
+        builder.Property(t => t.DiscountRate)
+            .HasColumnType("decimal(4, 2)");
 
         builder.Property(t => t.TaxRate)
-           .HasColumnType("decimal(18, 2)");
+           .HasColumnType("decimal(4, 2)");
 
     }
 }

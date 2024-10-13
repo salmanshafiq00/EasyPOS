@@ -34,10 +34,13 @@ internal sealed class PurchaseConfiguration : IEntityTypeConfiguration<Purchase>
                .IsRequired();
 
         builder.Property(x => x.TaxRate)
-               .HasColumnType("decimal(18, 2)");
+               .HasColumnType("decimal(4, 2)");
 
         builder.Property(x => x.TaxAmount)
                .HasColumnType("decimal(18, 2)");
+
+        builder.Property(x => x.DiscountRate)
+                .HasColumnType("decimal(3, 2)");
 
         builder.Property(x => x.DiscountAmount)
                .HasColumnType("decimal(18, 2)");

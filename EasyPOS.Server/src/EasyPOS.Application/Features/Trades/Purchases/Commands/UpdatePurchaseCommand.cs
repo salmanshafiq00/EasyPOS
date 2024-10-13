@@ -1,4 +1,5 @@
 ﻿using EasyPOS.Application.Features.Trades.Purchases.Queries;
+using EasyPOS.Domain.Common.Enums;
 
 namespace EasyPOS.Application.Features.Trades.Purchases.Commands;
 
@@ -13,6 +14,8 @@ public record UpdatePurchaseCommand(
     decimal SubTotal,
     decimal? TaxRate,
     decimal? TaxAmount,
+    DiscountType DiscountType,
+    decimal? DiscountRate,
     decimal? DiscountAmount,
     decimal? ShippingCost,
     decimal GrandTotal,

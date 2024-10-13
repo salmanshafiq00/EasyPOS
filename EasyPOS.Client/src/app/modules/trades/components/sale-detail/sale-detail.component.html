@@ -7,7 +7,7 @@
 
         <!-- Sale Date -->
         <div class="field col-12 md:col-4">
-          <app-input-date label="Date" [(ngModel)]="saleDate" name="saleDate" />
+          <app-input-date label="Date" [(ngModel)]="item.saleDate" name="saleDate" />
         </div>
 
         <!-- Reference No -->
@@ -80,7 +80,7 @@
                   </div>
                 </td>
                 <td>
-                  <app-button type="button" severity="danger" icon="pi pi-trash" (click)="onRemoveSaleDetail(i)" />
+                  <app-button type="button" severity="danger" icon="pi pi-trash" (click)="onRemoveSaleDetail(i, detail.id)" />
                 </td>
               </tr>
             </ng-template>

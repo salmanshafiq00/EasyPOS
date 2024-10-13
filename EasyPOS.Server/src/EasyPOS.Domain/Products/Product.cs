@@ -1,4 +1,5 @@
-﻿using EasyPOS.Domain.Enums;
+﻿using EasyPOS.Domain.Common.Enums;
+using EasyPOS.Domain.Enums;
 
 namespace EasyPOS.Domain.Products;
 
@@ -22,7 +23,8 @@ public class Product : BaseAuditableEntity
     public TaxMethod TaxMethod { get; set; }
     public decimal TaxRate { get; set; }
     public DiscountType DiscountType { get; set; }
-    public decimal Discount { get; set; }
+    public decimal DiscountAmount { get; set; }
+    public decimal DiscountRate { get; set; }
     public string? Description { get; set; }
     public bool IsActive { get; set; }
 

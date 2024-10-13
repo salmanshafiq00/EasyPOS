@@ -1,4 +1,5 @@
 ﻿using EasyPOS.Application.Common.Enums;
+using EasyPOS.Domain.Common.Enums;
 using EasyPOS.Domain.Enums;
 
 namespace EasyPOS.Application.Features.Trades.Sales.Queries;
@@ -26,7 +27,8 @@ internal sealed class GetSaleByIdQueryHandler(ISqlConnectionFactory sqlConnectio
                 DiscountAmount = 0,
                 SaleStatusId = await commonQueryService.GetLookupDetailIdAsync((int)SaleSatus.Completed) ,
                 PaymentStatusId = await commonQueryService.GetLookupDetailIdAsync((int)PaymentStatus.Pending),
-                TaxRate = 0
+                TaxRate = 0,
+                SaleDate = DateOnly.FromDateTime(DateTime.Now)
             };
         }
 
@@ -69,7 +71,9 @@ internal sealed class GetSaleByIdQueryHandler(ISqlConnectionFactory sqlConnectio
                 d.Quantity AS {nameof(SaleDetailModel.Quantity)},
                 d.BatchNo AS {nameof(SaleDetailModel.BatchNo)},
                 d.ExpiredDate AS {nameof(SaleDetailModel.ExpiredDate)},
-                d.NetUnitCost AS {nameof(SaleDetailModel.NetUnitPrice)},
+                d.NetUnitPrice AS {nameof(SaleDetailModel.NetUnitPrice)},
+                d.DiscountType AS {nameof(SaleDetailModel.DiscountType)},
+                d.DiscountRate AS {nameof(SaleDetailModel.DiscountRate)},
                 d.DiscountAmount AS {nameof(SaleDetailModel.DiscountAmount)},
                 d.TaxRate AS {nameof(SaleDetailModel.TaxRate)},
                 d.TaxAmount AS {nameof(SaleDetailModel.TaxAmount)},

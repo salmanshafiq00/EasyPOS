@@ -29,8 +29,9 @@ internal sealed class ProductSelectListQueryHandler(
                 t.SalePrice AS {nameof(ProductSelectListModel.SalePrice)},
                 t.TaxRate AS {nameof(ProductSelectListModel.TaxRate)},
                 t.TaxMethod AS {nameof(ProductSelectListModel.TaxMethod)},
-                t.Discount AS {nameof(ProductSelectListModel.Discount)},
-                t.DiscountType AS {nameof(ProductSelectListModel.DiscountType)}
+                t.DiscountType AS {nameof(ProductSelectListModel.DiscountType)},
+                t.DiscountRate AS {nameof(ProductSelectListModel.DiscountRate)},
+                t.DiscountAmount AS {nameof(ProductSelectListModel.DiscountAmount)}
             FROM dbo.Products t
             WHERE 1 = 1
             ORDER BY t.Name

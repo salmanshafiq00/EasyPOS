@@ -486,7 +486,7 @@ namespace EasyPOS.Infrastructure.Persistence.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("Discount")
+                    b.Property<decimal>("DiscountAmount")
                         .HasColumnType("decimal(18, 2)");
 
                     b.Property<int>("DiscountType")

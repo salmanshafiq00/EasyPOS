@@ -53,9 +53,9 @@ internal sealed class PurchaseDetailConfiguration : IEntityTypeConfiguration<Pur
                .HasColumnType("decimal(18, 2)")
                .IsRequired();
 
-        //builder.Property(x => x.NetUnitPrice)
-        //       .HasColumnType("decimal(18, 2)")
-        //       .IsRequired();
+        builder.Property(x => x.DiscountRate)
+               .HasColumnType("decimal(4, 2)")
+               .IsRequired();
 
         builder.Property(x => x.DiscountAmount)
                .HasColumnType("decimal(18, 2)")
@@ -72,5 +72,10 @@ internal sealed class PurchaseDetailConfiguration : IEntityTypeConfiguration<Pur
         builder.Property(x => x.TotalPrice)
                .HasColumnType("decimal(18, 2)")
                .IsRequired();
+
+        builder.Property(x => x.Remarks)
+               .HasMaxLength(500)
+               .IsRequired(false);
+
     }
 }

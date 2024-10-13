@@ -1,5 +1,6 @@
 ﻿using EasyPOS.Application.Features.Common.Queries;
 using EasyPOS.Application.Features.ProductManagement.Queries;
+using EasyPOS.Application.Features.Trades.Purchases.Commands;
 using EasyPOS.Application.Features.Trades.Sales.Commands;
 using EasyPOS.Application.Features.Trades.Sales.Queries;
 using EasyPOS.Application.Features.UnitManagement.Queries;
@@ -40,6 +41,12 @@ public class Sales : EndpointGroupBase
              .WithName("DeleteSales")
              .Produces(StatusCodes.Status204NoContent)
              .Produces<ProblemDetails>(StatusCodes.Status400BadRequest);
+
+        group.MapPost("DeleteSaleDetail", DeleteSaleDetail)
+             .WithName("DeleteSaleDetail")
+             .Produces(StatusCodes.Status204NoContent)
+             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest);
+
     }
 
     private async Task<IResult> GetAll(ISender sender, GetSaleListQuery query)
@@ -142,4 +149,14 @@ public class Sales : EndpointGroupBase
             onSuccess: Results.NoContent,
             onFailure: result!.ToProblemDetails);
     }
+
+    private async Task<IResult> DeleteSaleDetail(ISender sender, Guid id)
+    {
+        var result = await sender.Send(new DeleteSaleDetailCommand(id));
+
+        return result.Match(
+            onSuccess: Results.NoContent,
+            onFailure: result.ToProblemDetails);
+    }
+
 }

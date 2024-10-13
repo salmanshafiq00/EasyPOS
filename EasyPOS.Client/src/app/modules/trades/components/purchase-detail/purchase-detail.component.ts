@@ -3,8 +3,9 @@ import { Component, inject, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { CommonConstants } from 'src/app/core/contants/common';
-import { ProductSelectListModel, PurchaseDetailModel, PurchaseModel, PurchasesClient, TaxMethod } from 'src/app/modules/generated-clients/api-service';
+import { DiscountType, ProductSelectListModel, PurchaseDetailModel, PurchaseModel, PurchasesClient, TaxMethod } from 'src/app/modules/generated-clients/api-service';
 import { ToastService } from 'src/app/shared/services/toast.service';
+import { CommonUtils } from 'src/app/shared/Utilities/common-utilities';
 
 @Component({
   selector: 'app-purchase-detail',
@@ -33,6 +34,8 @@ export class PurchaseDetailComponent implements OnInit {
   grandTotalAmount: number = 0;
 
   selectedProduct: any;
+  discountTypes: { id: number, name: string }[] = [];
+  DiscountType = DiscountType;
 
   get purchaseDetails(): FormArray {
     return this.form.get('purchaseDetails') as FormArray;
@@ -54,6 +57,8 @@ export class PurchaseDetailComponent implements OnInit {
     this.activatedRoute.paramMap.subscribe(params => {
       this.id = params.get('id')
     });
+    this.discountTypes = CommonUtils.enumToArray(DiscountType);
+
     this.getById(this.id || this.emptyGuid)
     this.initializeFormGroup();
   }
@@ -135,6 +140,8 @@ export class PurchaseDetailComponent implements OnInit {
       subTotal: [0],
       taxRate: [0],
       taxAmount: [0],
+      discountType: [DiscountType.Fixed],
+      discountRate: [0],
       discountAmount: [0],
       shippingCost: [0],
       grandTotal: [0],
@@ -159,11 +166,14 @@ export class PurchaseDetailComponent implements OnInit {
       expiredDate: [null],
       batchNo: [null],
       netUnitCost: [0],
+      discountType: [DiscountType.Fixed],
+      discountRate: [0],
       discountAmount: [0],
+      taxMethod: [TaxMethod.Exclusive],
       taxRate: [0],
       taxAmount: [0],
-      taxMethod: [TaxMethod.Exclusive],
-      totalPrice: [0]
+      totalPrice: [0],
+      remarks: ['']
     });
   }
 
@@ -192,7 +202,7 @@ export class PurchaseDetailComponent implements OnInit {
   private addProductToPurchaseDetails(product: ProductSelectListModel) {
     const productFormGroup = this.addPurchaseDetailFormGroup();
     const quantity = 1; 
-    const totalDiscountAmount = (product.discount || 0) * quantity;
+    const totalDiscountAmount = (product.discountAmount || 0) * quantity;
 
     // Set the values in the form group
     productFormGroup.patchValue({
@@ -202,11 +212,13 @@ export class PurchaseDetailComponent implements OnInit {
       productUnitCost: product.costPrice,
       productUnitPrice: product.salePrice,
       productUnitId: product.saleUnit,
-      productUnitDiscount: product.discount,
+      productUnitDiscount: product.discountAmount  || 0,
       quantity: quantity,
-      taxRate: product.taxRate || 0,
+      discountType: product.discountType || DiscountType.Fixed,
+      discountRate: product.discountRate || 0, 
+      discountAmount: totalDiscountAmount,
       taxMethod: product.taxMethod,
-      discountAmount: totalDiscountAmount
+      taxRate: product.taxRate || 0,
     });
 
     this.purchaseDetails.push(productFormGroup);
@@ -219,7 +231,7 @@ export class PurchaseDetailComponent implements OnInit {
       return;
     }
 
-    this.entityClient.deleteDetail(id).subscribe({
+    this.entityClient.deletePurchaseDetail(id).subscribe({
       next: () => {
         console.log('delete detail')
       }, error: (error) => {
@@ -279,6 +291,13 @@ export class PurchaseDetailComponent implements OnInit {
   // #region Grand Total Section
 
   onOrderTaxChange() {
+    this.calculateGrandTotal();
+  }
+
+  onDiscountTypeChange() {
+    this.f['discountRate'].setValue(null, { emitEvent: false });
+    this.f['discountAmount'].setValue(0, { emitEvent: false });
+
     this.calculateGrandTotal();
   }
 

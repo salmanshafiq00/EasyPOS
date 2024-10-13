@@ -1,4 +1,5 @@
-﻿using EasyPOS.Domain.Enums;
+﻿using EasyPOS.Domain.Common.Enums;
+using EasyPOS.Domain.Enums;
 
 namespace EasyPOS.Application.Features.Trades.Sales.Queries;
 
@@ -17,7 +18,7 @@ public record SaleModel
     public decimal? TaxAmount {get;set;} 
     public decimal? DiscountAmount {get;set;} 
     public decimal? DiscountRate {get;set;} 
-    public DiscountType? DiscountType { get;set;} 
+    public DiscountType DiscountType { get;set;} 
     public decimal? ShippingCost {get;set;} 
     public decimal GrandTotal {get;set;} 
     public string? SaleNote {get;set;} 
@@ -49,9 +50,9 @@ public record UpsertSaleModel
     public decimal SubTotal { get; set; }
     public decimal? TaxRate { get; set; }
     public decimal? TaxAmount { get; set; }
+    public DiscountType? DiscountType { get; set; }
     public decimal? DiscountAmount { get; set; }
     public decimal? DiscountRate { get; set; }
-    public DiscountType? DiscountType { get; set; }
     public decimal? ShippingCost { get; set; }
     public decimal GrandTotal { get; set; }
     public string? SaleNote { get; set; }
@@ -78,10 +79,14 @@ public class SaleDetailModel
     public string BatchNo { get; set; } = string.Empty;
     public DateOnly? ExpiredDate { get; set; }
     public decimal NetUnitPrice { get; set; }
+    public DiscountType DiscountType { get; set; }
+    public decimal? DiscountRate { get; set; }
     public decimal DiscountAmount { get; set; }
+    public TaxMethod TaxMethod { get; set; }
     public decimal TaxRate { get; set; }
     public decimal TaxAmount { get; set; }
-    public TaxMethod TaxMethod { get; set; }
     public decimal TotalPrice { get; set; }
+    public string? Remarks { get; set; }
+
 }
 

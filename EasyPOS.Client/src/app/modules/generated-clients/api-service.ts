@@ -3278,7 +3278,7 @@ export interface IPurchasesClient {
     delete(id: string): Observable<void>;
     deleteMultiple(ids: string[]): Observable<void>;
     upload(): Observable<number>;
-    deleteDetail(id: string): Observable<void>;
+    deletePurchaseDetail(id: string): Observable<void>;
 }
 
 @Injectable()
@@ -3686,8 +3686,8 @@ export class PurchasesClient implements IPurchasesClient {
         return _observableOf(null as any);
     }
 
-    deleteDetail(id: string): Observable<void> {
-        let url_ = this.baseUrl + "/api/Purchases/DeleteDetail?";
+    deletePurchaseDetail(id: string): Observable<void> {
+        let url_ = this.baseUrl + "/api/Purchases/DeletePurchaseDetail?";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined and cannot be null.");
         else
@@ -3703,11 +3703,11 @@ export class PurchasesClient implements IPurchasesClient {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processDeleteDetail(response_);
+            return this.processDeletePurchaseDetail(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processDeleteDetail(response_ as any);
+                    return this.processDeletePurchaseDetail(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<void>;
                 }
@@ -3716,7 +3716,7 @@ export class PurchasesClient implements IPurchasesClient {
         }));
     }
 
-    protected processDeleteDetail(response: HttpResponseBase): Observable<void> {
+    protected processDeletePurchaseDetail(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3883,6 +3883,7 @@ export interface ISalesClient {
     update(command: UpdateSaleCommand): Observable<void>;
     delete(id: string): Observable<void>;
     deleteMultiple(ids: string[]): Observable<void>;
+    deleteSaleDetail(id: string): Observable<void>;
 }
 
 @Injectable()
@@ -4208,6 +4209,62 @@ export class SalesClient implements ISalesClient {
     }
 
     protected processDeleteMultiple(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    deleteSaleDetail(id: string): Observable<void> {
+        let url_ = this.baseUrl + "/api/Sales/DeleteSaleDetail?";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined and cannot be null.");
+        else
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDeleteSaleDetail(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDeleteSaleDetail(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processDeleteSaleDetail(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -11129,6 +11186,8 @@ export class PurchaseModel implements IPurchaseModel {
     subTotal?: number;
     taxRate?: number | undefined;
     taxAmount?: number | undefined;
+    discountType?: DiscountType;
+    discountRate?: number | undefined;
     discountAmount?: number | undefined;
     shippingCost?: number | undefined;
     grandTotal?: number;
@@ -11158,6 +11217,8 @@ export class PurchaseModel implements IPurchaseModel {
             this.subTotal = _data["subTotal"];
             this.taxRate = _data["taxRate"];
             this.taxAmount = _data["taxAmount"];
+            this.discountType = _data["discountType"];
+            this.discountRate = _data["discountRate"];
             this.discountAmount = _data["discountAmount"];
             this.shippingCost = _data["shippingCost"];
             this.grandTotal = _data["grandTotal"];
@@ -11197,6 +11258,8 @@ export class PurchaseModel implements IPurchaseModel {
         data["subTotal"] = this.subTotal;
         data["taxRate"] = this.taxRate;
         data["taxAmount"] = this.taxAmount;
+        data["discountType"] = this.discountType;
+        data["discountRate"] = this.discountRate;
         data["discountAmount"] = this.discountAmount;
         data["shippingCost"] = this.shippingCost;
         data["grandTotal"] = this.grandTotal;
@@ -11229,6 +11292,8 @@ export interface IPurchaseModel {
     subTotal?: number;
     taxRate?: number | undefined;
     taxAmount?: number | undefined;
+    discountType?: DiscountType;
+    discountRate?: number | undefined;
     discountAmount?: number | undefined;
     shippingCost?: number | undefined;
     grandTotal?: number;
@@ -11236,6 +11301,11 @@ export interface IPurchaseModel {
     supplierName?: string;
     purchaseDetails?: PurchaseDetailModel[];
     optionsDataSources?: { [key: string]: any; };
+}
+
+export enum DiscountType {
+    Fixed = 1,
+    Percentage = 2,
 }
 
 export class PurchaseDetailModel implements IPurchaseDetailModel {
@@ -11253,11 +11323,14 @@ export class PurchaseDetailModel implements IPurchaseDetailModel {
     batchNo?: string;
     expiredDate?: Date | undefined;
     netUnitCost?: number;
+    discountType?: DiscountType;
+    discountRate?: number | undefined;
     discountAmount?: number;
+    taxMethod?: TaxMethod;
     taxRate?: number;
     taxAmount?: number;
-    taxMethod?: TaxMethod;
     totalPrice?: number;
+    remarks?: string | undefined;
 
     constructor(data?: IPurchaseDetailModel) {
         if (data) {
@@ -11284,11 +11357,14 @@ export class PurchaseDetailModel implements IPurchaseDetailModel {
             this.batchNo = _data["batchNo"];
             this.expiredDate = _data["expiredDate"] ? new Date(_data["expiredDate"].toString()) : <any>undefined;
             this.netUnitCost = _data["netUnitCost"];
+            this.discountType = _data["discountType"];
+            this.discountRate = _data["discountRate"];
             this.discountAmount = _data["discountAmount"];
+            this.taxMethod = _data["taxMethod"];
             this.taxRate = _data["taxRate"];
             this.taxAmount = _data["taxAmount"];
-            this.taxMethod = _data["taxMethod"];
             this.totalPrice = _data["totalPrice"];
+            this.remarks = _data["remarks"];
         }
     }
 
@@ -11315,11 +11391,14 @@ export class PurchaseDetailModel implements IPurchaseDetailModel {
         data["batchNo"] = this.batchNo;
         data["expiredDate"] = this.expiredDate ? formatDate(this.expiredDate) : <any>undefined;
         data["netUnitCost"] = this.netUnitCost;
+        data["discountType"] = this.discountType;
+        data["discountRate"] = this.discountRate;
         data["discountAmount"] = this.discountAmount;
+        data["taxMethod"] = this.taxMethod;
         data["taxRate"] = this.taxRate;
         data["taxAmount"] = this.taxAmount;
-        data["taxMethod"] = this.taxMethod;
         data["totalPrice"] = this.totalPrice;
+        data["remarks"] = this.remarks;
         return data;
     }
 }
@@ -11339,11 +11418,14 @@ export interface IPurchaseDetailModel {
     batchNo?: string;
     expiredDate?: Date | undefined;
     netUnitCost?: number;
+    discountType?: DiscountType;
+    discountRate?: number | undefined;
     discountAmount?: number;
+    taxMethod?: TaxMethod;
     taxRate?: number;
     taxAmount?: number;
-    taxMethod?: TaxMethod;
     totalPrice?: number;
+    remarks?: string | undefined;
 }
 
 export enum TaxMethod {
@@ -11394,6 +11476,8 @@ export class CreatePurchaseCommand implements ICreatePurchaseCommand {
     subTotal?: number;
     taxRate?: number | undefined;
     taxAmount?: number | undefined;
+    discountType?: DiscountType;
+    discountRate?: number | undefined;
     discountAmount?: number | undefined;
     shippingCost?: number | undefined;
     grandTotal?: number;
@@ -11421,6 +11505,8 @@ export class CreatePurchaseCommand implements ICreatePurchaseCommand {
             this.subTotal = _data["subTotal"];
             this.taxRate = _data["taxRate"];
             this.taxAmount = _data["taxAmount"];
+            this.discountType = _data["discountType"];
+            this.discountRate = _data["discountRate"];
             this.discountAmount = _data["discountAmount"];
             this.shippingCost = _data["shippingCost"];
             this.grandTotal = _data["grandTotal"];
@@ -11452,6 +11538,8 @@ export class CreatePurchaseCommand implements ICreatePurchaseCommand {
         data["subTotal"] = this.subTotal;
         data["taxRate"] = this.taxRate;
         data["taxAmount"] = this.taxAmount;
+        data["discountType"] = this.discountType;
+        data["discountRate"] = this.discountRate;
         data["discountAmount"] = this.discountAmount;
         data["shippingCost"] = this.shippingCost;
         data["grandTotal"] = this.grandTotal;
@@ -11476,6 +11564,8 @@ export interface ICreatePurchaseCommand {
     subTotal?: number;
     taxRate?: number | undefined;
     taxAmount?: number | undefined;
+    discountType?: DiscountType;
+    discountRate?: number | undefined;
     discountAmount?: number | undefined;
     shippingCost?: number | undefined;
     grandTotal?: number;
@@ -11495,6 +11585,8 @@ export class UpdatePurchaseCommand implements IUpdatePurchaseCommand {
     subTotal?: number;
     taxRate?: number | undefined;
     taxAmount?: number | undefined;
+    discountType?: DiscountType;
+    discountRate?: number | undefined;
     discountAmount?: number | undefined;
     shippingCost?: number | undefined;
     grandTotal?: number;
@@ -11523,6 +11615,8 @@ export class UpdatePurchaseCommand implements IUpdatePurchaseCommand {
             this.subTotal = _data["subTotal"];
             this.taxRate = _data["taxRate"];
             this.taxAmount = _data["taxAmount"];
+            this.discountType = _data["discountType"];
+            this.discountRate = _data["discountRate"];
             this.discountAmount = _data["discountAmount"];
             this.shippingCost = _data["shippingCost"];
             this.grandTotal = _data["grandTotal"];
@@ -11555,6 +11649,8 @@ export class UpdatePurchaseCommand implements IUpdatePurchaseCommand {
         data["subTotal"] = this.subTotal;
         data["taxRate"] = this.taxRate;
         data["taxAmount"] = this.taxAmount;
+        data["discountType"] = this.discountType;
+        data["discountRate"] = this.discountRate;
         data["discountAmount"] = this.discountAmount;
         data["shippingCost"] = this.shippingCost;
         data["grandTotal"] = this.grandTotal;
@@ -11580,6 +11676,8 @@ export interface IUpdatePurchaseCommand {
     subTotal?: number;
     taxRate?: number | undefined;
     taxAmount?: number | undefined;
+    discountType?: DiscountType;
+    discountRate?: number | undefined;
     discountAmount?: number | undefined;
     shippingCost?: number | undefined;
     grandTotal?: number;
@@ -11770,7 +11868,7 @@ export class SaleModel implements ISaleModel {
     taxAmount?: number | undefined;
     discountAmount?: number | undefined;
     discountRate?: number | undefined;
-    discountType?: DiscountType | undefined;
+    discountType?: DiscountType;
     shippingCost?: number | undefined;
     grandTotal?: number;
     saleNote?: string | undefined;
@@ -11891,7 +11989,7 @@ export interface ISaleModel {
     taxAmount?: number | undefined;
     discountAmount?: number | undefined;
     discountRate?: number | undefined;
-    discountType?: DiscountType | undefined;
+    discountType?: DiscountType;
     shippingCost?: number | undefined;
     grandTotal?: number;
     saleNote?: string | undefined;
@@ -11902,11 +12000,6 @@ export interface ISaleModel {
     paymentStatus?: string;
     saleDetails?: SaleDetailModel[];
     optionsDataSources?: { [key: string]: any; };
-}
-
-export enum DiscountType {
-    Percentage = 1,
-    Fixed = 2,
 }
 
 export class SaleDetailModel implements ISaleDetailModel {
@@ -11924,11 +12017,14 @@ export class SaleDetailModel implements ISaleDetailModel {
     batchNo?: string;
     expiredDate?: Date | undefined;
     netUnitPrice?: number;
+    discountType?: DiscountType;
+    discountRate?: number | undefined;
     discountAmount?: number;
+    taxMethod?: TaxMethod;
     taxRate?: number;
     taxAmount?: number;
-    taxMethod?: TaxMethod;
     totalPrice?: number;
+    remarks?: string | undefined;
 
     constructor(data?: ISaleDetailModel) {
         if (data) {
@@ -11955,11 +12051,14 @@ export class SaleDetailModel implements ISaleDetailModel {
             this.batchNo = _data["batchNo"];
             this.expiredDate = _data["expiredDate"] ? new Date(_data["expiredDate"].toString()) : <any>undefined;
             this.netUnitPrice = _data["netUnitPrice"];
+            this.discountType = _data["discountType"];
+            this.discountRate = _data["discountRate"];
             this.discountAmount = _data["discountAmount"];
+            this.taxMethod = _data["taxMethod"];
             this.taxRate = _data["taxRate"];
             this.taxAmount = _data["taxAmount"];
-            this.taxMethod = _data["taxMethod"];
             this.totalPrice = _data["totalPrice"];
+            this.remarks = _data["remarks"];
         }
     }
 
@@ -11986,11 +12085,14 @@ export class SaleDetailModel implements ISaleDetailModel {
         data["batchNo"] = this.batchNo;
         data["expiredDate"] = this.expiredDate ? formatDate(this.expiredDate) : <any>undefined;
         data["netUnitPrice"] = this.netUnitPrice;
+        data["discountType"] = this.discountType;
+        data["discountRate"] = this.discountRate;
         data["discountAmount"] = this.discountAmount;
+        data["taxMethod"] = this.taxMethod;
         data["taxRate"] = this.taxRate;
         data["taxAmount"] = this.taxAmount;
-        data["taxMethod"] = this.taxMethod;
         data["totalPrice"] = this.totalPrice;
+        data["remarks"] = this.remarks;
         return data;
     }
 }
@@ -12010,11 +12112,14 @@ export interface ISaleDetailModel {
     batchNo?: string;
     expiredDate?: Date | undefined;
     netUnitPrice?: number;
+    discountType?: DiscountType;
+    discountRate?: number | undefined;
     discountAmount?: number;
+    taxMethod?: TaxMethod;
     taxRate?: number;
     taxAmount?: number;
-    taxMethod?: TaxMethod;
     totalPrice?: number;
+    remarks?: string | undefined;
 }
 
 export class GetSaleListQuery extends DataGridModel implements IGetSaleListQuery {
@@ -12063,9 +12168,9 @@ export class UpsertSaleModel implements IUpsertSaleModel {
     subTotal?: number;
     taxRate?: number | undefined;
     taxAmount?: number | undefined;
+    discountType?: DiscountType | undefined;
     discountAmount?: number | undefined;
     discountRate?: number | undefined;
-    discountType?: DiscountType | undefined;
     shippingCost?: number | undefined;
     grandTotal?: number;
     saleNote?: string | undefined;
@@ -12096,9 +12201,9 @@ export class UpsertSaleModel implements IUpsertSaleModel {
             this.subTotal = _data["subTotal"];
             this.taxRate = _data["taxRate"];
             this.taxAmount = _data["taxAmount"];
+            this.discountType = _data["discountType"];
             this.discountAmount = _data["discountAmount"];
             this.discountRate = _data["discountRate"];
-            this.discountType = _data["discountType"];
             this.shippingCost = _data["shippingCost"];
             this.grandTotal = _data["grandTotal"];
             this.saleNote = _data["saleNote"];
@@ -12139,9 +12244,9 @@ export class UpsertSaleModel implements IUpsertSaleModel {
         data["subTotal"] = this.subTotal;
         data["taxRate"] = this.taxRate;
         data["taxAmount"] = this.taxAmount;
+        data["discountType"] = this.discountType;
         data["discountAmount"] = this.discountAmount;
         data["discountRate"] = this.discountRate;
-        data["discountType"] = this.discountType;
         data["shippingCost"] = this.shippingCost;
         data["grandTotal"] = this.grandTotal;
         data["saleNote"] = this.saleNote;
@@ -12175,9 +12280,9 @@ export interface IUpsertSaleModel {
     subTotal?: number;
     taxRate?: number | undefined;
     taxAmount?: number | undefined;
+    discountType?: DiscountType | undefined;
     discountAmount?: number | undefined;
     discountRate?: number | undefined;
-    discountType?: DiscountType | undefined;
     shippingCost?: number | undefined;
     grandTotal?: number;
     saleNote?: string | undefined;
@@ -13257,8 +13362,9 @@ export class ProductSelectListModel implements IProductSelectListModel {
     salePrice?: number;
     purchaseUnit?: string | undefined;
     saleUnit?: string | undefined;
-    discount?: number;
     discountType?: DiscountType;
+    discountAmount?: number | undefined;
+    discountRate?: number | undefined;
     taxRate?: number;
     taxMethod?: TaxMethod;
 
@@ -13280,8 +13386,9 @@ export class ProductSelectListModel implements IProductSelectListModel {
             this.salePrice = _data["salePrice"];
             this.purchaseUnit = _data["purchaseUnit"];
             this.saleUnit = _data["saleUnit"];
-            this.discount = _data["discount"];
             this.discountType = _data["discountType"];
+            this.discountAmount = _data["discountAmount"];
+            this.discountRate = _data["discountRate"];
             this.taxRate = _data["taxRate"];
             this.taxMethod = _data["taxMethod"];
         }
@@ -13303,8 +13410,9 @@ export class ProductSelectListModel implements IProductSelectListModel {
         data["salePrice"] = this.salePrice;
         data["purchaseUnit"] = this.purchaseUnit;
         data["saleUnit"] = this.saleUnit;
-        data["discount"] = this.discount;
         data["discountType"] = this.discountType;
+        data["discountAmount"] = this.discountAmount;
+        data["discountRate"] = this.discountRate;
         data["taxRate"] = this.taxRate;
         data["taxMethod"] = this.taxMethod;
         return data;
@@ -13319,8 +13427,9 @@ export interface IProductSelectListModel {
     salePrice?: number;
     purchaseUnit?: string | undefined;
     saleUnit?: string | undefined;
-    discount?: number;
     discountType?: DiscountType;
+    discountAmount?: number | undefined;
+    discountRate?: number | undefined;
     taxRate?: number;
     taxMethod?: TaxMethod;
 }

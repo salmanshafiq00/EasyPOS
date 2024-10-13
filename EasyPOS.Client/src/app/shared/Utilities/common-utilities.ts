@@ -7,4 +7,10 @@ export class CommonUtils {
       .map(key => ({ id: enumObj[key], name: key }));
   }
 
+  
+  static ddmmyyyyToyyyymmdd(date: string): string{
+    const dateParts = date.split('/');
+    return `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`;
+  }
+
 }

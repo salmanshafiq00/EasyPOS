@@ -1,4 +1,5 @@
-﻿using EasyPOS.Domain.Enums;
+﻿using EasyPOS.Domain.Common.Enums;
+using EasyPOS.Domain.Enums;
 
 namespace EasyPOS.Application.Features.ProductManagement.Queries;
 
@@ -51,8 +52,9 @@ public record ProductUpsertModel
     public Guid? QRCodeType { get; set; }
     public TaxMethod TaxMethod { get; set; }
     public decimal TaxRate { get; set; }
-    //public DiscountType DiscountType { get; set; }
-    //public decimal Discount { get; set; }
+    //public DiscountType? DiscountType { get; set; }
+    //public decimal? DiscountRate { get; set; }
+    //public decimal? DiscountAmount { get; set; }
     public string? Description { get; set; }
     public bool IsActive { get; set; }
 }

@@ -1,4 +1,5 @@
-﻿using EasyPOS.Domain.Enums;
+﻿using EasyPOS.Domain.Common.Enums;
+using EasyPOS.Domain.Enums;
 
 namespace EasyPOS.Domain.Trades;
 
@@ -16,13 +17,15 @@ public class PurchaseDetail : BaseEntity
     public int Quantity { get; set; }
     public string BatchNo { get; set; } = string.Empty;
     public DateOnly? ExpiredDate { get; set; }
-    //public decimal NetUnitPrice { get; set; }
     public decimal NetUnitCost { get; set; }
+    public DiscountType DiscountType { get; set; }
+    public decimal? DiscountRate { get; set; }
     public decimal DiscountAmount { get; set; }
+    public TaxMethod TaxMethod { get; set; }
     public decimal TaxRate { get; set; }
     public decimal TaxAmount { get; set; }
-    public TaxMethod TaxMethod { get; set; }
     public decimal TotalPrice { get; set; }
+    public string? Remarks { get; set; }
 
     public virtual Purchase Purchase { get; set; } = default!;
 }

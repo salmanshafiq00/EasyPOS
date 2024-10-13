@@ -74,9 +74,6 @@ export class SaleDetailComponent implements OnInit {
   // #region CRUDS
 
   onSubmit() {
-    if (this.saleDate) {
-      this.item.saleDate = new Date(this.saleDate);
-    }
     if (!this.id || this.id === this.CommonConstant.EmptyGuid) {
       this.save();
     } else {
@@ -86,16 +83,9 @@ export class SaleDetailComponent implements OnInit {
 
   getById(id: string) {
     this.entityClient.get(id).subscribe({
-      next: (res: any) => {
-        // if (id !== this.CommonConstant.EmptyGuid) {
-        //   this.item = res;
-        // }
+      next: (res: any) => {       
         this.item = res;
-        if (id && id !== CommonConstants.EmptyGuid) {
-          this.saleDate = this.datePipe.transform(this.item.saleDate, 'dd/MM/yyyy')
-        }
         this.optionsDataSources = res.optionsDataSources;
-
         this.calculateGrandTotal();
       },
       error: (error) => {
@@ -137,14 +127,15 @@ export class SaleDetailComponent implements OnInit {
     }
   }
 
-  onRemoveSaleDetail(index: number) {
+  onRemoveSaleDetail(index: number, id: string) {
     this.item.saleDetails.splice(index, 1);
+    this.deleteSaleDetailDelete(id);
     this.calculateGrandTotal();
   }
 
   private addProductToSaleDetails(product: ProductSelectListModel) {
     const quantity = 1; // Default quantity
-    const totalDiscountAmount = (product.discount || 0) * quantity;
+    const totalDiscountAmount = (product.discountAmount || 0) * quantity;
 
     // Prepare the sale detail model with computed values
     const productDetail = new SaleDetailModel({
@@ -154,11 +145,14 @@ export class SaleDetailComponent implements OnInit {
       productUnitCost: product.costPrice,
       productUnitPrice: product.salePrice,
       productUnitId: product.saleUnit,
-      productUnitDiscount: product.discount,
+      productUnitDiscount: product.discountAmount || 0,
       quantity: quantity,
+      discountType: product.discountType || DiscountType.Fixed,
+      discountRate: product.discountAmount || 0,
+      discountAmount: parseFloat(totalDiscountAmount.toFixed(2)),
       taxRate: product.taxRate || 0,
       taxMethod: product.taxMethod,
-      discountAmount: parseFloat(totalDiscountAmount.toFixed(2)),
+      remarks: ''
     });
 
     // Calculate tax and total price
@@ -207,11 +201,25 @@ export class SaleDetailComponent implements OnInit {
     productDetail.totalPrice = parseFloat(totalPrice.toFixed(2));
   }
 
+  private deleteSaleDetailDelete(id: string) {
+    if (!id || id === CommonConstants.EmptyGuid) {
+      return;
+    }
+
+    this.entityClient.deleteSaleDetail(id).subscribe({
+      next: () => {
+        console.log('delete detail')
+      }, error: (error) => {
+        console.log(error)
+      }
+    });
+  }
+
   // #endregion
 
   // #region SalesOrder Footer 
 
-  calculateFooterSection(){
+  calculateFooterSection() {
     this.totalQuantity = this.item.saleDetails.reduce((total, detail) => total + detail.quantity, 0);
     this.totalDiscount = this.item.saleDetails.reduce((total, detail) => total + (detail.discountAmount || 0), 0);
     this.totalTaxAmount = this.item.saleDetails.reduce((total, detail) => total + (detail.taxAmount || 0), 0);

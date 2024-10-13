@@ -45,8 +45,8 @@ public class Purchases : EndpointGroupBase
              .Produces<int>(StatusCodes.Status200OK)
              .Produces<ProblemDetails>(StatusCodes.Status400BadRequest);
 
-        group.MapPost("DeleteDetail", DeleteDetail)
-             .WithName("DeleteDetail")
+        group.MapPost("DeletePurchaseDetail", DeletePurchaseDetail)
+             .WithName("DeletePurchaseDetail")
              .Produces(StatusCodes.Status204NoContent)
              .Produces<ProblemDetails>(StatusCodes.Status400BadRequest);
     }
@@ -161,7 +161,7 @@ public class Purchases : EndpointGroupBase
             onFailure: result!.ToProblemDetails);
     }
 
-    private async Task<IResult> DeleteDetail(ISender sender, Guid id)
+    private async Task<IResult> DeletePurchaseDetail(ISender sender, Guid id)
     {
         var result = await sender.Send(new DeletePurchaseDetailCommand(id));
 
