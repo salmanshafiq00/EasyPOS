@@ -2,6 +2,7 @@
 using EasyPOS.Application.Features.ProductManagement.Queries;
 using EasyPOS.Application.Features.Trades.Purchases.Commands;
 using EasyPOS.Application.Features.Trades.Purchases.Queries;
+using EasyPOS.Application.Features.UnitManagement.Queries;
 
 namespace EasyPOS.WebApi.Endpoints;
 
@@ -96,11 +97,17 @@ public class Purchases : EndpointGroupBase
             AllowCacheList: false)
         );
 
+        var productUnitSelectList = await sender.Send(new GetUnitSelectListQuery(
+           AllowCacheList: false)
+        );
+
         result.Value.OptionsDataSources.Add("suppliersSelectList", suppliersSelectList.Value);
         result.Value.OptionsDataSources.Add("warehousesSelectList", warehousesSelectList.Value);
         result.Value.OptionsDataSources.Add("purchaseStatusSelectList", purchaseStatusSelectList.Value);
         result.Value.OptionsDataSources.Add("productsSelectList", productsSelectList.Value);
         result.Value.OptionsDataSources.Add("taxesSelectList", taxesSelectList.Value);
+        result.Value.OptionsDataSources.Add("productUnitSelectList", productUnitSelectList.Value);
+
 
 
         return TypedResults.Ok(result.Value);

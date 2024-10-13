@@ -5,12 +5,12 @@
 
         <!-- Price Input Currency -->
         <div class="field col-12 md:col-6">
-          <app-input-currency label="Product Price" formControlName="productUnitCost" [required]="true" />
+          <app-input-currency label="Product Cost" formControlName="productUnitCost" [required]="true" />
         </div>
   
         <!-- Sale Unit Input -->
         <div class="field col-12 md:col-6">
-          <app-input-select label="Sale Unit" formControlName="productUnitId" [options]="optionsDataSources?.['productUnitSelectList']" [required]="false" />
+          <app-input-select label="Purchase Unit" formControlName="productUnitId" [options]="optionsDataSources?.['productUnitSelectList']" [required]="false" />
         </div>
 
         <div class="field col-12 md:col-6">
