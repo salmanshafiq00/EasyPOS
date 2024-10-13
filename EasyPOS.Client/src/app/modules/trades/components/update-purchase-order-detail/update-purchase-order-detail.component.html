@@ -1,0 +1,47 @@
+
+  <div class="col-12">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+      <div class="p-fluid p-formgrid grid">
+
+        <!-- Price Input Currency -->
+        <div class="field col-12 md:col-6">
+          <app-input-currency label="Product Price" formControlName="productUnitCost" [required]="true" />
+        </div>
+  
+        <!-- Sale Unit Input -->
+        <div class="field col-12 md:col-6">
+          <app-input-select label="Sale Unit" formControlName="productUnitId" [options]="optionsDataSources?.['productUnitSelectList']" [required]="false" />
+        </div>
+
+        <div class="field col-12 md:col-6">
+          <app-input-select label="Tax Method" formControlName="taxMethod" [options]="taxMethods" [required]="false" [showClear]="false" />
+        </div>
+
+        <div class="field col-12 md:col-6">
+          <app-input-decimal label="Tax Rate" formControlName="taxRate" suffix="%" textAlign="right" [showButtons]="false" [required]="false"  />
+          <app-validator-msg [control]="f['discountRate']" />
+        </div>
+        
+        <div class="field col-12 md:col-6">
+          <app-input-select label="Discount Type" formControlName="discountType" [options]="discountTypes" (onChange)="onDiscountTypeChange()" [showClear]="false" appendTo="body"  />
+        </div>
+
+        <div class="field col-12 md:col-6" *ngIf="f['discountType'].value === DiscountType.Percentage">
+          <app-input-decimal label="Discount Rate" formControlName="discountRate" suffix="%" textAlign="right" [showButtons]="false" [required]="false"  />
+          <app-validator-msg [control]="f['discountRate']" />
+        </div>
+
+        <div class="field col-12 md:col-6" *ngIf="f['discountType'].value === DiscountType.Fixed">
+          <app-input-decimal label="Discount" formControlName="productUnitDiscount" textAlign="right" [showButtons]="false" [required]="false"   />
+          <app-validator-msg [control]="f['productUnitDiscount']" />
+        </div>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="mt-3 p-dialog-footer">
+        <app-button label="Cancel" type="button" icon="pi pi-times" [text]="true" severity="warning" (onClick)="cancel()" />
+        <app-button label="Save" type="submit" icon="pi pi-check" [text]="true" [disabled]="form.invalid" />
+      </div>
+    </form>
+  </div>
+

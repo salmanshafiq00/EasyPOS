@@ -4,8 +4,11 @@ import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { CommonConstants } from 'src/app/core/contants/common';
 import { DiscountType, ProductSelectListModel, PurchaseDetailModel, PurchaseModel, PurchasesClient, TaxMethod } from 'src/app/modules/generated-clients/api-service';
+import { CustomDialogService } from 'src/app/shared/services/custom-dialog.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { CommonUtils } from 'src/app/shared/Utilities/common-utilities';
+import { UpdatePurchaseOrderDetailComponent } from '../update-purchase-order-detail/update-purchase-order-detail.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-purchase-detail',
@@ -37,6 +40,8 @@ export class PurchaseDetailComponent implements OnInit {
   discountTypes: { id: number, name: string }[] = [];
   DiscountType = DiscountType;
 
+  private closeDialogsubscription: Subscription;
+  
   get purchaseDetails(): FormArray {
     return this.form.get('purchaseDetails') as FormArray;
   }
@@ -50,7 +55,8 @@ export class PurchaseDetailComponent implements OnInit {
   protected datePipe: DatePipe = inject(DatePipe);
 
   constructor(private entityClient: PurchasesClient,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private customDialogService: CustomDialogService
   ) { }
 
   ngOnInit(): void {
@@ -61,6 +67,13 @@ export class PurchaseDetailComponent implements OnInit {
 
     this.getById(this.id || this.emptyGuid)
     this.initializeFormGroup();
+  }
+
+  ngOnDestroy() {
+    // Unsubscribe when the component is destroyed to avoid memory leaks
+    if (this.closeDialogsubscription) {
+      this.closeDialogsubscription.unsubscribe();
+    }
   }
 
   // #region CRUDS
@@ -202,7 +215,7 @@ export class PurchaseDetailComponent implements OnInit {
   private addProductToPurchaseDetails(product: ProductSelectListModel) {
     const productFormGroup = this.addPurchaseDetailFormGroup();
     const quantity = 1; 
-    const totalDiscountAmount = (product.discountAmount || 0) * quantity;
+    // const totalDiscountAmount = (product.discountAmount || 0) * quantity;
 
     // Set the values in the form group
     productFormGroup.patchValue({
@@ -216,7 +229,7 @@ export class PurchaseDetailComponent implements OnInit {
       quantity: quantity,
       discountType: product.discountType || DiscountType.Fixed,
       discountRate: product.discountRate || 0, 
-      discountAmount: totalDiscountAmount,
+      // discountAmount: totalDiscountAmount,
       taxMethod: product.taxMethod,
       taxRate: product.taxRate || 0,
     });
@@ -251,28 +264,112 @@ export class PurchaseDetailComponent implements OnInit {
     let netUnitCost: number;
     let taxAmount: number;
     let totalPrice: number;
+    let productUnitDiscount: number = 0;
+    let totalDiscountAmount: number = 0;
+
+    if(purchaseDetail.discountType === DiscountType.Fixed){
+      productUnitDiscount = purchaseDetail.productUnitDiscount;
+    } else if(purchaseDetail.discountType === DiscountType.Percentage){
+      productUnitDiscount = (purchaseDetail.productUnitPrice * purchaseDetail.discountRate) / 100;
+    }
+
+    totalDiscountAmount = parseFloat((productUnitDiscount * purchaseDetail.quantity).toFixed(2));
     const taxRateDecimal = purchaseDetail.taxRate / 100;
   
     if (purchaseDetail.taxMethod === TaxMethod.Exclusive) {
-      netUnitCost = parseFloat(purchaseDetail.productUnitCost.toFixed(2));
-      taxAmount = parseFloat(((purchaseDetail.productUnitCost * taxRateDecimal) * purchaseDetail.quantity).toFixed(2));
-      totalPrice = parseFloat(((netUnitCost * purchaseDetail.quantity) - purchaseDetail.discountAmount + taxAmount).toFixed(2));
-    } else if(purchaseDetail.taxMethod === TaxMethod.Inclusive){
+      netUnitCost = purchaseDetail.productUnitCost - (productUnitDiscount || 0);
+      const taxableTotalPrice = netUnitCost * purchaseDetail.quantity;
+      taxAmount = taxableTotalPrice * taxRateDecimal;
+      totalPrice = taxableTotalPrice + taxAmount;
+    } 
+    else if(purchaseDetail.taxMethod === TaxMethod.Inclusive){
+      const priceAfterDiscount = purchaseDetail.productUnitCost - (productUnitDiscount || 0);
       const taxRateFactor = 1 + taxRateDecimal;
-      netUnitCost = parseFloat((purchaseDetail.productUnitCost / taxRateFactor).toFixed(2));
-      taxAmount = parseFloat(((purchaseDetail.productUnitCost - netUnitCost) * purchaseDetail.quantity).toFixed(2));
-      totalPrice = parseFloat(((netUnitCost * purchaseDetail.quantity) - purchaseDetail.discountAmount + taxAmount).toFixed(2));
+      netUnitCost = priceAfterDiscount / taxRateFactor;
+      taxAmount = (netUnitCost * purchaseDetail.quantity) * (purchaseDetail.taxRate / 100);
+      totalPrice = (netUnitCost * purchaseDetail.quantity) + taxAmount;
     }
   
     this.purchaseDetails.at(index).patchValue({
-      netUnitCost: netUnitCost,
-      taxAmount: taxAmount,
-      totalPrice: totalPrice
+      productUnitDiscount: parseFloat(productUnitDiscount.toFixed(2)),
+      netUnitCost: parseFloat(netUnitCost.toFixed(2)),
+      discountAmount: parseFloat(totalDiscountAmount.toFixed(2)),
+      taxAmount: parseFloat(taxAmount.toFixed(2)),
+      totalPrice: parseFloat(totalPrice.toFixed(2))
     }, { emitEvent: false });
   
     this.calculateFooterSection();
     this.calculateGrandTotal();
   }
+
+  updatePurchaseDetail(index: number){
+    console.log(index)
+
+    const purchaseDetailFormGroup = this.purchaseDetails.at(index) as FormGroup; 
+    const purchaseDetail = purchaseDetailFormGroup.value;
+    this.customDialogService.open<{ purchaseDetail: PurchaseDetailModel; optionsDataSources: any }>(
+      UpdatePurchaseOrderDetailComponent,
+      { purchaseDetail: purchaseDetail, optionsDataSources: this.optionsDataSources },
+      purchaseDetail.productName
+    )
+      .subscribe((succeeded) => {
+        if (succeeded) {
+
+          if (this.closeDialogsubscription) {
+            this.closeDialogsubscription.unsubscribe();
+          }
+
+          this.closeDialogsubscription = this.customDialogService.closeDataSubject.subscribe((updatedPurchaseDetail: PurchaseDetailModel) => {
+           
+            purchaseDetailFormGroup.patchValue({
+              productUnitCost: updatedPurchaseDetail.productUnitCost,
+              productUnitId: updatedPurchaseDetail.productUnitId,
+              taxMethod: updatedPurchaseDetail.taxMethod,
+              taxRate: updatedPurchaseDetail.taxRate,
+              discountType: updatedPurchaseDetail.discountType,
+              discountRate: updatedPurchaseDetail.discountRate,
+              productUnitDiscount: updatedPurchaseDetail.productUnitDiscount,
+            }, {emitEvent: false});
+            const updatePurchaseDetailValue = purchaseDetailFormGroup.value;
+            this.calculateTaxAndTotalPrice(index, updatePurchaseDetailValue);
+    
+          });
+        } 
+      });
+
+  }
+
+  private openDialog(index: number, purchaseDetail: PurchaseDetailModel) {
+    this.customDialogService.open<{ purchaseDetail: PurchaseDetailModel; optionsDataSources: any }>(
+      UpdatePurchaseOrderDetailComponent,
+      { purchaseDetail: purchaseDetail, optionsDataSources: this.optionsDataSources },
+      purchaseDetail.productName
+    )
+      .subscribe((succeeded) => {
+        if (succeeded) {
+          this.closeDialogsubscription = this.customDialogService.closeDataSubject.subscribe((updatedPurchaseDetail: PurchaseDetailModel) => {
+            const purchaseDetailFormGroup = this.purchaseDetails.at(index) as FormGroup; 
+            console.log(index)
+            console.log(updatedPurchaseDetail)
+            console.log(purchaseDetailFormGroup)
+           
+            purchaseDetailFormGroup.patchValue({
+              productUnitCost: updatedPurchaseDetail.productUnitCost,
+              productUnitId: updatedPurchaseDetail.productUnitId,
+              taxMethod: updatedPurchaseDetail.taxMethod,
+              taxRate: updatedPurchaseDetail.taxRate,
+              discountType: updatedPurchaseDetail.discountType,
+              discountRate: updatedPurchaseDetail.discountRate,
+              productUnitDiscount: updatedPurchaseDetail.productUnitDiscount,
+            }, {emitEvent: false});
+            const updatePurchaseDetailValue = purchaseDetailFormGroup.value;
+            this.calculateTaxAndTotalPrice(index, updatePurchaseDetailValue);
+    
+          });
+        } 
+      });
+  }
+  
 
   // #endregion
 

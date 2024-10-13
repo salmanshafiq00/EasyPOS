@@ -62,7 +62,7 @@
             </ng-template>
             <ng-template pTemplate="body" let-field let-i="rowIndex">
               <tr [formGroup]="field">
-                <td>{{ field.get('productName').value }}</td>
+                <td>{{ field.get('productName').value }} <i class="pi pi-pen-to-square product-edit-icon" (click)="updatePurchaseDetail(i)"></i></td>
                 <td>{{ field.get('productCode').value }}</td>
                 <td>
                   <app-input-number formControlName="quantity" textAlign="center" (onChange)="onItemPropsChange(i)" [showButtons]="true" [min]="1" />
@@ -74,13 +74,13 @@
                   <app-input-decimal formControlName="expiredDate" textAlign="center" (ngModelChange)="onItemPropsChange(i)" />
                 </td> -->
                 <td>
-                  <app-input-decimal formControlName="netUnitCost" textAlign="center" (onChange)="onItemPropsChange(i)"  />
+                  <app-input-decimal formControlName="netUnitCost" textAlign="center"  />
                 </td>
                 <td>
-                  <app-input-decimal formControlName="discountAmount" textAlign="center" (onChange)="onItemPropsChange(i)"  />
+                  <app-input-decimal formControlName="discountAmount" textAlign="center"   />
                 </td>
                 <td>
-                  <app-input-decimal formControlName="taxAmount" textAlign="center" (onChange)="onItemPropsChange(i)"  />
+                  <app-input-decimal formControlName="taxAmount" textAlign="center"  />
                 </td>
                 <td >
                   <div class="text-right mr-2">

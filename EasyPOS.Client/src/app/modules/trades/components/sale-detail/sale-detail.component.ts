@@ -5,6 +5,9 @@ import { ToastService } from 'src/app/shared/services/toast.service';
 import { CommonConstants } from 'src/app/core/contants/common';
 import { CommonUtils } from 'src/app/shared/Utilities/common-utilities';
 import { DatePipe } from '@angular/common';
+import { CustomDialogService } from 'src/app/shared/services/custom-dialog.service';
+import { UpdateSaleDetailComponent } from '../update-sale-detail/update-sale-detail.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-sale-detail',
@@ -33,11 +36,15 @@ export class SaleDetailComponent implements OnInit {
   // Grand total Section
   totalItems: string = '0';
 
+  private closeDialogsubscription: Subscription;
+
+
   constructor(private entityClient: SalesClient,
     private activatedRoute: ActivatedRoute,
     private toast: ToastService,
-    private datePipe: DatePipe
-  ) {
+    private datePipe: DatePipe,
+    private customDialogService: CustomDialogService
+    ) {
   }
 
   ngOnInit(): void {
@@ -69,6 +76,13 @@ export class SaleDetailComponent implements OnInit {
     });
 
     this.getById(this.id || this.CommonConstant.EmptyGuid)
+  }
+
+  ngOnDestroy() {
+    // Unsubscribe when the component is destroyed to avoid memory leaks
+    if (this.closeDialogsubscription) {
+      this.closeDialogsubscription.unsubscribe();
+    }
   }
 
   // #region CRUDS
@@ -135,7 +149,7 @@ export class SaleDetailComponent implements OnInit {
 
   private addProductToSaleDetails(product: ProductSelectListModel) {
     const quantity = 1; // Default quantity
-    const totalDiscountAmount = (product.discountAmount || 0) * quantity;
+    // const totalDiscountAmount = (product.discountAmount || 0) * quantity;
 
     // Prepare the sale detail model with computed values
     const productDetail = new SaleDetailModel({
@@ -149,7 +163,7 @@ export class SaleDetailComponent implements OnInit {
       quantity: quantity,
       discountType: product.discountType || DiscountType.Fixed,
       discountRate: product.discountAmount || 0,
-      discountAmount: parseFloat(totalDiscountAmount.toFixed(2)),
+      // discountAmount: parseFloat(totalDiscountAmount.toFixed(2)),
       taxRate: product.taxRate || 0,
       taxMethod: product.taxMethod,
       remarks: ''
@@ -165,9 +179,9 @@ export class SaleDetailComponent implements OnInit {
   }
 
   onItemPropsChange(productDetail: SaleDetailModel) {
-    const quantity = productDetail.quantity;
-    const totalDiscountAmount = (productDetail.productUnitDiscount || 0) * quantity;
-    productDetail.discountAmount = parseFloat(totalDiscountAmount.toFixed(2));
+    // const quantity = productDetail.quantity;
+    // const totalDiscountAmount = (productDetail.productUnitDiscount || 0) * quantity;
+    // productDetail.discountAmount = parseFloat(totalDiscountAmount.toFixed(2));
 
     // Calculate tax and total price
     this.calculateTaxAndTotalPrice(productDetail);
@@ -179,24 +193,34 @@ export class SaleDetailComponent implements OnInit {
     let netUnitPrice: number;
     let taxAmount: number;
     let totalPrice: number;
+    let productUnitDiscount: number = 0;
+    // let totalDiscountAmount: number = 0;
 
+    if(productDetail.discountType === DiscountType.Fixed){
+      productUnitDiscount = productDetail.productUnitDiscount;
+    } else if(productDetail.discountType === DiscountType.Percentage){
+      productUnitDiscount = (productDetail.productUnitPrice * productDetail.discountRate) / 100;
+    }
+    
+    const taxRateDecimal = productDetail.taxRate / 100;
     if (productDetail.taxMethod === TaxMethod.Exclusive) {
       // Exclusive tax method
-      netUnitPrice = productDetail.productUnitPrice - (productDetail.productUnitDiscount || 0);
+      netUnitPrice = productDetail.productUnitPrice - (productUnitDiscount || 0);
       const taxableTotalPrice = netUnitPrice * productDetail.quantity;
-      const taxRateDecimal = productDetail.taxRate / 100;
       taxAmount = taxableTotalPrice * taxRateDecimal;
       totalPrice = taxableTotalPrice + taxAmount;
     } else if (productDetail.taxMethod === TaxMethod.Inclusive) {
       // Inclusive tax method
-      const priceAfterDiscount = productDetail.productUnitPrice - (productDetail.productUnitDiscount || 0);
-      const taxRateFactor = 1 + (productDetail.taxRate / 100);
+      const priceAfterDiscount = productDetail.productUnitPrice - (productUnitDiscount || 0);
+      const taxRateFactor = 1 + taxRateDecimal;
       netUnitPrice = priceAfterDiscount / taxRateFactor;
-      taxAmount = (netUnitPrice * productDetail.quantity) * (productDetail.taxRate / 100);
+      taxAmount = (netUnitPrice * productDetail.quantity) * taxRateDecimal;
       totalPrice = (netUnitPrice * productDetail.quantity) + taxAmount;
     }
 
     productDetail.netUnitPrice = parseFloat(netUnitPrice.toFixed(2));
+    productDetail.productUnitDiscount = parseFloat(productUnitDiscount.toFixed(2));
+    productDetail.discountAmount = parseFloat((productDetail.productUnitDiscount * productDetail.quantity).toFixed(2));
     productDetail.taxAmount = parseFloat(taxAmount.toFixed(2));
     productDetail.totalPrice = parseFloat(totalPrice.toFixed(2));
   }
@@ -214,6 +238,38 @@ export class SaleDetailComponent implements OnInit {
       }
     });
   }
+
+  updateSaleDetail(index: number, saleDetail: SaleDetailModel){
+    this.openDialog(index, saleDetail);
+  }
+
+  private openDialog(index: number, saleDetail: SaleDetailModel) {
+    this.customDialogService.open<{ saleDetail: SaleDetailModel; optionsDataSources: any }>(
+      UpdateSaleDetailComponent,
+      { saleDetail: saleDetail, optionsDataSources: this.optionsDataSources },
+      saleDetail.productName
+    )
+      .subscribe((succeeded) => {
+        if (succeeded) {
+
+          if (this.closeDialogsubscription) {
+            this.closeDialogsubscription.unsubscribe();
+          }
+
+          this.closeDialogsubscription = this.customDialogService.closeDataSubject.subscribe((updateSaleDetail: SaleDetailModel) => {
+            this.item.saleDetails[index].productUnitPrice = updateSaleDetail.productUnitPrice;
+            this.item.saleDetails[index].productUnitId = updateSaleDetail.productUnitId;
+            this.item.saleDetails[index].taxMethod = updateSaleDetail.taxMethod;
+            this.item.saleDetails[index].taxRate = updateSaleDetail.taxRate;
+            this.item.saleDetails[index].discountType = updateSaleDetail.discountType;
+            this.item.saleDetails[index].discountRate = updateSaleDetail.discountRate;
+            this.item.saleDetails[index].productUnitDiscount = updateSaleDetail.productUnitDiscount;
+            this.calculateTaxAndTotalPrice(this.item.saleDetails[index])
+          });
+        } 
+      });
+  }
+  
 
   // #endregion
 

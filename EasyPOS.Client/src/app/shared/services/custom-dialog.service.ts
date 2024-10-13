@@ -19,6 +19,7 @@ export class CustomDialogService {
   private ref: DynamicDialogRef | undefined;
   private dialogService: DialogService = inject(DialogService);
   private dataSubject = new BehaviorSubject<any>(null);
+  public closeDataSubject = new Subject<any>();
 
   open<T>(
     component: Type<any>,
@@ -55,6 +56,16 @@ export class CustomDialogService {
   close(succeeded: boolean) {
     if(this.ref){
       this.ref.close(succeeded);
+    }
+    else {
+      console.error('Dialog reference is undefined.');
+    }
+  }
+
+  closeWithData<T>(succeeded: boolean, data: T) {
+    if(this.ref){
+      this.ref.close(succeeded);
+      this.closeDataSubject.next(data);
     }
     else {
       console.error('Dialog reference is undefined.');

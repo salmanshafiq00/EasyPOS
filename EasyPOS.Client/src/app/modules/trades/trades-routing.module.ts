@@ -4,6 +4,8 @@ import { PurchaseDetailComponent } from "./components/purchase-detail/purchase-d
 import { PurchaseListComponent } from "./components/purchase-list/purchase-list.component";
 import { SaleDetailComponent } from "./components/sale-detail/sale-detail.component";
 import { SaleListComponent } from "./components/sale-list/sale-list.component";
+import { UpdateSaleDetailComponent } from "./components/update-sale-detail/update-sale-detail.component";
+import { UpdatePurchaseOrderDetailComponent } from "./components/update-purchase-order-detail/update-purchase-order-detail.component";
 
 const routes: Routes = [
   {path: 'sales', component: SaleListComponent},
@@ -24,5 +26,7 @@ export const TradesRoutingComponents = [
   SaleListComponent,
   SaleDetailComponent,
   PurchaseListComponent,
-  PurchaseDetailComponent
+  PurchaseDetailComponent,
+  UpdateSaleDetailComponent,
+  UpdatePurchaseOrderDetailComponent
 ];

@@ -36,6 +36,7 @@ export class InputSelectComponent implements ControlValueAccessor, Validator {
   @Input() filterBy: string = 'name';
   @Input() optionLabel: string = 'name';
   @Input() optionValue: string = 'id';
+  @Input() appendTo: string = null;
   @Output() onChange: EventEmitter<any> = new EventEmitter<any>();
   // @Input() emptyMessage: string = 'No Data Found!';
 
