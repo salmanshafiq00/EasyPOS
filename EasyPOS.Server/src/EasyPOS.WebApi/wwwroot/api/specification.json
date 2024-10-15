@@ -7187,6 +7187,9 @@
           "supplierName": {
             "type": "string"
           },
+          "purchaseStatus": {
+            "type": "string"
+          },
           "purchaseDetails": {
             "type": "array",
             "items": {

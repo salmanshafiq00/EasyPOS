@@ -19,7 +19,11 @@ public class Purchase : BaseAuditableEntity
     public decimal? ShippingCost { get; set; }
     public decimal GrandTotal { get; set; }
     public string? Note { get; set; }
+    public decimal? PaidAmount { get; set; }
+    public decimal? DueAmount { get; set; }
+    public Guid? PaymentStatusId { get; set; }
 
     public virtual List<PurchaseDetail> PurchaseDetails { get; set; } = [];
+    public virtual List<PurchasePayment> PurchasePayments { get; set; } = [];
 
 }

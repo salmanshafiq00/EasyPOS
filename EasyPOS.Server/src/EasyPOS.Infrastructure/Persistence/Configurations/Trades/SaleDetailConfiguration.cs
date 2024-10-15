@@ -1,5 +1,7 @@
 ﻿using EasyPOS.Domain.Trades;
 
+namespace EasyPOS.Infrastructure.Persistence.Configurations.Trades;
+
 internal sealed class SaleDetailConfiguration : IEntityTypeConfiguration<SaleDetail>
 {
     public void Configure(EntityTypeBuilder<SaleDetail> builder)

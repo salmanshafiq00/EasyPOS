@@ -20,14 +20,17 @@ internal sealed class GetPurchaseListQueryHandler(ISqlConnectionFactory sqlConne
                 t.Id AS {nameof(PurchaseModel.Id)},
                 t.PurchaseDate AS {nameof(PurchaseModel.PurchaseDate)},
                 t.ReferenceNo AS {nameof(PurchaseModel.ReferenceNo)},
-                s.Name AS {nameof(PurchaseModel.SupplierName)}
+                t.GrandTotal AS {nameof(PurchaseModel.GrandTotal)},
+                s.Name AS {nameof(PurchaseModel.SupplierName)},
+                ps.Name AS {nameof(PurchaseModel.PurchaseStatus)}
             FROM dbo.Purchases t
             LEFT JOIN dbo.Suppliers s ON s.Id = t.SupplierId
+            LEFT JOIN dbo.LookupDetails ps ON ps.Id = t.PurchaseStatusId
             """;
 
         var sqlWithOrders = $"""
                 {sql} 
-                ORDER BY t.Name
+                ORDER BY t.PurchaseDate Desc
                 """;
 
         return await PaginatedResponse<PurchaseModel>

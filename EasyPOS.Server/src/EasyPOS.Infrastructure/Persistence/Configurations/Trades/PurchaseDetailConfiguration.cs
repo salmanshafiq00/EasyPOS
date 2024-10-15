@@ -1,5 +1,7 @@
 ﻿using EasyPOS.Domain.Trades;
 
+namespace EasyPOS.Infrastructure.Persistence.Configurations.Trades;
+
 internal sealed class PurchaseDetailConfiguration : IEntityTypeConfiguration<PurchaseDetail>
 {
     public void Configure(EntityTypeBuilder<PurchaseDetail> builder)

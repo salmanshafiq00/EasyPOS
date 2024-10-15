@@ -48,8 +48,12 @@ public interface IApplicationDbContext
     #region Trades
     DbSet<Purchase> Purchases { get; }
     DbSet<PurchaseDetail> PurchaseDetails { get; }
+    DbSet<PurchasePayment> PurchasePayments { get; }
+
     DbSet<Sale> Sales { get; }
     DbSet<SaleDetail> SaleDetails { get; }
+    DbSet<SalePayment> SalePayments { get; }
+
 
 
     #endregion

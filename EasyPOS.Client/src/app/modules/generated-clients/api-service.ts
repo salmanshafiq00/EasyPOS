@@ -11193,6 +11193,7 @@ export class PurchaseModel implements IPurchaseModel {
     grandTotal?: number;
     note?: string | undefined;
     supplierName?: string;
+    purchaseStatus?: string;
     purchaseDetails?: PurchaseDetailModel[];
     optionsDataSources?: { [key: string]: any; };
 
@@ -11224,6 +11225,7 @@ export class PurchaseModel implements IPurchaseModel {
             this.grandTotal = _data["grandTotal"];
             this.note = _data["note"];
             this.supplierName = _data["supplierName"];
+            this.purchaseStatus = _data["purchaseStatus"];
             if (Array.isArray(_data["purchaseDetails"])) {
                 this.purchaseDetails = [] as any;
                 for (let item of _data["purchaseDetails"])
@@ -11265,6 +11267,7 @@ export class PurchaseModel implements IPurchaseModel {
         data["grandTotal"] = this.grandTotal;
         data["note"] = this.note;
         data["supplierName"] = this.supplierName;
+        data["purchaseStatus"] = this.purchaseStatus;
         if (Array.isArray(this.purchaseDetails)) {
             data["purchaseDetails"] = [];
             for (let item of this.purchaseDetails)
@@ -11299,6 +11302,7 @@ export interface IPurchaseModel {
     grandTotal?: number;
     note?: string | undefined;
     supplierName?: string;
+    purchaseStatus?: string;
     purchaseDetails?: PurchaseDetailModel[];
     optionsDataSources?: { [key: string]: any; };
 }

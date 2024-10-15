@@ -23,6 +23,7 @@ public record PurchaseModel
     public string? Note { get; set; }
 
     public string SupplierName { get; set; }
+    public string PurchaseStatus { get; set; }
 
     public List<PurchaseDetailModel> PurchaseDetails { get; set; } = [];
 

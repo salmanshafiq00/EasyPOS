@@ -2,7 +2,7 @@
 using Dapper;
 using EasyPOS.Application.Common.Abstractions;
 using EasyPOS.Application.Common.DapperQueries;
-using EasyPOS.Application.Features.LookupDetails.Queries;
+using EasyPOS.Domain.Common;
 
 namespace EasyPOS.Infrastructure.Persistence.Services;
 
@@ -20,9 +20,28 @@ internal sealed class CommonQueryService(ISqlConnectionFactory sqlConnection) : 
         return await connection.QueryFirstOrDefaultAsync<Guid?>(sql, new {DevCode = lookupDetailDevCode});
     }
 
-    public Task<List<LookupDetailModel>> GetLookupDetailsAsync(int lookupDetailDevCode)
+    public async Task<List<LookupDetail>> GetLookupDetailsAsync(int lookupDevCode)
     {
-        throw new NotImplementedException();
+        var connection = sqlConnection.GetOpenConnection();
+
+        var sql = """
+            SELECT 
+                ld.Id, 
+                ld.Name, 
+                ld.Description, 
+                ld.Status, 
+                ld.ParentId, 
+                ld.LookupId, 
+                ld.DevCode
+            FROM 
+                dbo.Lookups l
+            INNER JOIN 
+                dbo.LookupDetails ld ON l.Id = ld.LookupId
+            WHERE 
+                l.DevCode = @DevCode          
+            """;
+
+        return await connection.QueryFirstOrDefaultAsync<List<LookupDetail>>(sql, new { DevCode = lookupDevCode });
     }
 
     public async Task<bool> IsExistAsync(

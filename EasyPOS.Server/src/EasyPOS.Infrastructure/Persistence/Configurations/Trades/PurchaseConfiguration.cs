@@ -1,5 +1,7 @@
 ﻿using EasyPOS.Domain.Trades;
 
+namespace EasyPOS.Infrastructure.Persistence.Configurations.Trades;
+
 internal sealed class PurchaseConfiguration : IEntityTypeConfiguration<Purchase>
 {
     public void Configure(EntityTypeBuilder<Purchase> builder)
@@ -51,6 +53,14 @@ internal sealed class PurchaseConfiguration : IEntityTypeConfiguration<Purchase>
         builder.Property(x => x.GrandTotal)
               .HasColumnType("decimal(18, 2)")
               .IsRequired();
+
+        builder.Property(x => x.PaidAmount)
+              .HasColumnType("decimal(18, 2)")
+              .IsRequired(false);
+
+        builder.Property(x => x.DueAmount)
+              .HasColumnType("decimal(18, 2)")
+              .IsRequired(false);
 
         builder.Property(x => x.Note)
                .HasMaxLength(500);
