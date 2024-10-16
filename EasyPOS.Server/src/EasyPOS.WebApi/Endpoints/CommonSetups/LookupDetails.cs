@@ -9,7 +9,7 @@ using EasyPOS.Domain.Shared;
 using EasyPOS.WebApi.Extensions;
 using EasyPOS.WebApi.Infrastructure;
 
-namespace EasyPOS.WebApi.Endpoints;
+namespace EasyPOS.WebApi.Endpoints.CommonSetups;
 
 public class LookupDetails : EndpointGroupBase
 {

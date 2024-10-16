@@ -33,7 +33,7 @@ internal sealed class CreatePurchaseCommandHandler(
     public async Task<Result<Guid>> Handle(CreatePurchaseCommand request, CancellationToken cancellationToken)
     {
         var entity = request.Adapt<Purchase>();
-
+        entity.DueAmount = entity.GrandTotal;
         dbContext.Purchases.Add(entity);
         await dbContext.SaveChangesAsync(cancellationToken);
 

@@ -54,6 +54,8 @@ public static class CacheKeys
     #region Trades
 
     public const string Purchase = nameof(Purchase);
+    public const string PurchasePayment = nameof(PurchasePayment);
+    public const string PurchasePayment_PurchaseId = nameof(PurchasePayment_PurchaseId);
     public const string Sale = nameof(Sale);
 
     #endregion

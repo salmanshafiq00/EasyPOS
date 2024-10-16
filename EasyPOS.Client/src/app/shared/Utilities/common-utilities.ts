@@ -13,4 +13,8 @@ export class CommonUtils {
     return `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`;
   }
 
+  static getErrorMessage(error: any): string {
+    return error?.errors?.[0]?.description || 'An unexpected error occurred';
+  }
+
 }

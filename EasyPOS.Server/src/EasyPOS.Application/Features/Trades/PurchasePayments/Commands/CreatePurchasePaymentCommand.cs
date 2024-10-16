@@ -1,7 +1,9 @@
-﻿using EasyPOS.Application.Common.Enums;
+﻿using DocumentFormat.OpenXml.Drawing.Diagrams;
+using EasyPOS.Application.Common.Enums;
+using EasyPOS.Application.Features.Trades.Purchases.Shared;
 using EasyPOS.Domain.Trades;
 
-namespace EasyPOS.Application.Features.Trades.Purchases.Commands;
+namespace EasyPOS.Application.Features.Trades.PurchasePayments.Commands;
 
 public record CreatePurchasePaymentCommand(
     Guid PurchaseId,
@@ -29,28 +31,16 @@ internal sealed class CreatePurchasePaymentCommandHandler(
         var purchase = await dbContext.Purchases
             .FirstOrDefaultAsync(x => x.Id == entity.PurchaseId, cancellationToken: cancellationToken);
 
-        if(purchase is null)
+        if (purchase is null)
         {
             return Result.Failure<Guid>(Error.Failure(nameof(purchase), "Purchase Entity not found"));
         }
 
-        var paymentStatuses = await commonQueryService.GetLookupDetailsAsync((int)LookupDevCode.PaymentStatus);
 
         purchase.PaidAmount += entity.PayingAmount;
         purchase.DueAmount = purchase.GrandTotal - purchase.PaidAmount;
 
-        if(purchase.DueAmount == 0)
-        {
-            purchase.PaymentStatusId = paymentStatuses.FirstOrDefault(x => x.DevCode == (int)PaymentStatus.Due)?.Id;
-        }
-        else if (purchase.GrandTotal == purchase.PaidAmount)
-        {
-            purchase.PaymentStatusId = paymentStatuses.FirstOrDefault(x => x.DevCode == (int)PaymentStatus.Paid)?.Id;
-        }
-        else
-        {
-            purchase.PaymentStatusId = paymentStatuses.FirstOrDefault(x => x.DevCode == (int)PaymentStatus.Partial)?.Id;
-        }
+        purchase.PaymentStatusId = await PurchaseSharedService.GetPurchasePaymentId(commonQueryService, purchase);
 
         await dbContext.SaveChangesAsync(cancellationToken);
 

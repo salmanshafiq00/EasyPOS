@@ -1108,727 +1108,6 @@ export class ImagesClient implements IImagesClient {
     }
 }
 
-export interface ILookupDetailsClient {
-    getAll(query: GetLookupDetailListQuery): Observable<PaginatedResponseOfLookupDetailModel>;
-    get(id: string): Observable<LookupDetailModel>;
-    create(command: CreateLookupDetailCommand): Observable<string>;
-    update(command: UpdateLookupDetailCommand): Observable<void>;
-    delete(id: string): Observable<void>;
-    deleteMultiple(ids: string[]): Observable<void>;
-    upload(): Observable<number>;
-}
-
-@Injectable()
-export class LookupDetailsClient implements ILookupDetailsClient {
-    private http: HttpClient;
-    private baseUrl: string;
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
-
-    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
-        this.http = http;
-        this.baseUrl = baseUrl ?? "";
-    }
-
-    getAll(query: GetLookupDetailListQuery): Observable<PaginatedResponseOfLookupDetailModel> {
-        let url_ = this.baseUrl + "/api/LookupDetails/GetAll";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(query);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            withCredentials: true,
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetAll(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGetAll(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<PaginatedResponseOfLookupDetailModel>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<PaginatedResponseOfLookupDetailModel>;
-        }));
-    }
-
-    protected processGetAll(response: HttpResponseBase): Observable<PaginatedResponseOfLookupDetailModel> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = PaginatedResponseOfLookupDetailModel.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    get(id: string): Observable<LookupDetailModel> {
-        let url_ = this.baseUrl + "/api/LookupDetails/Get/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            withCredentials: true,
-            headers: new HttpHeaders({
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGet(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGet(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<LookupDetailModel>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<LookupDetailModel>;
-        }));
-    }
-
-    protected processGet(response: HttpResponseBase): Observable<LookupDetailModel> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = LookupDetailModel.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    create(command: CreateLookupDetailCommand): Observable<string> {
-        let url_ = this.baseUrl + "/api/LookupDetails/Create";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(command);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            withCredentials: true,
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processCreate(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processCreate(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<string>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<string>;
-        }));
-    }
-
-    protected processCreate(response: HttpResponseBase): Observable<string> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 201) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result201: any = null;
-            let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-                result201 = resultData201 !== undefined ? resultData201 : <any>null;
-    
-            return _observableOf(result201);
-            }));
-        } else if (status === 400) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ProblemDetails.fromJS(resultData400);
-            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    update(command: UpdateLookupDetailCommand): Observable<void> {
-        let url_ = this.baseUrl + "/api/LookupDetails/Update";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(command);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            withCredentials: true,
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-            })
-        };
-
-        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processUpdate(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processUpdate(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<void>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<void>;
-        }));
-    }
-
-    protected processUpdate(response: HttpResponseBase): Observable<void> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return _observableOf(null as any);
-            }));
-        } else if (status === 400) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ProblemDetails.fromJS(resultData400);
-            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
-            }));
-        } else if (status === 404) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("A server side error occurred.", status, _responseText, _headers);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    delete(id: string): Observable<void> {
-        let url_ = this.baseUrl + "/api/LookupDetails/Delete/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            withCredentials: true,
-            headers: new HttpHeaders({
-            })
-        };
-
-        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processDelete(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processDelete(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<void>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<void>;
-        }));
-    }
-
-    protected processDelete(response: HttpResponseBase): Observable<void> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return _observableOf(null as any);
-            }));
-        } else if (status === 400) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ProblemDetails.fromJS(resultData400);
-            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    deleteMultiple(ids: string[]): Observable<void> {
-        let url_ = this.baseUrl + "/api/LookupDetails/DeleteMultiple";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(ids);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            withCredentials: true,
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processDeleteMultiple(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processDeleteMultiple(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<void>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<void>;
-        }));
-    }
-
-    protected processDeleteMultiple(response: HttpResponseBase): Observable<void> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return _observableOf(null as any);
-            }));
-        } else if (status === 400) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ProblemDetails.fromJS(resultData400);
-            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    upload(): Observable<number> {
-        let url_ = this.baseUrl + "/api/LookupDetails/Upload";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            withCredentials: true,
-            headers: new HttpHeaders({
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processUpload(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processUpload(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<number>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<number>;
-        }));
-    }
-
-    protected processUpload(response: HttpResponseBase): Observable<number> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-                result200 = resultData200 !== undefined ? resultData200 : <any>null;
-    
-            return _observableOf(result200);
-            }));
-        } else if (status === 400) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ProblemDetails.fromJS(resultData400);
-            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-}
-
-export interface ILookupsClient {
-    getAll(query: GetLookupListQuery): Observable<PaginatedResponseOfLookupModel>;
-    get(id: string): Observable<LookupModel>;
-    create(command: CreateLookupCommand): Observable<string>;
-    update(command: UpdateLookupCommand): Observable<void>;
-    delete(id: string): Observable<void>;
-}
-
-@Injectable()
-export class LookupsClient implements ILookupsClient {
-    private http: HttpClient;
-    private baseUrl: string;
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
-
-    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
-        this.http = http;
-        this.baseUrl = baseUrl ?? "";
-    }
-
-    getAll(query: GetLookupListQuery): Observable<PaginatedResponseOfLookupModel> {
-        let url_ = this.baseUrl + "/api/Lookups/GetAll";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(query);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            withCredentials: true,
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetAll(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGetAll(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<PaginatedResponseOfLookupModel>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<PaginatedResponseOfLookupModel>;
-        }));
-    }
-
-    protected processGetAll(response: HttpResponseBase): Observable<PaginatedResponseOfLookupModel> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = PaginatedResponseOfLookupModel.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    get(id: string): Observable<LookupModel> {
-        let url_ = this.baseUrl + "/api/Lookups/Get/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            withCredentials: true,
-            headers: new HttpHeaders({
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGet(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGet(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<LookupModel>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<LookupModel>;
-        }));
-    }
-
-    protected processGet(response: HttpResponseBase): Observable<LookupModel> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = LookupModel.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status === 400) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("A server side error occurred.", status, _responseText, _headers);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    create(command: CreateLookupCommand): Observable<string> {
-        let url_ = this.baseUrl + "/api/Lookups/Create";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(command);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            withCredentials: true,
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processCreate(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processCreate(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<string>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<string>;
-        }));
-    }
-
-    protected processCreate(response: HttpResponseBase): Observable<string> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 201) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result201: any = null;
-            let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-                result201 = resultData201 !== undefined ? resultData201 : <any>null;
-    
-            return _observableOf(result201);
-            }));
-        } else if (status === 400) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ProblemDetails.fromJS(resultData400);
-            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    update(command: UpdateLookupCommand): Observable<void> {
-        let url_ = this.baseUrl + "/api/Lookups/Update";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(command);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            withCredentials: true,
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-            })
-        };
-
-        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processUpdate(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processUpdate(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<void>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<void>;
-        }));
-    }
-
-    protected processUpdate(response: HttpResponseBase): Observable<void> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return _observableOf(null as any);
-            }));
-        } else if (status === 400) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ProblemDetails.fromJS(resultData400);
-            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
-            }));
-        } else if (status === 404) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("A server side error occurred.", status, _responseText, _headers);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    delete(id: string): Observable<void> {
-        let url_ = this.baseUrl + "/api/Lookups/Delete/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            withCredentials: true,
-            headers: new HttpHeaders({
-            })
-        };
-
-        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processDelete(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processDelete(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<void>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<void>;
-        }));
-    }
-
-    protected processDelete(response: HttpResponseBase): Observable<void> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return _observableOf(null as any);
-            }));
-        } else if (status === 400) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ProblemDetails.fromJS(resultData400);
-            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-}
-
 export interface ISelectListsClient {
     getLookupSelectList(allowCache: boolean | null | undefined): Observable<SelectListModel[]>;
     getLookupDetailSelectList(allowCache: boolean | null | undefined): Observable<SelectListModel[]>;
@@ -3866,6 +3145,364 @@ export class TreeNodeListsClient implements ITreeNodeListsClient {
                 result200 = <any>null;
             }
             return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
+export interface IPurchasePaymentsClient {
+    getAll(query: GetPurchasePaymentListQuery): Observable<PaginatedResponseOfPurchasePaymentModel>;
+    get(id: string): Observable<PurchasePaymentModel>;
+    create(command: CreatePurchasePaymentCommand): Observable<string>;
+    update(command: UpdatePurchasePaymentCommand): Observable<void>;
+    delete(id: string): Observable<void>;
+    deleteMultiple(ids: string[]): Observable<void>;
+}
+
+@Injectable()
+export class PurchasePaymentsClient implements IPurchasePaymentsClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ?? "";
+    }
+
+    getAll(query: GetPurchasePaymentListQuery): Observable<PaginatedResponseOfPurchasePaymentModel> {
+        let url_ = this.baseUrl + "/api/PurchasePayments/GetAll";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(query);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAll(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PaginatedResponseOfPurchasePaymentModel>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PaginatedResponseOfPurchasePaymentModel>;
+        }));
+    }
+
+    protected processGetAll(response: HttpResponseBase): Observable<PaginatedResponseOfPurchasePaymentModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PaginatedResponseOfPurchasePaymentModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    get(id: string): Observable<PurchasePaymentModel> {
+        let url_ = this.baseUrl + "/api/PurchasePayments/Get/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PurchasePaymentModel>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PurchasePaymentModel>;
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<PurchasePaymentModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PurchasePaymentModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    create(command: CreatePurchasePaymentCommand): Observable<string> {
+        let url_ = this.baseUrl + "/api/PurchasePayments/Create";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<string>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<string>;
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<string> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 201) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result201: any = null;
+            let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result201 = resultData201 !== undefined ? resultData201 : <any>null;
+    
+            return _observableOf(result201);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    update(command: UpdatePurchasePaymentCommand): Observable<void> {
+        let url_ = this.baseUrl + "/api/PurchasePayments/Update";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdate(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processUpdate(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    delete(id: string): Observable<void> {
+        let url_ = this.baseUrl + "/api/PurchasePayments/Delete/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDelete(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processDelete(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    deleteMultiple(ids: string[]): Observable<void> {
+        let url_ = this.baseUrl + "/api/PurchasePayments/DeleteMultiple";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(ids);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDeleteMultiple(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDeleteMultiple(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processDeleteMultiple(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
@@ -6674,6 +6311,727 @@ export class WarehousesClient implements IWarehousesClient {
     }
 }
 
+export interface ILookupDetailsClient {
+    getAll(query: GetLookupDetailListQuery): Observable<PaginatedResponseOfLookupDetailModel>;
+    get(id: string): Observable<LookupDetailModel>;
+    create(command: CreateLookupDetailCommand): Observable<string>;
+    update(command: UpdateLookupDetailCommand): Observable<void>;
+    delete(id: string): Observable<void>;
+    deleteMultiple(ids: string[]): Observable<void>;
+    upload(): Observable<number>;
+}
+
+@Injectable()
+export class LookupDetailsClient implements ILookupDetailsClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ?? "";
+    }
+
+    getAll(query: GetLookupDetailListQuery): Observable<PaginatedResponseOfLookupDetailModel> {
+        let url_ = this.baseUrl + "/api/LookupDetails/GetAll";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(query);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAll(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PaginatedResponseOfLookupDetailModel>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PaginatedResponseOfLookupDetailModel>;
+        }));
+    }
+
+    protected processGetAll(response: HttpResponseBase): Observable<PaginatedResponseOfLookupDetailModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PaginatedResponseOfLookupDetailModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    get(id: string): Observable<LookupDetailModel> {
+        let url_ = this.baseUrl + "/api/LookupDetails/Get/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<LookupDetailModel>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<LookupDetailModel>;
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<LookupDetailModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = LookupDetailModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    create(command: CreateLookupDetailCommand): Observable<string> {
+        let url_ = this.baseUrl + "/api/LookupDetails/Create";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<string>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<string>;
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<string> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 201) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result201: any = null;
+            let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result201 = resultData201 !== undefined ? resultData201 : <any>null;
+    
+            return _observableOf(result201);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    update(command: UpdateLookupDetailCommand): Observable<void> {
+        let url_ = this.baseUrl + "/api/LookupDetails/Update";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdate(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processUpdate(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    delete(id: string): Observable<void> {
+        let url_ = this.baseUrl + "/api/LookupDetails/Delete/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDelete(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processDelete(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    deleteMultiple(ids: string[]): Observable<void> {
+        let url_ = this.baseUrl + "/api/LookupDetails/DeleteMultiple";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(ids);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDeleteMultiple(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDeleteMultiple(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processDeleteMultiple(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    upload(): Observable<number> {
+        let url_ = this.baseUrl + "/api/LookupDetails/Upload";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpload(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpload(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<number>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<number>;
+        }));
+    }
+
+    protected processUpload(response: HttpResponseBase): Observable<number> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return _observableOf(result200);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
+export interface ILookupsClient {
+    getAll(query: GetLookupListQuery): Observable<PaginatedResponseOfLookupModel>;
+    get(id: string): Observable<LookupModel>;
+    create(command: CreateLookupCommand): Observable<string>;
+    update(command: UpdateLookupCommand): Observable<void>;
+    delete(id: string): Observable<void>;
+}
+
+@Injectable()
+export class LookupsClient implements ILookupsClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ?? "";
+    }
+
+    getAll(query: GetLookupListQuery): Observable<PaginatedResponseOfLookupModel> {
+        let url_ = this.baseUrl + "/api/Lookups/GetAll";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(query);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAll(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PaginatedResponseOfLookupModel>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PaginatedResponseOfLookupModel>;
+        }));
+    }
+
+    protected processGetAll(response: HttpResponseBase): Observable<PaginatedResponseOfLookupModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PaginatedResponseOfLookupModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    get(id: string): Observable<LookupModel> {
+        let url_ = this.baseUrl + "/api/Lookups/Get/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<LookupModel>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<LookupModel>;
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<LookupModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = LookupModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    create(command: CreateLookupCommand): Observable<string> {
+        let url_ = this.baseUrl + "/api/Lookups/Create";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<string>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<string>;
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<string> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 201) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result201: any = null;
+            let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result201 = resultData201 !== undefined ? resultData201 : <any>null;
+    
+            return _observableOf(result201);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    update(command: UpdateLookupCommand): Observable<void> {
+        let url_ = this.baseUrl + "/api/Lookups/Update";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdate(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processUpdate(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    delete(id: string): Observable<void> {
+        let url_ = this.baseUrl + "/api/Lookups/Delete/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDelete(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processDelete(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
 export interface IAppMenusClient {
     getAll(query: GetAppMenuListQuery): Observable<PaginatedResponseOfAppMenuModel>;
     getSidebarMenus(): Observable<SidebarMenuModel[]>;
@@ -9384,706 +9742,6 @@ export interface IUpdateMoneyTransferCommand {
     cacheKey?: string;
 }
 
-export class PaginatedResponseOfLookupDetailModel implements IPaginatedResponseOfLookupDetailModel {
-    items?: LookupDetailModel[];
-    pageNumber?: number;
-    totalPages?: number;
-    totalCount?: number;
-    hasPreviousPage?: boolean;
-    hasNextPage?: boolean;
-    optionsDataSources?: { [key: string]: any; };
-
-    constructor(data?: IPaginatedResponseOfLookupDetailModel) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            if (Array.isArray(_data["items"])) {
-                this.items = [] as any;
-                for (let item of _data["items"])
-                    this.items!.push(LookupDetailModel.fromJS(item));
-            }
-            this.pageNumber = _data["pageNumber"];
-            this.totalPages = _data["totalPages"];
-            this.totalCount = _data["totalCount"];
-            this.hasPreviousPage = _data["hasPreviousPage"];
-            this.hasNextPage = _data["hasNextPage"];
-            if (_data["optionsDataSources"]) {
-                this.optionsDataSources = {} as any;
-                for (let key in _data["optionsDataSources"]) {
-                    if (_data["optionsDataSources"].hasOwnProperty(key))
-                        (<any>this.optionsDataSources)![key] = _data["optionsDataSources"][key];
-                }
-            }
-        }
-    }
-
-    static fromJS(data: any): PaginatedResponseOfLookupDetailModel {
-        data = typeof data === 'object' ? data : {};
-        let result = new PaginatedResponseOfLookupDetailModel();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.items)) {
-            data["items"] = [];
-            for (let item of this.items)
-                data["items"].push(item.toJSON());
-        }
-        data["pageNumber"] = this.pageNumber;
-        data["totalPages"] = this.totalPages;
-        data["totalCount"] = this.totalCount;
-        data["hasPreviousPage"] = this.hasPreviousPage;
-        data["hasNextPage"] = this.hasNextPage;
-        if (this.optionsDataSources) {
-            data["optionsDataSources"] = {};
-            for (let key in this.optionsDataSources) {
-                if (this.optionsDataSources.hasOwnProperty(key))
-                    (<any>data["optionsDataSources"])[key] = (<any>this.optionsDataSources)[key];
-            }
-        }
-        return data;
-    }
-}
-
-export interface IPaginatedResponseOfLookupDetailModel {
-    items?: LookupDetailModel[];
-    pageNumber?: number;
-    totalPages?: number;
-    totalCount?: number;
-    hasPreviousPage?: boolean;
-    hasNextPage?: boolean;
-    optionsDataSources?: { [key: string]: any; };
-}
-
-export class LookupDetailModel implements ILookupDetailModel {
-    id?: string;
-    name?: string;
-    code?: string;
-    description?: string;
-    status?: boolean;
-    statusName?: string;
-    parentId?: string | undefined;
-    parentName?: string;
-    lookupId?: string | undefined;
-    lookupName?: string;
-    optionsDataSources?: { [key: string]: any; };
-
-    constructor(data?: ILookupDetailModel) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.name = _data["name"];
-            this.code = _data["code"];
-            this.description = _data["description"];
-            this.status = _data["status"];
-            this.statusName = _data["statusName"];
-            this.parentId = _data["parentId"];
-            this.parentName = _data["parentName"];
-            this.lookupId = _data["lookupId"];
-            this.lookupName = _data["lookupName"];
-            if (_data["optionsDataSources"]) {
-                this.optionsDataSources = {} as any;
-                for (let key in _data["optionsDataSources"]) {
-                    if (_data["optionsDataSources"].hasOwnProperty(key))
-                        (<any>this.optionsDataSources)![key] = _data["optionsDataSources"][key];
-                }
-            }
-        }
-    }
-
-    static fromJS(data: any): LookupDetailModel {
-        data = typeof data === 'object' ? data : {};
-        let result = new LookupDetailModel();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["name"] = this.name;
-        data["code"] = this.code;
-        data["description"] = this.description;
-        data["status"] = this.status;
-        data["statusName"] = this.statusName;
-        data["parentId"] = this.parentId;
-        data["parentName"] = this.parentName;
-        data["lookupId"] = this.lookupId;
-        data["lookupName"] = this.lookupName;
-        if (this.optionsDataSources) {
-            data["optionsDataSources"] = {};
-            for (let key in this.optionsDataSources) {
-                if (this.optionsDataSources.hasOwnProperty(key))
-                    (<any>data["optionsDataSources"])[key] = (<any>this.optionsDataSources)[key];
-            }
-        }
-        return data;
-    }
-}
-
-export interface ILookupDetailModel {
-    id?: string;
-    name?: string;
-    code?: string;
-    description?: string;
-    status?: boolean;
-    statusName?: string;
-    parentId?: string | undefined;
-    parentName?: string;
-    lookupId?: string | undefined;
-    lookupName?: string;
-    optionsDataSources?: { [key: string]: any; };
-}
-
-export class GetLookupDetailListQuery extends DataGridModel implements IGetLookupDetailListQuery {
-    cacheKey?: string;
-
-    constructor(data?: IGetLookupDetailListQuery) {
-        super(data);
-    }
-
-    override init(_data?: any) {
-        super.init(_data);
-        if (_data) {
-            this.cacheKey = _data["cacheKey"];
-        }
-    }
-
-    static override fromJS(data: any): GetLookupDetailListQuery {
-        data = typeof data === 'object' ? data : {};
-        let result = new GetLookupDetailListQuery();
-        result.init(data);
-        return result;
-    }
-
-    override toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["cacheKey"] = this.cacheKey;
-        super.toJSON(data);
-        return data;
-    }
-}
-
-export interface IGetLookupDetailListQuery extends IDataGridModel {
-    cacheKey?: string;
-}
-
-export class CreateLookupDetailCommand implements ICreateLookupDetailCommand {
-    name!: string;
-    code?: string;
-    description?: string;
-    status?: boolean;
-    lookupId?: string;
-    parentId?: string | undefined;
-    cacheKey?: string;
-
-    constructor(data?: ICreateLookupDetailCommand) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.name = _data["name"];
-            this.code = _data["code"];
-            this.description = _data["description"];
-            this.status = _data["status"];
-            this.lookupId = _data["lookupId"];
-            this.parentId = _data["parentId"];
-            this.cacheKey = _data["cacheKey"];
-        }
-    }
-
-    static fromJS(data: any): CreateLookupDetailCommand {
-        data = typeof data === 'object' ? data : {};
-        let result = new CreateLookupDetailCommand();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["name"] = this.name;
-        data["code"] = this.code;
-        data["description"] = this.description;
-        data["status"] = this.status;
-        data["lookupId"] = this.lookupId;
-        data["parentId"] = this.parentId;
-        data["cacheKey"] = this.cacheKey;
-        return data;
-    }
-}
-
-export interface ICreateLookupDetailCommand {
-    name: string;
-    code?: string;
-    description?: string;
-    status?: boolean;
-    lookupId?: string;
-    parentId?: string | undefined;
-    cacheKey?: string;
-}
-
-export class UpdateLookupDetailCommand implements IUpdateLookupDetailCommand {
-    id?: string;
-    name!: string;
-    code?: string;
-    description?: string;
-    status?: boolean;
-    lookupId!: string;
-    parentId?: string | undefined;
-    cacheKey?: string;
-
-    constructor(data?: IUpdateLookupDetailCommand) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.name = _data["name"];
-            this.code = _data["code"];
-            this.description = _data["description"];
-            this.status = _data["status"];
-            this.lookupId = _data["lookupId"];
-            this.parentId = _data["parentId"];
-            this.cacheKey = _data["cacheKey"];
-        }
-    }
-
-    static fromJS(data: any): UpdateLookupDetailCommand {
-        data = typeof data === 'object' ? data : {};
-        let result = new UpdateLookupDetailCommand();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["name"] = this.name;
-        data["code"] = this.code;
-        data["description"] = this.description;
-        data["status"] = this.status;
-        data["lookupId"] = this.lookupId;
-        data["parentId"] = this.parentId;
-        data["cacheKey"] = this.cacheKey;
-        return data;
-    }
-}
-
-export interface IUpdateLookupDetailCommand {
-    id?: string;
-    name: string;
-    code?: string;
-    description?: string;
-    status?: boolean;
-    lookupId: string;
-    parentId?: string | undefined;
-    cacheKey?: string;
-}
-
-export class PaginatedResponseOfLookupModel implements IPaginatedResponseOfLookupModel {
-    items?: LookupModel[];
-    pageNumber?: number;
-    totalPages?: number;
-    totalCount?: number;
-    hasPreviousPage?: boolean;
-    hasNextPage?: boolean;
-    optionsDataSources?: { [key: string]: any; };
-
-    constructor(data?: IPaginatedResponseOfLookupModel) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            if (Array.isArray(_data["items"])) {
-                this.items = [] as any;
-                for (let item of _data["items"])
-                    this.items!.push(LookupModel.fromJS(item));
-            }
-            this.pageNumber = _data["pageNumber"];
-            this.totalPages = _data["totalPages"];
-            this.totalCount = _data["totalCount"];
-            this.hasPreviousPage = _data["hasPreviousPage"];
-            this.hasNextPage = _data["hasNextPage"];
-            if (_data["optionsDataSources"]) {
-                this.optionsDataSources = {} as any;
-                for (let key in _data["optionsDataSources"]) {
-                    if (_data["optionsDataSources"].hasOwnProperty(key))
-                        (<any>this.optionsDataSources)![key] = _data["optionsDataSources"][key];
-                }
-            }
-        }
-    }
-
-    static fromJS(data: any): PaginatedResponseOfLookupModel {
-        data = typeof data === 'object' ? data : {};
-        let result = new PaginatedResponseOfLookupModel();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.items)) {
-            data["items"] = [];
-            for (let item of this.items)
-                data["items"].push(item.toJSON());
-        }
-        data["pageNumber"] = this.pageNumber;
-        data["totalPages"] = this.totalPages;
-        data["totalCount"] = this.totalCount;
-        data["hasPreviousPage"] = this.hasPreviousPage;
-        data["hasNextPage"] = this.hasNextPage;
-        if (this.optionsDataSources) {
-            data["optionsDataSources"] = {};
-            for (let key in this.optionsDataSources) {
-                if (this.optionsDataSources.hasOwnProperty(key))
-                    (<any>data["optionsDataSources"])[key] = (<any>this.optionsDataSources)[key];
-            }
-        }
-        return data;
-    }
-}
-
-export interface IPaginatedResponseOfLookupModel {
-    items?: LookupModel[];
-    pageNumber?: number;
-    totalPages?: number;
-    totalCount?: number;
-    hasPreviousPage?: boolean;
-    hasNextPage?: boolean;
-    optionsDataSources?: { [key: string]: any; };
-}
-
-export class LookupModel implements ILookupModel {
-    id?: string;
-    name?: string;
-    code?: string;
-    description?: string;
-    status?: boolean;
-    statusName?: string;
-    parentId?: string | undefined;
-    parentName?: string;
-    created?: Date | undefined;
-    createdDate?: Date | undefined;
-    createdTime?: string | undefined;
-    createdYear?: number | undefined;
-    subjects?: string[];
-    subjectRadio?: string;
-    color?: string;
-    uploadFile?: string;
-    descEdit?: string;
-    menus?: string[];
-    singleMenu?: string;
-    treeSelectMenus?: string[];
-    treeSelectSingleMenu?: string;
-    optionsDataSources?: { [key: string]: any; };
-
-    constructor(data?: ILookupModel) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.name = _data["name"];
-            this.code = _data["code"];
-            this.description = _data["description"];
-            this.status = _data["status"];
-            this.statusName = _data["statusName"];
-            this.parentId = _data["parentId"];
-            this.parentName = _data["parentName"];
-            this.created = _data["created"] ? new Date(_data["created"].toString()) : <any>undefined;
-            this.createdDate = _data["createdDate"] ? new Date(_data["createdDate"].toString()) : <any>undefined;
-            this.createdTime = _data["createdTime"];
-            this.createdYear = _data["createdYear"];
-            if (Array.isArray(_data["subjects"])) {
-                this.subjects = [] as any;
-                for (let item of _data["subjects"])
-                    this.subjects!.push(item);
-            }
-            this.subjectRadio = _data["subjectRadio"];
-            this.color = _data["color"];
-            this.uploadFile = _data["uploadFile"];
-            this.descEdit = _data["descEdit"];
-            if (Array.isArray(_data["menus"])) {
-                this.menus = [] as any;
-                for (let item of _data["menus"])
-                    this.menus!.push(item);
-            }
-            this.singleMenu = _data["singleMenu"];
-            if (Array.isArray(_data["treeSelectMenus"])) {
-                this.treeSelectMenus = [] as any;
-                for (let item of _data["treeSelectMenus"])
-                    this.treeSelectMenus!.push(item);
-            }
-            this.treeSelectSingleMenu = _data["treeSelectSingleMenu"];
-            if (_data["optionsDataSources"]) {
-                this.optionsDataSources = {} as any;
-                for (let key in _data["optionsDataSources"]) {
-                    if (_data["optionsDataSources"].hasOwnProperty(key))
-                        (<any>this.optionsDataSources)![key] = _data["optionsDataSources"][key];
-                }
-            }
-        }
-    }
-
-    static fromJS(data: any): LookupModel {
-        data = typeof data === 'object' ? data : {};
-        let result = new LookupModel();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["name"] = this.name;
-        data["code"] = this.code;
-        data["description"] = this.description;
-        data["status"] = this.status;
-        data["statusName"] = this.statusName;
-        data["parentId"] = this.parentId;
-        data["parentName"] = this.parentName;
-        data["created"] = this.created ? this.created.toISOString() : <any>undefined;
-        data["createdDate"] = this.createdDate ? formatDate(this.createdDate) : <any>undefined;
-        data["createdTime"] = this.createdTime;
-        data["createdYear"] = this.createdYear;
-        if (Array.isArray(this.subjects)) {
-            data["subjects"] = [];
-            for (let item of this.subjects)
-                data["subjects"].push(item);
-        }
-        data["subjectRadio"] = this.subjectRadio;
-        data["color"] = this.color;
-        data["uploadFile"] = this.uploadFile;
-        data["descEdit"] = this.descEdit;
-        if (Array.isArray(this.menus)) {
-            data["menus"] = [];
-            for (let item of this.menus)
-                data["menus"].push(item);
-        }
-        data["singleMenu"] = this.singleMenu;
-        if (Array.isArray(this.treeSelectMenus)) {
-            data["treeSelectMenus"] = [];
-            for (let item of this.treeSelectMenus)
-                data["treeSelectMenus"].push(item);
-        }
-        data["treeSelectSingleMenu"] = this.treeSelectSingleMenu;
-        if (this.optionsDataSources) {
-            data["optionsDataSources"] = {};
-            for (let key in this.optionsDataSources) {
-                if (this.optionsDataSources.hasOwnProperty(key))
-                    (<any>data["optionsDataSources"])[key] = (<any>this.optionsDataSources)[key];
-            }
-        }
-        return data;
-    }
-}
-
-export interface ILookupModel {
-    id?: string;
-    name?: string;
-    code?: string;
-    description?: string;
-    status?: boolean;
-    statusName?: string;
-    parentId?: string | undefined;
-    parentName?: string;
-    created?: Date | undefined;
-    createdDate?: Date | undefined;
-    createdTime?: string | undefined;
-    createdYear?: number | undefined;
-    subjects?: string[];
-    subjectRadio?: string;
-    color?: string;
-    uploadFile?: string;
-    descEdit?: string;
-    menus?: string[];
-    singleMenu?: string;
-    treeSelectMenus?: string[];
-    treeSelectSingleMenu?: string;
-    optionsDataSources?: { [key: string]: any; };
-}
-
-export class GetLookupListQuery extends DataGridModel implements IGetLookupListQuery {
-
-    constructor(data?: IGetLookupListQuery) {
-        super(data);
-    }
-
-    override init(_data?: any) {
-        super.init(_data);
-    }
-
-    static override fromJS(data: any): GetLookupListQuery {
-        data = typeof data === 'object' ? data : {};
-        let result = new GetLookupListQuery();
-        result.init(data);
-        return result;
-    }
-
-    override toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        super.toJSON(data);
-        return data;
-    }
-}
-
-export interface IGetLookupListQuery extends IDataGridModel {
-}
-
-export class CreateLookupCommand implements ICreateLookupCommand {
-    name!: string;
-    code!: string;
-    description?: string;
-    status?: boolean;
-    parentId?: string | undefined;
-
-    constructor(data?: ICreateLookupCommand) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.name = _data["name"];
-            this.code = _data["code"];
-            this.description = _data["description"];
-            this.status = _data["status"];
-            this.parentId = _data["parentId"];
-        }
-    }
-
-    static fromJS(data: any): CreateLookupCommand {
-        data = typeof data === 'object' ? data : {};
-        let result = new CreateLookupCommand();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["name"] = this.name;
-        data["code"] = this.code;
-        data["description"] = this.description;
-        data["status"] = this.status;
-        data["parentId"] = this.parentId;
-        return data;
-    }
-}
-
-export interface ICreateLookupCommand {
-    name: string;
-    code: string;
-    description?: string;
-    status?: boolean;
-    parentId?: string | undefined;
-}
-
-export class UpdateLookupCommand implements IUpdateLookupCommand {
-    id?: string;
-    name!: string;
-    code!: string;
-    description?: string;
-    status?: boolean;
-    parentId?: string | undefined;
-    cacheKey?: string;
-
-    constructor(data?: IUpdateLookupCommand) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.name = _data["name"];
-            this.code = _data["code"];
-            this.description = _data["description"];
-            this.status = _data["status"];
-            this.parentId = _data["parentId"];
-            this.cacheKey = _data["cacheKey"];
-        }
-    }
-
-    static fromJS(data: any): UpdateLookupCommand {
-        data = typeof data === 'object' ? data : {};
-        let result = new UpdateLookupCommand();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["name"] = this.name;
-        data["code"] = this.code;
-        data["description"] = this.description;
-        data["status"] = this.status;
-        data["parentId"] = this.parentId;
-        data["cacheKey"] = this.cacheKey;
-        return data;
-    }
-}
-
-export interface IUpdateLookupCommand {
-    id?: string;
-    name: string;
-    code: string;
-    description?: string;
-    status?: boolean;
-    parentId?: string | undefined;
-    cacheKey?: string;
-}
-
 export class SelectListModel implements ISelectListModel {
     id?: any;
     name?: string;
@@ -11191,9 +10849,12 @@ export class PurchaseModel implements IPurchaseModel {
     discountAmount?: number | undefined;
     shippingCost?: number | undefined;
     grandTotal?: number;
+    paidAmount?: number;
+    dueAmount?: number;
     note?: string | undefined;
     supplierName?: string;
     purchaseStatus?: string;
+    paymentStatusId?: string;
     purchaseDetails?: PurchaseDetailModel[];
     optionsDataSources?: { [key: string]: any; };
 
@@ -11223,9 +10884,12 @@ export class PurchaseModel implements IPurchaseModel {
             this.discountAmount = _data["discountAmount"];
             this.shippingCost = _data["shippingCost"];
             this.grandTotal = _data["grandTotal"];
+            this.paidAmount = _data["paidAmount"];
+            this.dueAmount = _data["dueAmount"];
             this.note = _data["note"];
             this.supplierName = _data["supplierName"];
             this.purchaseStatus = _data["purchaseStatus"];
+            this.paymentStatusId = _data["paymentStatusId"];
             if (Array.isArray(_data["purchaseDetails"])) {
                 this.purchaseDetails = [] as any;
                 for (let item of _data["purchaseDetails"])
@@ -11265,9 +10929,12 @@ export class PurchaseModel implements IPurchaseModel {
         data["discountAmount"] = this.discountAmount;
         data["shippingCost"] = this.shippingCost;
         data["grandTotal"] = this.grandTotal;
+        data["paidAmount"] = this.paidAmount;
+        data["dueAmount"] = this.dueAmount;
         data["note"] = this.note;
         data["supplierName"] = this.supplierName;
         data["purchaseStatus"] = this.purchaseStatus;
+        data["paymentStatusId"] = this.paymentStatusId;
         if (Array.isArray(this.purchaseDetails)) {
             data["purchaseDetails"] = [];
             for (let item of this.purchaseDetails)
@@ -11300,9 +10967,12 @@ export interface IPurchaseModel {
     discountAmount?: number | undefined;
     shippingCost?: number | undefined;
     grandTotal?: number;
+    paidAmount?: number;
+    dueAmount?: number;
     note?: string | undefined;
     supplierName?: string;
     purchaseStatus?: string;
+    paymentStatusId?: string;
     purchaseDetails?: PurchaseDetailModel[];
     optionsDataSources?: { [key: string]: any; };
 }
@@ -11776,6 +11446,327 @@ export interface ITreeNodeModel {
     partialSelected?: boolean;
     leaf?: boolean;
     children?: TreeNodeModel[];
+}
+
+export class PaginatedResponseOfPurchasePaymentModel implements IPaginatedResponseOfPurchasePaymentModel {
+    items?: PurchasePaymentModel[];
+    pageNumber?: number;
+    totalPages?: number;
+    totalCount?: number;
+    hasPreviousPage?: boolean;
+    hasNextPage?: boolean;
+    optionsDataSources?: { [key: string]: any; };
+
+    constructor(data?: IPaginatedResponseOfPurchasePaymentModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(PurchasePaymentModel.fromJS(item));
+            }
+            this.pageNumber = _data["pageNumber"];
+            this.totalPages = _data["totalPages"];
+            this.totalCount = _data["totalCount"];
+            this.hasPreviousPage = _data["hasPreviousPage"];
+            this.hasNextPage = _data["hasNextPage"];
+            if (_data["optionsDataSources"]) {
+                this.optionsDataSources = {} as any;
+                for (let key in _data["optionsDataSources"]) {
+                    if (_data["optionsDataSources"].hasOwnProperty(key))
+                        (<any>this.optionsDataSources)![key] = _data["optionsDataSources"][key];
+                }
+            }
+        }
+    }
+
+    static fromJS(data: any): PaginatedResponseOfPurchasePaymentModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new PaginatedResponseOfPurchasePaymentModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["pageNumber"] = this.pageNumber;
+        data["totalPages"] = this.totalPages;
+        data["totalCount"] = this.totalCount;
+        data["hasPreviousPage"] = this.hasPreviousPage;
+        data["hasNextPage"] = this.hasNextPage;
+        if (this.optionsDataSources) {
+            data["optionsDataSources"] = {};
+            for (let key in this.optionsDataSources) {
+                if (this.optionsDataSources.hasOwnProperty(key))
+                    (<any>data["optionsDataSources"])[key] = (<any>this.optionsDataSources)[key];
+            }
+        }
+        return data;
+    }
+}
+
+export interface IPaginatedResponseOfPurchasePaymentModel {
+    items?: PurchasePaymentModel[];
+    pageNumber?: number;
+    totalPages?: number;
+    totalCount?: number;
+    hasPreviousPage?: boolean;
+    hasNextPage?: boolean;
+    optionsDataSources?: { [key: string]: any; };
+}
+
+export class PurchasePaymentModel implements IPurchasePaymentModel {
+    id?: string;
+    purchaseId?: string;
+    paymentDate?: Date;
+    receivedAmount?: number;
+    payingAmount?: number;
+    changeAmount?: number;
+    paymentType?: string;
+    note?: string | undefined;
+    optionsDataSources?: { [key: string]: any; };
+
+    constructor(data?: IPurchasePaymentModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.purchaseId = _data["purchaseId"];
+            this.paymentDate = _data["paymentDate"] ? new Date(_data["paymentDate"].toString()) : <any>undefined;
+            this.receivedAmount = _data["receivedAmount"];
+            this.payingAmount = _data["payingAmount"];
+            this.changeAmount = _data["changeAmount"];
+            this.paymentType = _data["paymentType"];
+            this.note = _data["note"];
+            if (_data["optionsDataSources"]) {
+                this.optionsDataSources = {} as any;
+                for (let key in _data["optionsDataSources"]) {
+                    if (_data["optionsDataSources"].hasOwnProperty(key))
+                        (<any>this.optionsDataSources)![key] = _data["optionsDataSources"][key];
+                }
+            }
+        }
+    }
+
+    static fromJS(data: any): PurchasePaymentModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new PurchasePaymentModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["purchaseId"] = this.purchaseId;
+        data["paymentDate"] = this.paymentDate ? this.paymentDate.toISOString() : <any>undefined;
+        data["receivedAmount"] = this.receivedAmount;
+        data["payingAmount"] = this.payingAmount;
+        data["changeAmount"] = this.changeAmount;
+        data["paymentType"] = this.paymentType;
+        data["note"] = this.note;
+        if (this.optionsDataSources) {
+            data["optionsDataSources"] = {};
+            for (let key in this.optionsDataSources) {
+                if (this.optionsDataSources.hasOwnProperty(key))
+                    (<any>data["optionsDataSources"])[key] = (<any>this.optionsDataSources)[key];
+            }
+        }
+        return data;
+    }
+}
+
+export interface IPurchasePaymentModel {
+    id?: string;
+    purchaseId?: string;
+    paymentDate?: Date;
+    receivedAmount?: number;
+    payingAmount?: number;
+    changeAmount?: number;
+    paymentType?: string;
+    note?: string | undefined;
+    optionsDataSources?: { [key: string]: any; };
+}
+
+export class GetPurchasePaymentListQuery extends DataGridModel implements IGetPurchasePaymentListQuery {
+    cacheKey?: string;
+    purchaseId?: string;
+
+    constructor(data?: IGetPurchasePaymentListQuery) {
+        super(data);
+    }
+
+    override init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.cacheKey = _data["cacheKey"];
+            this.purchaseId = _data["purchaseId"];
+        }
+    }
+
+    static override fromJS(data: any): GetPurchasePaymentListQuery {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetPurchasePaymentListQuery();
+        result.init(data);
+        return result;
+    }
+
+    override toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["cacheKey"] = this.cacheKey;
+        data["purchaseId"] = this.purchaseId;
+        super.toJSON(data);
+        return data;
+    }
+}
+
+export interface IGetPurchasePaymentListQuery extends IDataGridModel {
+    cacheKey?: string;
+    purchaseId?: string;
+}
+
+export class CreatePurchasePaymentCommand implements ICreatePurchasePaymentCommand {
+    purchaseId?: string;
+    receivedAmount?: number;
+    payingAmount?: number;
+    changeAmount?: number;
+    paymentType?: string;
+    note?: string | undefined;
+
+    constructor(data?: ICreatePurchasePaymentCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.purchaseId = _data["purchaseId"];
+            this.receivedAmount = _data["receivedAmount"];
+            this.payingAmount = _data["payingAmount"];
+            this.changeAmount = _data["changeAmount"];
+            this.paymentType = _data["paymentType"];
+            this.note = _data["note"];
+        }
+    }
+
+    static fromJS(data: any): CreatePurchasePaymentCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreatePurchasePaymentCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["purchaseId"] = this.purchaseId;
+        data["receivedAmount"] = this.receivedAmount;
+        data["payingAmount"] = this.payingAmount;
+        data["changeAmount"] = this.changeAmount;
+        data["paymentType"] = this.paymentType;
+        data["note"] = this.note;
+        return data;
+    }
+}
+
+export interface ICreatePurchasePaymentCommand {
+    purchaseId?: string;
+    receivedAmount?: number;
+    payingAmount?: number;
+    changeAmount?: number;
+    paymentType?: string;
+    note?: string | undefined;
+}
+
+export class UpdatePurchasePaymentCommand implements IUpdatePurchasePaymentCommand {
+    id!: string;
+    purchaseId?: string;
+    paymentDate?: Date;
+    receivedAmount?: number;
+    payingAmount?: number;
+    changeAmount?: number;
+    paymentType?: string;
+    note?: string | undefined;
+    cacheKey?: string;
+
+    constructor(data?: IUpdatePurchasePaymentCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.purchaseId = _data["purchaseId"];
+            this.paymentDate = _data["paymentDate"] ? new Date(_data["paymentDate"].toString()) : <any>undefined;
+            this.receivedAmount = _data["receivedAmount"];
+            this.payingAmount = _data["payingAmount"];
+            this.changeAmount = _data["changeAmount"];
+            this.paymentType = _data["paymentType"];
+            this.note = _data["note"];
+            this.cacheKey = _data["cacheKey"];
+        }
+    }
+
+    static fromJS(data: any): UpdatePurchasePaymentCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdatePurchasePaymentCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["purchaseId"] = this.purchaseId;
+        data["paymentDate"] = this.paymentDate ? this.paymentDate.toISOString() : <any>undefined;
+        data["receivedAmount"] = this.receivedAmount;
+        data["payingAmount"] = this.payingAmount;
+        data["changeAmount"] = this.changeAmount;
+        data["paymentType"] = this.paymentType;
+        data["note"] = this.note;
+        data["cacheKey"] = this.cacheKey;
+        return data;
+    }
+}
+
+export interface IUpdatePurchasePaymentCommand {
+    id: string;
+    purchaseId?: string;
+    paymentDate?: Date;
+    receivedAmount?: number;
+    payingAmount?: number;
+    changeAmount?: number;
+    paymentType?: string;
+    note?: string | undefined;
+    cacheKey?: string;
 }
 
 export class PaginatedResponseOfSaleModel implements IPaginatedResponseOfSaleModel {
@@ -14342,6 +14333,706 @@ export interface IUpdateWarehouseCommand {
     city?: string | undefined;
     address?: string | undefined;
     isActive?: boolean;
+    cacheKey?: string;
+}
+
+export class PaginatedResponseOfLookupDetailModel implements IPaginatedResponseOfLookupDetailModel {
+    items?: LookupDetailModel[];
+    pageNumber?: number;
+    totalPages?: number;
+    totalCount?: number;
+    hasPreviousPage?: boolean;
+    hasNextPage?: boolean;
+    optionsDataSources?: { [key: string]: any; };
+
+    constructor(data?: IPaginatedResponseOfLookupDetailModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(LookupDetailModel.fromJS(item));
+            }
+            this.pageNumber = _data["pageNumber"];
+            this.totalPages = _data["totalPages"];
+            this.totalCount = _data["totalCount"];
+            this.hasPreviousPage = _data["hasPreviousPage"];
+            this.hasNextPage = _data["hasNextPage"];
+            if (_data["optionsDataSources"]) {
+                this.optionsDataSources = {} as any;
+                for (let key in _data["optionsDataSources"]) {
+                    if (_data["optionsDataSources"].hasOwnProperty(key))
+                        (<any>this.optionsDataSources)![key] = _data["optionsDataSources"][key];
+                }
+            }
+        }
+    }
+
+    static fromJS(data: any): PaginatedResponseOfLookupDetailModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new PaginatedResponseOfLookupDetailModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["pageNumber"] = this.pageNumber;
+        data["totalPages"] = this.totalPages;
+        data["totalCount"] = this.totalCount;
+        data["hasPreviousPage"] = this.hasPreviousPage;
+        data["hasNextPage"] = this.hasNextPage;
+        if (this.optionsDataSources) {
+            data["optionsDataSources"] = {};
+            for (let key in this.optionsDataSources) {
+                if (this.optionsDataSources.hasOwnProperty(key))
+                    (<any>data["optionsDataSources"])[key] = (<any>this.optionsDataSources)[key];
+            }
+        }
+        return data;
+    }
+}
+
+export interface IPaginatedResponseOfLookupDetailModel {
+    items?: LookupDetailModel[];
+    pageNumber?: number;
+    totalPages?: number;
+    totalCount?: number;
+    hasPreviousPage?: boolean;
+    hasNextPage?: boolean;
+    optionsDataSources?: { [key: string]: any; };
+}
+
+export class LookupDetailModel implements ILookupDetailModel {
+    id?: string;
+    name?: string;
+    code?: string;
+    description?: string;
+    status?: boolean;
+    statusName?: string;
+    parentId?: string | undefined;
+    parentName?: string;
+    lookupId?: string | undefined;
+    lookupName?: string;
+    optionsDataSources?: { [key: string]: any; };
+
+    constructor(data?: ILookupDetailModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.code = _data["code"];
+            this.description = _data["description"];
+            this.status = _data["status"];
+            this.statusName = _data["statusName"];
+            this.parentId = _data["parentId"];
+            this.parentName = _data["parentName"];
+            this.lookupId = _data["lookupId"];
+            this.lookupName = _data["lookupName"];
+            if (_data["optionsDataSources"]) {
+                this.optionsDataSources = {} as any;
+                for (let key in _data["optionsDataSources"]) {
+                    if (_data["optionsDataSources"].hasOwnProperty(key))
+                        (<any>this.optionsDataSources)![key] = _data["optionsDataSources"][key];
+                }
+            }
+        }
+    }
+
+    static fromJS(data: any): LookupDetailModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new LookupDetailModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["code"] = this.code;
+        data["description"] = this.description;
+        data["status"] = this.status;
+        data["statusName"] = this.statusName;
+        data["parentId"] = this.parentId;
+        data["parentName"] = this.parentName;
+        data["lookupId"] = this.lookupId;
+        data["lookupName"] = this.lookupName;
+        if (this.optionsDataSources) {
+            data["optionsDataSources"] = {};
+            for (let key in this.optionsDataSources) {
+                if (this.optionsDataSources.hasOwnProperty(key))
+                    (<any>data["optionsDataSources"])[key] = (<any>this.optionsDataSources)[key];
+            }
+        }
+        return data;
+    }
+}
+
+export interface ILookupDetailModel {
+    id?: string;
+    name?: string;
+    code?: string;
+    description?: string;
+    status?: boolean;
+    statusName?: string;
+    parentId?: string | undefined;
+    parentName?: string;
+    lookupId?: string | undefined;
+    lookupName?: string;
+    optionsDataSources?: { [key: string]: any; };
+}
+
+export class GetLookupDetailListQuery extends DataGridModel implements IGetLookupDetailListQuery {
+    cacheKey?: string;
+
+    constructor(data?: IGetLookupDetailListQuery) {
+        super(data);
+    }
+
+    override init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.cacheKey = _data["cacheKey"];
+        }
+    }
+
+    static override fromJS(data: any): GetLookupDetailListQuery {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetLookupDetailListQuery();
+        result.init(data);
+        return result;
+    }
+
+    override toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["cacheKey"] = this.cacheKey;
+        super.toJSON(data);
+        return data;
+    }
+}
+
+export interface IGetLookupDetailListQuery extends IDataGridModel {
+    cacheKey?: string;
+}
+
+export class CreateLookupDetailCommand implements ICreateLookupDetailCommand {
+    name!: string;
+    code?: string;
+    description?: string;
+    status?: boolean;
+    lookupId?: string;
+    parentId?: string | undefined;
+    cacheKey?: string;
+
+    constructor(data?: ICreateLookupDetailCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.code = _data["code"];
+            this.description = _data["description"];
+            this.status = _data["status"];
+            this.lookupId = _data["lookupId"];
+            this.parentId = _data["parentId"];
+            this.cacheKey = _data["cacheKey"];
+        }
+    }
+
+    static fromJS(data: any): CreateLookupDetailCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateLookupDetailCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["code"] = this.code;
+        data["description"] = this.description;
+        data["status"] = this.status;
+        data["lookupId"] = this.lookupId;
+        data["parentId"] = this.parentId;
+        data["cacheKey"] = this.cacheKey;
+        return data;
+    }
+}
+
+export interface ICreateLookupDetailCommand {
+    name: string;
+    code?: string;
+    description?: string;
+    status?: boolean;
+    lookupId?: string;
+    parentId?: string | undefined;
+    cacheKey?: string;
+}
+
+export class UpdateLookupDetailCommand implements IUpdateLookupDetailCommand {
+    id?: string;
+    name!: string;
+    code?: string;
+    description?: string;
+    status?: boolean;
+    lookupId!: string;
+    parentId?: string | undefined;
+    cacheKey?: string;
+
+    constructor(data?: IUpdateLookupDetailCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.code = _data["code"];
+            this.description = _data["description"];
+            this.status = _data["status"];
+            this.lookupId = _data["lookupId"];
+            this.parentId = _data["parentId"];
+            this.cacheKey = _data["cacheKey"];
+        }
+    }
+
+    static fromJS(data: any): UpdateLookupDetailCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateLookupDetailCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["code"] = this.code;
+        data["description"] = this.description;
+        data["status"] = this.status;
+        data["lookupId"] = this.lookupId;
+        data["parentId"] = this.parentId;
+        data["cacheKey"] = this.cacheKey;
+        return data;
+    }
+}
+
+export interface IUpdateLookupDetailCommand {
+    id?: string;
+    name: string;
+    code?: string;
+    description?: string;
+    status?: boolean;
+    lookupId: string;
+    parentId?: string | undefined;
+    cacheKey?: string;
+}
+
+export class PaginatedResponseOfLookupModel implements IPaginatedResponseOfLookupModel {
+    items?: LookupModel[];
+    pageNumber?: number;
+    totalPages?: number;
+    totalCount?: number;
+    hasPreviousPage?: boolean;
+    hasNextPage?: boolean;
+    optionsDataSources?: { [key: string]: any; };
+
+    constructor(data?: IPaginatedResponseOfLookupModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(LookupModel.fromJS(item));
+            }
+            this.pageNumber = _data["pageNumber"];
+            this.totalPages = _data["totalPages"];
+            this.totalCount = _data["totalCount"];
+            this.hasPreviousPage = _data["hasPreviousPage"];
+            this.hasNextPage = _data["hasNextPage"];
+            if (_data["optionsDataSources"]) {
+                this.optionsDataSources = {} as any;
+                for (let key in _data["optionsDataSources"]) {
+                    if (_data["optionsDataSources"].hasOwnProperty(key))
+                        (<any>this.optionsDataSources)![key] = _data["optionsDataSources"][key];
+                }
+            }
+        }
+    }
+
+    static fromJS(data: any): PaginatedResponseOfLookupModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new PaginatedResponseOfLookupModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["pageNumber"] = this.pageNumber;
+        data["totalPages"] = this.totalPages;
+        data["totalCount"] = this.totalCount;
+        data["hasPreviousPage"] = this.hasPreviousPage;
+        data["hasNextPage"] = this.hasNextPage;
+        if (this.optionsDataSources) {
+            data["optionsDataSources"] = {};
+            for (let key in this.optionsDataSources) {
+                if (this.optionsDataSources.hasOwnProperty(key))
+                    (<any>data["optionsDataSources"])[key] = (<any>this.optionsDataSources)[key];
+            }
+        }
+        return data;
+    }
+}
+
+export interface IPaginatedResponseOfLookupModel {
+    items?: LookupModel[];
+    pageNumber?: number;
+    totalPages?: number;
+    totalCount?: number;
+    hasPreviousPage?: boolean;
+    hasNextPage?: boolean;
+    optionsDataSources?: { [key: string]: any; };
+}
+
+export class LookupModel implements ILookupModel {
+    id?: string;
+    name?: string;
+    code?: string;
+    description?: string;
+    status?: boolean;
+    statusName?: string;
+    parentId?: string | undefined;
+    parentName?: string;
+    created?: Date | undefined;
+    createdDate?: Date | undefined;
+    createdTime?: string | undefined;
+    createdYear?: number | undefined;
+    subjects?: string[];
+    subjectRadio?: string;
+    color?: string;
+    uploadFile?: string;
+    descEdit?: string;
+    menus?: string[];
+    singleMenu?: string;
+    treeSelectMenus?: string[];
+    treeSelectSingleMenu?: string;
+    optionsDataSources?: { [key: string]: any; };
+
+    constructor(data?: ILookupModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.code = _data["code"];
+            this.description = _data["description"];
+            this.status = _data["status"];
+            this.statusName = _data["statusName"];
+            this.parentId = _data["parentId"];
+            this.parentName = _data["parentName"];
+            this.created = _data["created"] ? new Date(_data["created"].toString()) : <any>undefined;
+            this.createdDate = _data["createdDate"] ? new Date(_data["createdDate"].toString()) : <any>undefined;
+            this.createdTime = _data["createdTime"];
+            this.createdYear = _data["createdYear"];
+            if (Array.isArray(_data["subjects"])) {
+                this.subjects = [] as any;
+                for (let item of _data["subjects"])
+                    this.subjects!.push(item);
+            }
+            this.subjectRadio = _data["subjectRadio"];
+            this.color = _data["color"];
+            this.uploadFile = _data["uploadFile"];
+            this.descEdit = _data["descEdit"];
+            if (Array.isArray(_data["menus"])) {
+                this.menus = [] as any;
+                for (let item of _data["menus"])
+                    this.menus!.push(item);
+            }
+            this.singleMenu = _data["singleMenu"];
+            if (Array.isArray(_data["treeSelectMenus"])) {
+                this.treeSelectMenus = [] as any;
+                for (let item of _data["treeSelectMenus"])
+                    this.treeSelectMenus!.push(item);
+            }
+            this.treeSelectSingleMenu = _data["treeSelectSingleMenu"];
+            if (_data["optionsDataSources"]) {
+                this.optionsDataSources = {} as any;
+                for (let key in _data["optionsDataSources"]) {
+                    if (_data["optionsDataSources"].hasOwnProperty(key))
+                        (<any>this.optionsDataSources)![key] = _data["optionsDataSources"][key];
+                }
+            }
+        }
+    }
+
+    static fromJS(data: any): LookupModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new LookupModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["code"] = this.code;
+        data["description"] = this.description;
+        data["status"] = this.status;
+        data["statusName"] = this.statusName;
+        data["parentId"] = this.parentId;
+        data["parentName"] = this.parentName;
+        data["created"] = this.created ? this.created.toISOString() : <any>undefined;
+        data["createdDate"] = this.createdDate ? formatDate(this.createdDate) : <any>undefined;
+        data["createdTime"] = this.createdTime;
+        data["createdYear"] = this.createdYear;
+        if (Array.isArray(this.subjects)) {
+            data["subjects"] = [];
+            for (let item of this.subjects)
+                data["subjects"].push(item);
+        }
+        data["subjectRadio"] = this.subjectRadio;
+        data["color"] = this.color;
+        data["uploadFile"] = this.uploadFile;
+        data["descEdit"] = this.descEdit;
+        if (Array.isArray(this.menus)) {
+            data["menus"] = [];
+            for (let item of this.menus)
+                data["menus"].push(item);
+        }
+        data["singleMenu"] = this.singleMenu;
+        if (Array.isArray(this.treeSelectMenus)) {
+            data["treeSelectMenus"] = [];
+            for (let item of this.treeSelectMenus)
+                data["treeSelectMenus"].push(item);
+        }
+        data["treeSelectSingleMenu"] = this.treeSelectSingleMenu;
+        if (this.optionsDataSources) {
+            data["optionsDataSources"] = {};
+            for (let key in this.optionsDataSources) {
+                if (this.optionsDataSources.hasOwnProperty(key))
+                    (<any>data["optionsDataSources"])[key] = (<any>this.optionsDataSources)[key];
+            }
+        }
+        return data;
+    }
+}
+
+export interface ILookupModel {
+    id?: string;
+    name?: string;
+    code?: string;
+    description?: string;
+    status?: boolean;
+    statusName?: string;
+    parentId?: string | undefined;
+    parentName?: string;
+    created?: Date | undefined;
+    createdDate?: Date | undefined;
+    createdTime?: string | undefined;
+    createdYear?: number | undefined;
+    subjects?: string[];
+    subjectRadio?: string;
+    color?: string;
+    uploadFile?: string;
+    descEdit?: string;
+    menus?: string[];
+    singleMenu?: string;
+    treeSelectMenus?: string[];
+    treeSelectSingleMenu?: string;
+    optionsDataSources?: { [key: string]: any; };
+}
+
+export class GetLookupListQuery extends DataGridModel implements IGetLookupListQuery {
+
+    constructor(data?: IGetLookupListQuery) {
+        super(data);
+    }
+
+    override init(_data?: any) {
+        super.init(_data);
+    }
+
+    static override fromJS(data: any): GetLookupListQuery {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetLookupListQuery();
+        result.init(data);
+        return result;
+    }
+
+    override toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        super.toJSON(data);
+        return data;
+    }
+}
+
+export interface IGetLookupListQuery extends IDataGridModel {
+}
+
+export class CreateLookupCommand implements ICreateLookupCommand {
+    name!: string;
+    code!: string;
+    description?: string;
+    status?: boolean;
+    parentId?: string | undefined;
+
+    constructor(data?: ICreateLookupCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.code = _data["code"];
+            this.description = _data["description"];
+            this.status = _data["status"];
+            this.parentId = _data["parentId"];
+        }
+    }
+
+    static fromJS(data: any): CreateLookupCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateLookupCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["code"] = this.code;
+        data["description"] = this.description;
+        data["status"] = this.status;
+        data["parentId"] = this.parentId;
+        return data;
+    }
+}
+
+export interface ICreateLookupCommand {
+    name: string;
+    code: string;
+    description?: string;
+    status?: boolean;
+    parentId?: string | undefined;
+}
+
+export class UpdateLookupCommand implements IUpdateLookupCommand {
+    id?: string;
+    name!: string;
+    code!: string;
+    description?: string;
+    status?: boolean;
+    parentId?: string | undefined;
+    cacheKey?: string;
+
+    constructor(data?: IUpdateLookupCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.code = _data["code"];
+            this.description = _data["description"];
+            this.status = _data["status"];
+            this.parentId = _data["parentId"];
+            this.cacheKey = _data["cacheKey"];
+        }
+    }
+
+    static fromJS(data: any): UpdateLookupCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateLookupCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["code"] = this.code;
+        data["description"] = this.description;
+        data["status"] = this.status;
+        data["parentId"] = this.parentId;
+        data["cacheKey"] = this.cacheKey;
+        return data;
+    }
+}
+
+export interface IUpdateLookupCommand {
+    id?: string;
+    name: string;
+    code: string;
+    description?: string;
+    status?: boolean;
+    parentId?: string | undefined;
     cacheKey?: string;
 }
 

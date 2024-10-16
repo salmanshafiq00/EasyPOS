@@ -21,11 +21,15 @@ internal sealed class GetPurchaseListQueryHandler(ISqlConnectionFactory sqlConne
                 t.PurchaseDate AS {nameof(PurchaseModel.PurchaseDate)},
                 t.ReferenceNo AS {nameof(PurchaseModel.ReferenceNo)},
                 t.GrandTotal AS {nameof(PurchaseModel.GrandTotal)},
+                ISNULL(t.PaidAmount, 0) AS {nameof(PurchaseModel.PaidAmount)},
+                ISNULL(t.DueAmount, 0) AS {nameof(PurchaseModel.DueAmount)},
                 s.Name AS {nameof(PurchaseModel.SupplierName)},
-                ps.Name AS {nameof(PurchaseModel.PurchaseStatus)}
+                ps.Name AS {nameof(PurchaseModel.PurchaseStatus)},
+                pmns.Name AS {nameof(PurchaseModel.PaymentStatusId)}
             FROM dbo.Purchases t
             LEFT JOIN dbo.Suppliers s ON s.Id = t.SupplierId
             LEFT JOIN dbo.LookupDetails ps ON ps.Id = t.PurchaseStatusId
+            LEFT JOIN dbo.LookupDetails pmns ON pmns.Id = t.PaymentStatusId
             """;
 
         var sqlWithOrders = $"""

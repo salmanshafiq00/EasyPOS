@@ -17,3 +17,10 @@ public enum SaleSatus
     Completed = 107101,
     Pending = 107102
 }
+
+public enum PaymentType
+{
+    Cach = 109101,
+    Card = 109102,
+    Cheque = 109102
+}

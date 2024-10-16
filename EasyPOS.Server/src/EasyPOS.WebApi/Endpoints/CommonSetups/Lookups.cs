@@ -9,7 +9,7 @@ using EasyPOS.Application.Features.Lookups.Queries;
 using EasyPOS.Infrastructure.Communications;
 using Microsoft.AspNetCore.SignalR;
 
-namespace EasyPOS.WebApi.Endpoints;
+namespace EasyPOS.WebApi.Endpoints.CommonSetups;
 
 public sealed class Lookups : EndpointGroupBase
 {

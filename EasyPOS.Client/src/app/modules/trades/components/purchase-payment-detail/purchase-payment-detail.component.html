@@ -1,0 +1,30 @@
+<div class="col-12">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+    <div class="p-fluid p-formgrid grid">
+      <div class="field col-12 md:col-6">
+        <app-input-decimal label="Received Amount" formControlName="receivedAmount" (onChange)="updateChangeAmount()" textAlign="right" [required]="true" />
+        <app-validator-msg [control]="f['receivedAmount']" />
+      </div>
+      <div class="field col-12 md:col-6">
+        <app-input-decimal label="Paying Amount" formControlName="payingAmount" (onChange)="updateChangeAmount()" textAlign="right" [required]="true" />
+        <app-validator-msg [control]="f['payingAmount']" />
+      </div>
+      <div class="field col-12 md:col-6">
+        <app-input-decimal label="Change" formControlName="changeAmount" textAlign="right" [required]="false" [disabled]="true" />
+    
+      </div>
+      <div class="field col-12 md:col-6">
+        <app-input-select label="Payment Type" formControlName="paymentTypeId"
+          [options]="optionsDataSources?.['paymentTypeSelectList']" [required]="true" [showClear]="false" />
+      </div>
+      <div class="field col-12">
+        <app-input-textarea label="Note" formControlName="note" [required]="false" [max]="500" [autoResize]="true" [showCharLength]="true" />
+      </div>
+    </div>
+    <div class="mt-3 p-dialog-footer">
+      <app-button label="Cancel" type="button" icon="pi pi-times" [text]="true" severity="warning"
+        (onClick)="cancel()" />
+      <app-button label="Save" type="submit" icon="pi pi-check" [text]="true" [disabled]="form.invalid" />
+    </div>
+  </form>
+</div>

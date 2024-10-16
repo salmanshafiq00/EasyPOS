@@ -41,7 +41,9 @@ internal sealed class CommonQueryService(ISqlConnectionFactory sqlConnection) : 
                 l.DevCode = @DevCode          
             """;
 
-        return await connection.QueryFirstOrDefaultAsync<List<LookupDetail>>(sql, new { DevCode = lookupDevCode });
+        var result = await connection.QueryAsync<LookupDetail>(sql, new { DevCode = lookupDevCode });
+
+        return result.AsList();
     }
 
     public async Task<bool> IsExistAsync(

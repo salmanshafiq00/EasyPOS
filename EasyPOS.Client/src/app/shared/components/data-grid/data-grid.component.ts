@@ -324,7 +324,6 @@ export class DataGridComponent implements OnInit, OnDestroy {
   // };
 
   handleRowAction(action: AppPageActionModel, item: any) {
-    console.log(action)
     if (action.actionName === 'edit') {
       this.edit(item)
     } else if (action.actionName === 'delete') {

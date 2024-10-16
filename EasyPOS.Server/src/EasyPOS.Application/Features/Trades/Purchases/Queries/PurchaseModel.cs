@@ -20,10 +20,13 @@ public record PurchaseModel
     public decimal? DiscountAmount { get; set; }
     public decimal? ShippingCost { get; set; }
     public decimal GrandTotal { get; set; }
+    public decimal PaidAmount { get; set; }
+    public decimal DueAmount { get; set; }
     public string? Note { get; set; }
 
     public string SupplierName { get; set; }
     public string PurchaseStatus { get; set; }
+    public string PaymentStatusId { get; set; }
 
     public List<PurchaseDetailModel> PurchaseDetails { get; set; } = [];
 

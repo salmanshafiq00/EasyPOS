@@ -218,6 +218,14 @@ public static class Permissions
         public const string Delete = "Permissions.Purchases.Delete";
     }
 
+    public static class PurchasePayments
+    {
+        public const string View = "Permissions.PurchasePayments.View";
+        public const string Create = "Permissions.PurchasePayments.Create";
+        public const string Edit = "Permissions.PurchasePayments.Edit";
+        public const string Delete = "Permissions.PurchasePayments.Delete";
+    }
+
     public static class Sales
     {
         public const string View = "Permissions.Sales.View";

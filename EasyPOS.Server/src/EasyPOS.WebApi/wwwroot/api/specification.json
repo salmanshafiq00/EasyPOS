@@ -725,499 +725,6 @@
         }
       }
     },
-    "/api/LookupDetails/GetAll": {
-      "post": {
-        "tags": [
-          "LookupDetails"
-        ],
-        "operationId": "GetLookupDetails",
-        "requestBody": {
-          "x-name": "query",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/GetLookupDetailListQuery"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PaginatedResponseOfLookupDetailModel"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
-      }
-    },
-    "/api/LookupDetails/Get/{id}": {
-      "get": {
-        "tags": [
-          "LookupDetails"
-        ],
-        "operationId": "GetLookupDetail",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "guid"
-            },
-            "x-position": 1
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/LookupDetailModel"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
-      }
-    },
-    "/api/LookupDetails/Create": {
-      "post": {
-        "tags": [
-          "LookupDetails"
-        ],
-        "operationId": "CreateLookupDetail",
-        "requestBody": {
-          "x-name": "command",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateLookupDetailCommand"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string",
-                  "format": "guid"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
-      }
-    },
-    "/api/LookupDetails/Update": {
-      "put": {
-        "tags": [
-          "LookupDetails"
-        ],
-        "operationId": "UpdateLookupDetail",
-        "requestBody": {
-          "x-name": "command",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateLookupDetailCommand"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": ""
-          },
-          "400": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": ""
-          }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
-      }
-    },
-    "/api/LookupDetails/Delete/{id}": {
-      "delete": {
-        "tags": [
-          "LookupDetails"
-        ],
-        "operationId": "DeleteLookupDetail",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "guid"
-            },
-            "x-position": 1
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": ""
-          },
-          "400": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
-      }
-    },
-    "/api/LookupDetails/DeleteMultiple": {
-      "post": {
-        "tags": [
-          "LookupDetails"
-        ],
-        "operationId": "DeleteMultiple",
-        "requestBody": {
-          "x-name": "ids",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "type": "string",
-                  "format": "guid"
-                }
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
-        "responses": {
-          "204": {
-            "description": ""
-          },
-          "400": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
-      }
-    },
-    "/api/LookupDetails/Upload": {
-      "post": {
-        "tags": [
-          "LookupDetails"
-        ],
-        "operationId": "LookupDetailUpload",
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "integer",
-                  "format": "int32"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
-      }
-    },
-    "/api/Lookups/GetAll": {
-      "post": {
-        "tags": [
-          "Lookups"
-        ],
-        "operationId": "GetLookups",
-        "requestBody": {
-          "x-name": "query",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/GetLookupListQuery"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PaginatedResponseOfLookupModel"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
-      }
-    },
-    "/api/Lookups/Get/{id}": {
-      "get": {
-        "tags": [
-          "Lookups"
-        ],
-        "operationId": "GetLookup",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "guid"
-            },
-            "x-position": 1
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/LookupModel"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": ""
-          }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
-      }
-    },
-    "/api/Lookups/Create": {
-      "post": {
-        "tags": [
-          "Lookups"
-        ],
-        "operationId": "CreateLookup",
-        "requestBody": {
-          "x-name": "command",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateLookupCommand"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string",
-                  "format": "guid"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
-      }
-    },
-    "/api/Lookups/Update": {
-      "put": {
-        "tags": [
-          "Lookups"
-        ],
-        "operationId": "UpdateLookup",
-        "requestBody": {
-          "x-name": "command",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateLookupCommand"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": ""
-          },
-          "400": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": ""
-          }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
-      }
-    },
-    "/api/Lookups/Delete/{id}": {
-      "delete": {
-        "tags": [
-          "Lookups"
-        ],
-        "operationId": "DeleteLookup",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "guid"
-            },
-            "x-position": 1
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": ""
-          },
-          "400": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
-      }
-    },
     "/api/SelectLists/GetLookupSelectList": {
       "get": {
         "tags": [
@@ -2584,6 +2091,255 @@
                   "items": {
                     "$ref": "#/components/schemas/TreeNodeModel"
                   }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
+    "/api/PurchasePayments/GetAll": {
+      "post": {
+        "tags": [
+          "PurchasePayments"
+        ],
+        "operationId": "GetPurchasePayments",
+        "requestBody": {
+          "x-name": "query",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetPurchasePaymentListQuery"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponseOfPurchasePaymentModel"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
+    "/api/PurchasePayments/Get/{id}": {
+      "get": {
+        "tags": [
+          "PurchasePayments"
+        ],
+        "operationId": "GetPurchasePayment",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PurchasePaymentModel"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
+    "/api/PurchasePayments/Create": {
+      "post": {
+        "tags": [
+          "PurchasePayments"
+        ],
+        "operationId": "CreatePurchasePayment",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePurchasePaymentCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "guid"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
+    "/api/PurchasePayments/Update": {
+      "put": {
+        "tags": [
+          "PurchasePayments"
+        ],
+        "operationId": "UpdatePurchasePayment",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePurchasePaymentCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
+    "/api/PurchasePayments/Delete/{id}": {
+      "delete": {
+        "tags": [
+          "PurchasePayments"
+        ],
+        "operationId": "DeletePurchasePayment",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
+    "/api/PurchasePayments/DeleteMultiple": {
+      "post": {
+        "tags": [
+          "PurchasePayments"
+        ],
+        "operationId": "DeletePurchasePayments",
+        "requestBody": {
+          "x-name": "ids",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "guid"
+                }
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
             }
@@ -4526,6 +4282,499 @@
         ]
       }
     },
+    "/api/LookupDetails/GetAll": {
+      "post": {
+        "tags": [
+          "LookupDetails"
+        ],
+        "operationId": "GetLookupDetails",
+        "requestBody": {
+          "x-name": "query",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetLookupDetailListQuery"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponseOfLookupDetailModel"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
+    "/api/LookupDetails/Get/{id}": {
+      "get": {
+        "tags": [
+          "LookupDetails"
+        ],
+        "operationId": "GetLookupDetail",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LookupDetailModel"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
+    "/api/LookupDetails/Create": {
+      "post": {
+        "tags": [
+          "LookupDetails"
+        ],
+        "operationId": "CreateLookupDetail",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateLookupDetailCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "guid"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
+    "/api/LookupDetails/Update": {
+      "put": {
+        "tags": [
+          "LookupDetails"
+        ],
+        "operationId": "UpdateLookupDetail",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateLookupDetailCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
+    "/api/LookupDetails/Delete/{id}": {
+      "delete": {
+        "tags": [
+          "LookupDetails"
+        ],
+        "operationId": "DeleteLookupDetail",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
+    "/api/LookupDetails/DeleteMultiple": {
+      "post": {
+        "tags": [
+          "LookupDetails"
+        ],
+        "operationId": "DeleteMultiple",
+        "requestBody": {
+          "x-name": "ids",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "guid"
+                }
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
+    "/api/LookupDetails/Upload": {
+      "post": {
+        "tags": [
+          "LookupDetails"
+        ],
+        "operationId": "LookupDetailUpload",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
+    "/api/Lookups/GetAll": {
+      "post": {
+        "tags": [
+          "Lookups"
+        ],
+        "operationId": "GetLookups",
+        "requestBody": {
+          "x-name": "query",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetLookupListQuery"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponseOfLookupModel"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
+    "/api/Lookups/Get/{id}": {
+      "get": {
+        "tags": [
+          "Lookups"
+        ],
+        "operationId": "GetLookup",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LookupModel"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
+    "/api/Lookups/Create": {
+      "post": {
+        "tags": [
+          "Lookups"
+        ],
+        "operationId": "CreateLookup",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateLookupCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "guid"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
+    "/api/Lookups/Update": {
+      "put": {
+        "tags": [
+          "Lookups"
+        ],
+        "operationId": "UpdateLookup",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateLookupCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
+    "/api/Lookups/Delete/{id}": {
+      "delete": {
+        "tags": [
+          "Lookups"
+        ],
+        "operationId": "DeleteLookup",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
     "/api/AppMenus/GetAll": {
       "post": {
         "tags": [
@@ -6147,398 +6396,6 @@
           }
         }
       },
-      "PaginatedResponseOfLookupDetailModel": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/LookupDetailModel"
-            }
-          },
-          "pageNumber": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalCount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "hasPreviousPage": {
-            "type": "boolean"
-          },
-          "hasNextPage": {
-            "type": "boolean"
-          },
-          "optionsDataSources": {
-            "type": "object",
-            "additionalProperties": {}
-          }
-        }
-      },
-      "LookupDetailModel": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "guid"
-          },
-          "name": {
-            "type": "string"
-          },
-          "code": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          },
-          "status": {
-            "type": "boolean"
-          },
-          "statusName": {
-            "type": "string"
-          },
-          "parentId": {
-            "type": "string",
-            "format": "guid",
-            "nullable": true
-          },
-          "parentName": {
-            "type": "string"
-          },
-          "lookupId": {
-            "type": "string",
-            "format": "guid",
-            "nullable": true
-          },
-          "lookupName": {
-            "type": "string"
-          },
-          "optionsDataSources": {
-            "type": "object",
-            "additionalProperties": {}
-          }
-        }
-      },
-      "GetLookupDetailListQuery": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/DataGridModel"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "cacheKey": {
-                "type": "string"
-              }
-            }
-          }
-        ]
-      },
-      "CreateLookupDetailCommand": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": [
-          "name"
-        ],
-        "properties": {
-          "name": {
-            "type": "string",
-            "maxLength": 200,
-            "minLength": 0
-          },
-          "code": {
-            "type": "string",
-            "maxLength": 20,
-            "minLength": 0
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 500,
-            "minLength": 0
-          },
-          "status": {
-            "type": "boolean"
-          },
-          "lookupId": {
-            "type": "string",
-            "format": "guid"
-          },
-          "parentId": {
-            "type": "string",
-            "format": "guid",
-            "nullable": true
-          },
-          "cacheKey": {
-            "type": "string"
-          }
-        }
-      },
-      "UpdateLookupDetailCommand": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": [
-          "name",
-          "lookupId"
-        ],
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "guid"
-          },
-          "name": {
-            "type": "string",
-            "maxLength": 200,
-            "minLength": 0
-          },
-          "code": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 500,
-            "minLength": 0
-          },
-          "status": {
-            "type": "boolean"
-          },
-          "lookupId": {
-            "type": "string",
-            "format": "guid"
-          },
-          "parentId": {
-            "type": "string",
-            "format": "guid",
-            "nullable": true
-          },
-          "cacheKey": {
-            "type": "string"
-          }
-        }
-      },
-      "PaginatedResponseOfLookupModel": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/LookupModel"
-            }
-          },
-          "pageNumber": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalCount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "hasPreviousPage": {
-            "type": "boolean"
-          },
-          "hasNextPage": {
-            "type": "boolean"
-          },
-          "optionsDataSources": {
-            "type": "object",
-            "additionalProperties": {}
-          }
-        }
-      },
-      "LookupModel": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "guid"
-          },
-          "name": {
-            "type": "string"
-          },
-          "code": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          },
-          "status": {
-            "type": "boolean"
-          },
-          "statusName": {
-            "type": "string"
-          },
-          "parentId": {
-            "type": "string",
-            "format": "guid",
-            "nullable": true
-          },
-          "parentName": {
-            "type": "string"
-          },
-          "created": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "createdDate": {
-            "type": "string",
-            "format": "date",
-            "nullable": true
-          },
-          "createdTime": {
-            "type": "string",
-            "format": "time",
-            "nullable": true
-          },
-          "createdYear": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "subjects": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "subjectRadio": {
-            "type": "string"
-          },
-          "color": {
-            "type": "string"
-          },
-          "uploadFile": {
-            "type": "string",
-            "format": "binary"
-          },
-          "descEdit": {
-            "type": "string"
-          },
-          "menus": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "format": "guid"
-            }
-          },
-          "singleMenu": {
-            "type": "string",
-            "format": "guid"
-          },
-          "treeSelectMenus": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "format": "guid"
-            }
-          },
-          "treeSelectSingleMenu": {
-            "type": "string",
-            "format": "guid"
-          },
-          "optionsDataSources": {
-            "type": "object",
-            "additionalProperties": {}
-          }
-        }
-      },
-      "GetLookupListQuery": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/DataGridModel"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false
-          }
-        ]
-      },
-      "CreateLookupCommand": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": [
-          "name",
-          "code"
-        ],
-        "properties": {
-          "name": {
-            "type": "string",
-            "maxLength": 200,
-            "minLength": 0
-          },
-          "code": {
-            "type": "string",
-            "maxLength": 10,
-            "minLength": 0
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 500,
-            "minLength": 0
-          },
-          "status": {
-            "type": "boolean"
-          },
-          "parentId": {
-            "type": "string",
-            "format": "guid",
-            "nullable": true
-          }
-        }
-      },
-      "UpdateLookupCommand": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": [
-          "name",
-          "code"
-        ],
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "guid"
-          },
-          "name": {
-            "type": "string",
-            "maxLength": 200,
-            "minLength": 0
-          },
-          "code": {
-            "type": "string",
-            "maxLength": 10,
-            "minLength": 0
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 500,
-            "minLength": 0
-          },
-          "status": {
-            "type": "boolean"
-          },
-          "parentId": {
-            "type": "string",
-            "format": "guid",
-            "nullable": true
-          },
-          "cacheKey": {
-            "type": "string"
-          }
-        }
-      },
       "SelectListModel": {
         "type": "object",
         "additionalProperties": false,
@@ -7180,6 +7037,14 @@
             "type": "number",
             "format": "decimal"
           },
+          "paidAmount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "dueAmount": {
+            "type": "number",
+            "format": "decimal"
+          },
           "note": {
             "type": "string",
             "nullable": true
@@ -7188,6 +7053,9 @@
             "type": "string"
           },
           "purchaseStatus": {
+            "type": "string"
+          },
+          "paymentStatusId": {
             "type": "string"
           },
           "purchaseDetails": {
@@ -7533,6 +7401,176 @@
             "items": {
               "$ref": "#/components/schemas/TreeNodeModel"
             }
+          }
+        }
+      },
+      "PaginatedResponseOfPurchasePaymentModel": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PurchasePaymentModel"
+            }
+          },
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hasPreviousPage": {
+            "type": "boolean"
+          },
+          "hasNextPage": {
+            "type": "boolean"
+          },
+          "optionsDataSources": {
+            "type": "object",
+            "additionalProperties": {}
+          }
+        }
+      },
+      "PurchasePaymentModel": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "purchaseId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "paymentDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "receivedAmount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "payingAmount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "changeAmount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "paymentType": {
+            "type": "string",
+            "format": "guid"
+          },
+          "note": {
+            "type": "string",
+            "nullable": true
+          },
+          "optionsDataSources": {
+            "type": "object",
+            "additionalProperties": {}
+          }
+        }
+      },
+      "GetPurchasePaymentListQuery": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/DataGridModel"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "cacheKey": {
+                "type": "string"
+              },
+              "purchaseId": {
+                "type": "string",
+                "format": "guid"
+              }
+            }
+          }
+        ]
+      },
+      "CreatePurchasePaymentCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "purchaseId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "receivedAmount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "payingAmount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "changeAmount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "paymentType": {
+            "type": "string",
+            "format": "guid"
+          },
+          "note": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "UpdatePurchasePaymentCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "purchaseId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "paymentDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "receivedAmount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "payingAmount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "changeAmount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "paymentType": {
+            "type": "string",
+            "format": "guid"
+          },
+          "note": {
+            "type": "string",
+            "nullable": true
+          },
+          "cacheKey": {
+            "type": "string"
           }
         }
       },
@@ -8974,6 +9012,398 @@
           },
           "isActive": {
             "type": "boolean"
+          },
+          "cacheKey": {
+            "type": "string"
+          }
+        }
+      },
+      "PaginatedResponseOfLookupDetailModel": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LookupDetailModel"
+            }
+          },
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hasPreviousPage": {
+            "type": "boolean"
+          },
+          "hasNextPage": {
+            "type": "boolean"
+          },
+          "optionsDataSources": {
+            "type": "object",
+            "additionalProperties": {}
+          }
+        }
+      },
+      "LookupDetailModel": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "status": {
+            "type": "boolean"
+          },
+          "statusName": {
+            "type": "string"
+          },
+          "parentId": {
+            "type": "string",
+            "format": "guid",
+            "nullable": true
+          },
+          "parentName": {
+            "type": "string"
+          },
+          "lookupId": {
+            "type": "string",
+            "format": "guid",
+            "nullable": true
+          },
+          "lookupName": {
+            "type": "string"
+          },
+          "optionsDataSources": {
+            "type": "object",
+            "additionalProperties": {}
+          }
+        }
+      },
+      "GetLookupDetailListQuery": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/DataGridModel"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "cacheKey": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "CreateLookupDetailCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 0
+          },
+          "code": {
+            "type": "string",
+            "maxLength": 20,
+            "minLength": 0
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500,
+            "minLength": 0
+          },
+          "status": {
+            "type": "boolean"
+          },
+          "lookupId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "parentId": {
+            "type": "string",
+            "format": "guid",
+            "nullable": true
+          },
+          "cacheKey": {
+            "type": "string"
+          }
+        }
+      },
+      "UpdateLookupDetailCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "lookupId"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 0
+          },
+          "code": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500,
+            "minLength": 0
+          },
+          "status": {
+            "type": "boolean"
+          },
+          "lookupId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "parentId": {
+            "type": "string",
+            "format": "guid",
+            "nullable": true
+          },
+          "cacheKey": {
+            "type": "string"
+          }
+        }
+      },
+      "PaginatedResponseOfLookupModel": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LookupModel"
+            }
+          },
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hasPreviousPage": {
+            "type": "boolean"
+          },
+          "hasNextPage": {
+            "type": "boolean"
+          },
+          "optionsDataSources": {
+            "type": "object",
+            "additionalProperties": {}
+          }
+        }
+      },
+      "LookupModel": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "status": {
+            "type": "boolean"
+          },
+          "statusName": {
+            "type": "string"
+          },
+          "parentId": {
+            "type": "string",
+            "format": "guid",
+            "nullable": true
+          },
+          "parentName": {
+            "type": "string"
+          },
+          "created": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "createdDate": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "createdTime": {
+            "type": "string",
+            "format": "time",
+            "nullable": true
+          },
+          "createdYear": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "subjects": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "subjectRadio": {
+            "type": "string"
+          },
+          "color": {
+            "type": "string"
+          },
+          "uploadFile": {
+            "type": "string",
+            "format": "binary"
+          },
+          "descEdit": {
+            "type": "string"
+          },
+          "menus": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "guid"
+            }
+          },
+          "singleMenu": {
+            "type": "string",
+            "format": "guid"
+          },
+          "treeSelectMenus": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "guid"
+            }
+          },
+          "treeSelectSingleMenu": {
+            "type": "string",
+            "format": "guid"
+          },
+          "optionsDataSources": {
+            "type": "object",
+            "additionalProperties": {}
+          }
+        }
+      },
+      "GetLookupListQuery": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/DataGridModel"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ]
+      },
+      "CreateLookupCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "code"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 0
+          },
+          "code": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 0
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500,
+            "minLength": 0
+          },
+          "status": {
+            "type": "boolean"
+          },
+          "parentId": {
+            "type": "string",
+            "format": "guid",
+            "nullable": true
+          }
+        }
+      },
+      "UpdateLookupCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "code"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 0
+          },
+          "code": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 0
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500,
+            "minLength": 0
+          },
+          "status": {
+            "type": "boolean"
+          },
+          "parentId": {
+            "type": "string",
+            "format": "guid",
+            "nullable": true
           },
           "cacheKey": {
             "type": "string"
