@@ -2140,6 +2140,46 @@
         ]
       }
     },
+    "/api/PurchasePayments/GetAllByPurchaseId": {
+      "post": {
+        "tags": [
+          "PurchasePayments"
+        ],
+        "operationId": "GetAllByPurchaseId",
+        "requestBody": {
+          "x-name": "query",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetPaymentListByPurchaseIdQuery"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PurchasePaymentModel"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
     "/api/PurchasePayments/Get/{id}": {
       "get": {
         "tags": [
@@ -7470,7 +7510,17 @@
             "type": "string",
             "format": "guid"
           },
+          "paymentTypeName": {
+            "type": "string"
+          },
+          "createdBy": {
+            "type": "string"
+          },
           "note": {
+            "type": "string",
+            "nullable": true
+          },
+          "paymentDateString": {
             "type": "string",
             "nullable": true
           },
@@ -7499,6 +7549,23 @@
             }
           }
         ]
+      },
+      "GetPaymentListByPurchaseIdQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "cacheKey": {
+            "type": "string"
+          },
+          "purchaseId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "allowCache": {
+            "type": "boolean",
+            "nullable": true
+          }
+        }
       },
       "CreatePurchasePaymentCommand": {
         "type": "object",

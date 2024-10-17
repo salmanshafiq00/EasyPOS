@@ -24,7 +24,18 @@ internal sealed class UpdatePurchasePaymentCommandHandler(
 
         if (entity is null) return Result.Failure(Error.NotFound(nameof(entity), ErrorMessages.EntityNotFound));
 
+        var purchase = await dbContext.Purchases
+            .FirstOrDefaultAsync(x => x.Id == entity.PurchaseId);
+
+        if(purchase is null) return Result.Failure(Error.NotFound(nameof(purchase), "Purchase Not Found."));
+
+        var previousPaymentAmount = entity.PayingAmount;
+
         request.Adapt(entity);
+
+        purchase.PaidAmount = entity.PayingAmount - previousPaymentAmount;
+        purchase.DueAmount = purchase.GrandTotal - purchase.PaidAmount;
+
         await dbContext.SaveChangesAsync(cancellationToken);
 
         return Result.Success();

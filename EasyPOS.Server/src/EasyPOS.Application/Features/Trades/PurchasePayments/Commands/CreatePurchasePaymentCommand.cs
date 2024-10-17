@@ -1,6 +1,4 @@
-﻿using DocumentFormat.OpenXml.Drawing.Diagrams;
-using EasyPOS.Application.Common.Enums;
-using EasyPOS.Application.Features.Trades.Purchases.Shared;
+﻿using EasyPOS.Application.Features.Trades.Purchases.Shared;
 using EasyPOS.Domain.Trades;
 
 namespace EasyPOS.Application.Features.Trades.PurchasePayments.Commands;
@@ -25,6 +23,7 @@ internal sealed class CreatePurchasePaymentCommandHandler(
     public async Task<Result<Guid>> Handle(CreatePurchasePaymentCommand request, CancellationToken cancellationToken)
     {
         var entity = request.Adapt<PurchasePayment>();
+        entity.PaymentDate = DateTime.Now;
 
         dbContext.PurchasePayments.Add(entity);
 

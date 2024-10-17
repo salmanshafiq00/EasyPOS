@@ -91,7 +91,7 @@ export class PurchasePaymentDetailComponent implements OnInit {
       receivedAmount: [''],
       payingAmount: [''],
       changeAmount: [0],
-      paymentTypeId: [null],
+      paymentType: [null],
       note: [null]
     });
   }

@@ -13,7 +13,7 @@ internal static class PurchaseSharedService
         {
             return paymentStatuses.FirstOrDefault(x => x.DevCode == (int)PaymentStatus.Paid)?.Id;
         }
-        else if (purchase.GrandTotal > purchase.PaidAmount && purchase.PaidAmount < 0)
+        else if (purchase.GrandTotal > purchase.PaidAmount && purchase.PaidAmount > 0)
         {
             return paymentStatuses.FirstOrDefault(x => x.DevCode == (int)PaymentStatus.Partial)?.Id;
         }

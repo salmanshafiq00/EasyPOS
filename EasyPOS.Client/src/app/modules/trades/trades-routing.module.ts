@@ -7,6 +7,7 @@ import { SaleListComponent } from "./components/sale-list/sale-list.component";
 import { UpdateSaleDetailComponent } from "./components/update-sale-detail/update-sale-detail.component";
 import { UpdatePurchaseOrderDetailComponent } from "./components/update-purchase-order-detail/update-purchase-order-detail.component";
 import { PurchasePaymentDetailComponent } from "./components/purchase-payment-detail/purchase-payment-detail.component";
+import { PurchasePaymentListComponent } from "./components/purchase-payment-list/purchase-payment-list.component";
 
 const routes: Routes = [
   {path: 'sales', component: SaleListComponent},
@@ -30,5 +31,6 @@ export const TradesRoutingComponents = [
   PurchaseDetailComponent,
   UpdateSaleDetailComponent,
   UpdatePurchaseOrderDetailComponent,
-  PurchasePaymentDetailComponent
+  PurchasePaymentDetailComponent,
+  PurchasePaymentListComponent
 ];

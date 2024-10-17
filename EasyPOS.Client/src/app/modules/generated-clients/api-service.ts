@@ -3157,6 +3157,7 @@ export class TreeNodeListsClient implements ITreeNodeListsClient {
 
 export interface IPurchasePaymentsClient {
     getAll(query: GetPurchasePaymentListQuery): Observable<PaginatedResponseOfPurchasePaymentModel>;
+    getAllByPurchaseId(query: GetPaymentListByPurchaseIdQuery): Observable<PurchasePaymentModel[]>;
     get(id: string): Observable<PurchasePaymentModel>;
     create(command: CreatePurchasePaymentCommand): Observable<string>;
     update(command: UpdatePurchasePaymentCommand): Observable<void>;
@@ -3218,6 +3219,66 @@ export class PurchasePaymentsClient implements IPurchasePaymentsClient {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = PaginatedResponseOfPurchasePaymentModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    getAllByPurchaseId(query: GetPaymentListByPurchaseIdQuery): Observable<PurchasePaymentModel[]> {
+        let url_ = this.baseUrl + "/api/PurchasePayments/GetAllByPurchaseId";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(query);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllByPurchaseId(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllByPurchaseId(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PurchasePaymentModel[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PurchasePaymentModel[]>;
+        }));
+    }
+
+    protected processGetAllByPurchaseId(response: HttpResponseBase): Observable<PurchasePaymentModel[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(PurchasePaymentModel.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -11536,7 +11597,10 @@ export class PurchasePaymentModel implements IPurchasePaymentModel {
     payingAmount?: number;
     changeAmount?: number;
     paymentType?: string;
+    paymentTypeName?: string;
+    createdBy?: string;
     note?: string | undefined;
+    paymentDateString?: string | undefined;
     optionsDataSources?: { [key: string]: any; };
 
     constructor(data?: IPurchasePaymentModel) {
@@ -11557,7 +11621,10 @@ export class PurchasePaymentModel implements IPurchasePaymentModel {
             this.payingAmount = _data["payingAmount"];
             this.changeAmount = _data["changeAmount"];
             this.paymentType = _data["paymentType"];
+            this.paymentTypeName = _data["paymentTypeName"];
+            this.createdBy = _data["createdBy"];
             this.note = _data["note"];
+            this.paymentDateString = _data["paymentDateString"];
             if (_data["optionsDataSources"]) {
                 this.optionsDataSources = {} as any;
                 for (let key in _data["optionsDataSources"]) {
@@ -11584,7 +11651,10 @@ export class PurchasePaymentModel implements IPurchasePaymentModel {
         data["payingAmount"] = this.payingAmount;
         data["changeAmount"] = this.changeAmount;
         data["paymentType"] = this.paymentType;
+        data["paymentTypeName"] = this.paymentTypeName;
+        data["createdBy"] = this.createdBy;
         data["note"] = this.note;
+        data["paymentDateString"] = this.paymentDateString;
         if (this.optionsDataSources) {
             data["optionsDataSources"] = {};
             for (let key in this.optionsDataSources) {
@@ -11604,7 +11674,10 @@ export interface IPurchasePaymentModel {
     payingAmount?: number;
     changeAmount?: number;
     paymentType?: string;
+    paymentTypeName?: string;
+    createdBy?: string;
     note?: string | undefined;
+    paymentDateString?: string | undefined;
     optionsDataSources?: { [key: string]: any; };
 }
 
@@ -11643,6 +11716,50 @@ export class GetPurchasePaymentListQuery extends DataGridModel implements IGetPu
 export interface IGetPurchasePaymentListQuery extends IDataGridModel {
     cacheKey?: string;
     purchaseId?: string;
+}
+
+export class GetPaymentListByPurchaseIdQuery implements IGetPaymentListByPurchaseIdQuery {
+    cacheKey?: string;
+    purchaseId?: string;
+    allowCache?: boolean | undefined;
+
+    constructor(data?: IGetPaymentListByPurchaseIdQuery) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.cacheKey = _data["cacheKey"];
+            this.purchaseId = _data["purchaseId"];
+            this.allowCache = _data["allowCache"];
+        }
+    }
+
+    static fromJS(data: any): GetPaymentListByPurchaseIdQuery {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetPaymentListByPurchaseIdQuery();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["cacheKey"] = this.cacheKey;
+        data["purchaseId"] = this.purchaseId;
+        data["allowCache"] = this.allowCache;
+        return data;
+    }
+}
+
+export interface IGetPaymentListByPurchaseIdQuery {
+    cacheKey?: string;
+    purchaseId?: string;
+    allowCache?: boolean | undefined;
 }
 
 export class CreatePurchasePaymentCommand implements ICreatePurchasePaymentCommand {

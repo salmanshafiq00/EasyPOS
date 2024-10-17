@@ -56,11 +56,13 @@ internal sealed class SaleConfiguration : IEntityTypeConfiguration<Sale>
 
         builder.Property(x => x.PaidAmount)
               .HasColumnType("decimal(18, 2)")
-              .IsRequired(false);
+              .HasDefaultValue(0)
+              .IsRequired();
 
         builder.Property(x => x.DueAmount)
               .HasColumnType("decimal(18, 2)")
-              .IsRequired(false);
+              .HasDefaultValue(0)
+              .IsRequired();
 
         builder.Property(x => x.SaleNote)
                .HasMaxLength(500);

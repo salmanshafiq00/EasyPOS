@@ -1,4 +1,6 @@
-﻿namespace EasyPOS.Application.Features.Trades.PurchasePayments.Commands;
+﻿using EasyPOS.Domain.Trades;
+
+namespace EasyPOS.Application.Features.Trades.PurchasePayments.Commands;
 
 public record DeletePurchasePaymentCommand(Guid Id): ICacheInvalidatorCommand
 {
@@ -17,10 +19,17 @@ internal sealed class DeletePurchasePaymentCommandHandler(
 
         if (entity is null) return Result.Failure(Error.NotFound(nameof(entity), ErrorMessages.EntityNotFound));
 
+        var purchase = await dbContext.Purchases
+            .FirstOrDefaultAsync(x => x.Id == entity.PurchaseId);
+
+        if (purchase is null) return Result.Failure(Error.NotFound(nameof(purchase), "Purchase Not Found."));
+
         dbContext.PurchasePayments.Remove(entity);
 
-        await dbContext.SaveChangesAsync(cancellationToken);
+        purchase.PaidAmount -= entity.PayingAmount;
+        purchase.DueAmount = purchase.GrandTotal - purchase.PaidAmount;
 
+        await dbContext.SaveChangesAsync(cancellationToken);
         return Result.Success();
     }
 

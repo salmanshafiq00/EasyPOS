@@ -39,7 +39,7 @@ internal sealed class UpdatePurchaseCommandHandler(
 
         request.Adapt(entity);
 
-        entity.DueAmount = entity.GrandTotal - (entity.PaidAmount ?? 0);
+        entity.DueAmount = entity.GrandTotal - entity.PaidAmount;
 
         entity.PaymentStatusId = await PurchaseSharedService.GetPurchasePaymentId(commonQueryService, entity);
 

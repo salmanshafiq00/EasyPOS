@@ -14,6 +14,10 @@ public class PurchasePayments : EndpointGroupBase
              .WithName("GetPurchasePayments")
              .Produces<PaginatedResponse<PurchasePaymentModel>>(StatusCodes.Status200OK);
 
+        group.MapPost("GetAllByPurchaseId", GetAllByPurchaseId)
+             .WithName("GetAllByPurchaseId")
+             .Produces<List<PurchasePaymentModel>>(StatusCodes.Status200OK);
+
         group.MapGet("Get/{id:Guid}", Get)
              .WithName("GetPurchasePayment")
              .Produces<PurchasePaymentModel>(StatusCodes.Status200OK);
@@ -41,6 +45,12 @@ public class PurchasePayments : EndpointGroupBase
     }
 
     private async Task<IResult> GetAll(ISender sender, GetPurchasePaymentListQuery query)
+    {
+        var result = await sender.Send(query);
+        return TypedResults.Ok(result.Value);
+    }
+
+    private async Task<IResult> GetAllByPurchaseId(ISender sender, GetPaymentListByPurchaseIdQuery query)
     {
         var result = await sender.Send(query);
         return TypedResults.Ok(result.Value);
