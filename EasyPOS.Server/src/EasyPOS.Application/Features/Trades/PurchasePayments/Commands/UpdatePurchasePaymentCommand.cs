@@ -33,7 +33,7 @@ internal sealed class UpdatePurchasePaymentCommandHandler(
 
         request.Adapt(entity);
 
-        purchase.PaidAmount = entity.PayingAmount - previousPaymentAmount;
+        purchase.PaidAmount = purchase.PaidAmount + (entity.PayingAmount - previousPaymentAmount);
         purchase.DueAmount = purchase.GrandTotal - purchase.PaidAmount;
 
         await dbContext.SaveChangesAsync(cancellationToken);

@@ -17,6 +17,7 @@ export class PurchasePaymentDetailComponent implements OnInit {
   purchaseModel: PurchaseModel;
   form: FormGroup;
   optionsDataSources: any;
+  id: null;
 
   get f(){
     return this.form.controls;
@@ -31,14 +32,20 @@ export class PurchasePaymentDetailComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.purchaseModel = this.customDialogService.getConfigData();
-    console.log(this.purchaseModel)
-    this.getById(CommonConstants.EmptyGuid)
-    this.form.patchValue({
-      receivedAmount: this.purchaseModel.dueAmount,
-      payingAmount: this.purchaseModel.dueAmount,
-      purchaseId: this.purchaseModel.id
-    });
+    const configData = this.customDialogService.getConfigData<any>();
+    this.id = configData.id;
+    if(this.id && this.id !== CommonConstants.EmptyGuid){
+      this.getById(this.id)
+    } else {
+      this.getById(CommonConstants.EmptyGuid)
+      this.purchaseModel = configData.purchase;
+      this.form.patchValue({
+        receivedAmount: this.purchaseModel?.dueAmount,
+        payingAmount: this.purchaseModel?.dueAmount,
+        purchaseId: this.purchaseModel?.id
+      });
+    }
+
   }
 
   
@@ -46,9 +53,11 @@ export class PurchasePaymentDetailComponent implements OnInit {
     this.entityClient.get(id).subscribe({
       next: (res: any) => {
         this.optionsDataSources = res.optionsDataSources;
-        // this.form.patchValue({
-        //   ...this.item
-        // });
+        if(id && id !== CommonConstants.EmptyGuid){
+          this.form.patchValue({
+            ...res
+          });
+        }
       },
       error: (error) => {
         this.toast.showError(CommonUtils.getErrorMessage(error));
@@ -57,7 +66,11 @@ export class PurchasePaymentDetailComponent implements OnInit {
   }
 
   onSubmit(){
-    this.save();
+    if(this.id && this.id !== CommonConstants.EmptyGuid){
+      this.update();
+    } else {
+      this.create();
+    }
   }
 
   cancel(){
@@ -71,11 +84,24 @@ export class PurchasePaymentDetailComponent implements OnInit {
   }
 
   
-  private save() {
+  private create() {
     const createCommand = { ...this.form.value };
     this.entityClient.create(createCommand).subscribe({
       next: () => {
         this.toast.created();
+        this.customDialogService.close(true);
+      },
+      error: (error) => {
+        this.toast.showError(CommonUtils.getErrorMessage(error));
+      }
+    });
+  }
+
+  private update() {
+    const updateCommand = { ...this.form.value };
+    this.entityClient.update(updateCommand).subscribe({
+      next: () => {
+        this.toast.updated();
         this.customDialogService.close(true);
       },
       error: (error) => {

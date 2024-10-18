@@ -56,6 +56,9 @@ export class CustomDialogService {
   close(succeeded: boolean) {
     if(this.ref){
       this.ref.close(succeeded);
+      if(succeeded){
+        this.ref.destroy();
+      }
     }
     else {
       console.error('Dialog reference is undefined.');

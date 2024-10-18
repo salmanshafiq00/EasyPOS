@@ -61,6 +61,12 @@ import { ProgressBarComponent } from './components/progress-bar/progress-bar.com
 import { ImageModule } from 'primeng/image';
 import { ImageComponent } from './components/image/image.component';
 import { DividerModule } from 'primeng/divider';
+import { SplitButtonModule } from 'primeng/splitbutton';
+import { SplitButtonComponent } from './components/split-button/split-button.component';
+import { CustomMenuComponent } from './components/custom-menu/custom-menu.component';
+import { MenuModule } from 'primeng/menu';
+import { BadgeModule } from 'primeng/badge';
+import { AvatarModule } from 'primeng/avatar';
 
 
 @NgModule({
@@ -93,7 +99,9 @@ import { DividerModule } from 'primeng/divider';
 		TreeSelectComponent,
 		InputSelectButtonComponent,
 		ProgressBarComponent,
-		ImageComponent
+		ImageComponent,
+		SplitButtonComponent,
+		CustomMenuComponent
 	],
 	imports: [
 		CommonModule,
@@ -129,7 +137,11 @@ import { DividerModule } from 'primeng/divider';
 		OverlayPanelModule,
 		ProgressBarModule,
 		ImageModule,
-		DividerModule 
+		DividerModule,
+		SplitButtonModule ,
+		MenuModule,
+		BadgeModule,
+		AvatarModule
 
 	],
 	providers: [
@@ -167,8 +179,9 @@ import { DividerModule } from 'primeng/divider';
 		TreeComponent,
 		TreeSelectComponent,
 		InputSelectButtonComponent,
-		ImageComponent
-		
+		ImageComponent,
+		SplitButtonComponent,
+		CustomMenuComponent
 	]
 })
 export class AppSharedModule { }

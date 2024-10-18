@@ -4,12 +4,19 @@
           <th *ngFor="let col of columns">
               {{ col.header }}
           </th>
+          <th>Action</th>
       </tr>
   </ng-template>
   <ng-template pTemplate="body" let-rowData let-columns="columns">
       <tr>
           <td *ngFor="let col of columns">
               {{ rowData[col.field] }}
+          </td>
+          <!-- <td>
+            <app-split-button [model]="actionDropdownOptions" [rowData]="rowData" icon="pi pi-building-columns" appendTo="body" />
+          </td> -->
+          <td>
+            <app-custom-menu  [items]="actionDropdownOptions" [data]="rowData" label="Action" (onMenuClick)="onhandleMenuClick($event)"  />  
           </td>
       </tr>
   </ng-template>

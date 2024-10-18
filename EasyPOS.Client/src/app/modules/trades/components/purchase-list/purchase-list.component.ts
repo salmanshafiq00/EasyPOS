@@ -6,6 +6,7 @@ import { CustomDialogService } from 'src/app/shared/services/custom-dialog.servi
 import { PurchasePaymentDetailComponent } from '../purchase-payment-detail/purchase-payment-detail.component';
 import { DataGridComponent } from 'src/app/shared/components/data-grid/data-grid.component';
 import { PurchasePaymentListComponent } from '../purchase-payment-list/purchase-payment-list.component';
+import { CommonConstants } from 'src/app/core/contants/common';
 
 @Component({
   selector: 'app-purchase-list',
@@ -27,16 +28,21 @@ export class PurchaseListComponent {
     console.log(event)
 
     if(event.action.actionName === 'addPayment'){
-      this.customDialogService.open<PurchaseModel>(PurchasePaymentDetailComponent, event.data, 'Add Payment').subscribe((succeeded) => {
+      this.customDialogService.open<{id: string, purchase: PurchaseModel}>(
+        PurchasePaymentDetailComponent, 
+        {id: CommonConstants.EmptyGuid, purchase: event.data}, 
+        'Add Payment').subscribe((succeeded) => {
         if(succeeded){
           this.grid.refreshGrid();
-          this.grid.toast.created('Payment Added Successfully');
+          // this.grid.toast.created('Payment Added Successfully');
         }
       });
     } else if(event.action.actionName === 'paymentList'){
       this.customDialogService.open<PurchaseModel>(PurchasePaymentListComponent, event.data, 'Payment List',  { width: '60vw' } ).subscribe((succeeded) => {
+        console.log(succeeded)
         if(succeeded){
-          this.grid.toast.created('Payment Added Successfully555');
+          this.grid.refreshGrid();
+          // this.grid.toast.created('Payment Added Successfully');
         }
       });
     }

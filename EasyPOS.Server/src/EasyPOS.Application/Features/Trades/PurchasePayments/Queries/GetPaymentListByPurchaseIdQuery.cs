@@ -42,7 +42,7 @@ internal sealed class GetPaymentListByPurchaseIdQueryHandler(ISqlConnectionFacto
             """;
 
 
-        var result = await connection.QueryAsync<PurchasePaymentModel>(sql, new { PurchaseId = request.PurchaseId });
+        var result = await connection.QueryAsync<PurchasePaymentModel>(sql, new { request.PurchaseId });
         return result.AsList();
 
     }
