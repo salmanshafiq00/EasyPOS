@@ -16,10 +16,13 @@ export class CustomDialogService {
     }
   };
 
+  private dialogRefs: DynamicDialogRef[] = [];  // Keep track of all open dialogs
   private ref: DynamicDialogRef | undefined;
   private dialogService: DialogService = inject(DialogService);
   private dataSubject = new BehaviorSubject<any>(null);
   public closeDataSubject = new Subject<any>();
+  public handelCloseIconClick = new Subject<boolean>();
+  public previousModelSucceeded: boolean = false;
 
   open<T>(
     component: Type<any>,
@@ -34,13 +37,6 @@ export class CustomDialogService {
 
     this.dataSubject.next(data);
 
-    // const onClose$ = new Subject<boolean>();
-    // this.ref.onClose.subscribe((result: boolean) => {
-    //   onClose$.next(result);
-    //   onClose$.complete();
-    // });
-
-    // return onClose$.asObservable();
     if (this.ref) {
       return this.ref.onClose as Observable<boolean>;
     } else {
@@ -49,8 +45,21 @@ export class CustomDialogService {
     }
   }
 
+  /**
+   * Gets the current config data stored in the BehaviorSubject.
+   */
   getConfigData<T>(): T {
     return this.dataSubject.value as T;
+  }
+
+  closeWithData<T>(succeeded: boolean, data: T) {
+    if(this.ref){
+      this.ref.close(succeeded);
+      this.closeDataSubject.next(data);
+    }
+    else {
+      console.error('Dialog reference is undefined.');
+    }
   }
 
   close(succeeded: boolean) {
@@ -65,14 +74,87 @@ export class CustomDialogService {
     }
   }
 
-  closeWithData<T>(succeeded: boolean, data: T) {
-    if(this.ref){
-      this.ref.close(succeeded);
-      this.closeDataSubject.next(data);
-    }
-    else {
-      console.error('Dialog reference is undefined.');
+  /**
+   * Opens a new dialog and adds the reference to the dialog stack.
+   */
+  openDialog<T>(component: Type<any>, data: T, header: string, config?: Partial<DynamicDialogConfig>, handleCloseIcon: boolean = false): DynamicDialogRef {
+    this.previousModelSucceeded = false;
+    const mergedConfig = { ...this.defaultConfig, ...config, data: data, header: header };
+    const ref = this.dialogService.open(component, mergedConfig);
+
+    // Push the dialog ref to the stack
+    this.dialogRefs.push(ref);
+    this.dataSubject.next(data);
+
+    ref.onClose.subscribe((result) => {
+      if(result != undefined){
+        this.previousModelSucceeded = result;
+      }
+      if(this.previousModelSucceeded && handleCloseIcon){
+        this.handelCloseIconClick.next(handleCloseIcon)
+      }
+    });
+
+    return ref;  // Return the reference for the caller to manage
+  }
+
+  /**
+   * Close only the most recently opened dialog (the top of the stack).
+   */
+  closeLastDialog(succeeded: boolean) {
+    if (this.dialogRefs.length > 0) {
+      const ref = this.dialogRefs.pop();  // Get the most recent dialog reference
+      if (ref) {
+        ref.close(succeeded);
+        ref.destroy();
+      }
+    } else {
+      console.error('No dialog reference found to close.');
     }
   }
+
+    /**
+   * Close only the most recently opened dialog (the top of the stack).
+   */
+    closeLastDialogWithData<T>(succeeded: boolean, data: T) {
+      if (this.dialogRefs.length > 0) {
+        const ref = this.dialogRefs.pop();  // Get the most recent dialog reference
+        if (ref) {
+          ref.close(succeeded);
+          this.closeDataSubject.next(data);
+          ref.destroy();
+        }
+      } else {
+        console.error('No dialog reference found to close.');
+      }
+    }
+
+  /**
+   * Closes all dialogs currently open.
+   */
+  closeAllDialogs(succeeded: boolean) {
+    while (this.dialogRefs.length > 0) {
+      const ref = this.dialogRefs.pop();
+      if (ref) {
+        ref.close(succeeded);
+        ref.destroy();
+      }
+    }
+  }
+
+   /**
+   * Close a specific dialog by reference.
+   */
+   closeDialog(ref: DynamicDialogRef, succeeded: boolean) {
+    const index = this.dialogRefs.indexOf(ref);
+    if (index !== -1) {
+      this.dialogRefs.splice(index, 1);  // Remove dialog ref from the stack
+      ref.close(succeeded);
+      ref.destroy();
+    } else {
+      console.error('Dialog reference not found in the stack.');
+    }
+  }
+
   
 }

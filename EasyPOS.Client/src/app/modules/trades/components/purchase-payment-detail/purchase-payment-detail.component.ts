@@ -83,7 +83,6 @@ export class PurchasePaymentDetailComponent implements OnInit {
     this.form.get('changeAmount').setValue(receivedAmount - payingAmount);
   }
 
-  
   private create() {
     const createCommand = { ...this.form.value };
     this.entityClient.create(createCommand).subscribe({
@@ -102,7 +101,7 @@ export class PurchasePaymentDetailComponent implements OnInit {
     this.entityClient.update(updateCommand).subscribe({
       next: () => {
         this.toast.updated();
-        this.customDialogService.close(true);
+        this.customDialogService.closeLastDialog(true);
       },
       error: (error) => {
         this.toast.showError(CommonUtils.getErrorMessage(error));

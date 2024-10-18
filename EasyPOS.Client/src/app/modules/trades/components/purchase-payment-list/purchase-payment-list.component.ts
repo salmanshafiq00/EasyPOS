@@ -65,10 +65,10 @@ export class PurchasePaymentListComponent {
     this.getList(this.purchaseModel.id)
   }
 
-  onhandleMenuClick(event){
-    if(event?.menuItem?.id === 'edit' && event?.data?.id  && event?.data?.id !== CommonConstants.EmptyGuid){
+  onhandleMenuClick(event) {
+    if (event?.menuItem?.id === 'edit' && event?.data?.id && event?.data?.id !== CommonConstants.EmptyGuid) {
       this.update(event.data)
-    } else if(event?.menuItem?.id === 'delete'){
+    } else if (event?.menuItem?.id === 'delete') {
 
     }
   }
@@ -86,24 +86,27 @@ export class PurchasePaymentListComponent {
     });
   }
 
-  cancel() {
-    this.customDialogService.close(true);
-    this.isEditOrDeleteSucceeded = false;
-  }
-
   update(data: PurchasePaymentModel) {
-    this.customDialogService.open<{id: string, purchasePayment: PurchasePaymentModel}>(
-      PurchasePaymentDetailComponent, 
-      {id: data.id, purchasePayment: data}, 
-      'Edit Payment').subscribe((succeeded) => {
-      if(succeeded){
-        this.isEditOrDeleteSucceeded = true;
-        this.customDialogService.close(true);
-        // this.getList(data.purchaseId)
-      }
+    const updatePaymentDialogRef = this.customDialogService.openDialog<{ id: string, purchasePayment: PurchasePaymentModel }>(
+      PurchasePaymentDetailComponent,
+      { id: data.id, purchasePayment: data },
+      'Edit Payment'
+    );
+
+    updatePaymentDialogRef.onClose.subscribe({
+      next: (updateSucceeded) => {
+        this.isEditOrDeleteSucceeded = updateSucceeded;
+        if (updateSucceeded) {
+          // Close the current Payment List dialog after update succeeds
+          // this.customDialogService.closeLastDialog(true);
+          this.getList(data.purchaseId);
+        }
+      },
+      error: (error) => { console.error('Error during dialog close:', error); },
+      complete: () => { console.log('Dialog closed'); }
     });
   }
-  
+
   delete(rowData: PurchasePaymentModel) {
     console.log("Delete row:", rowData);
     // Handle the delete logic here
