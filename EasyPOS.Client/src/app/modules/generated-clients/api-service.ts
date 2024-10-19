@@ -11821,7 +11821,6 @@ export interface ICreatePurchasePaymentCommand {
 export class UpdatePurchasePaymentCommand implements IUpdatePurchasePaymentCommand {
     id!: string;
     purchaseId?: string;
-    paymentDate?: Date;
     receivedAmount?: number;
     payingAmount?: number;
     changeAmount?: number;
@@ -11842,7 +11841,6 @@ export class UpdatePurchasePaymentCommand implements IUpdatePurchasePaymentComma
         if (_data) {
             this.id = _data["id"];
             this.purchaseId = _data["purchaseId"];
-            this.paymentDate = _data["paymentDate"] ? new Date(_data["paymentDate"].toString()) : <any>undefined;
             this.receivedAmount = _data["receivedAmount"];
             this.payingAmount = _data["payingAmount"];
             this.changeAmount = _data["changeAmount"];
@@ -11863,7 +11861,6 @@ export class UpdatePurchasePaymentCommand implements IUpdatePurchasePaymentComma
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["purchaseId"] = this.purchaseId;
-        data["paymentDate"] = this.paymentDate ? this.paymentDate.toISOString() : <any>undefined;
         data["receivedAmount"] = this.receivedAmount;
         data["payingAmount"] = this.payingAmount;
         data["changeAmount"] = this.changeAmount;
@@ -11877,7 +11874,6 @@ export class UpdatePurchasePaymentCommand implements IUpdatePurchasePaymentComma
 export interface IUpdatePurchasePaymentCommand {
     id: string;
     purchaseId?: string;
-    paymentDate?: Date;
     receivedAmount?: number;
     payingAmount?: number;
     changeAmount?: number;

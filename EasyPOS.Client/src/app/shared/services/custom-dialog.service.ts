@@ -22,7 +22,8 @@ export class CustomDialogService {
   private dataSubject = new BehaviorSubject<any>(null);
   public closeDataSubject = new Subject<any>();
   public handelCloseIconClick = new Subject<boolean>();
-  public previousModelSucceeded: boolean = false;
+  // public isLastClosedSuccessfully: boolean = false;
+  public handleCloseIcon: boolean = false;
 
   open<T>(
     component: Type<any>,
@@ -77,8 +78,14 @@ export class CustomDialogService {
   /**
    * Opens a new dialog and adds the reference to the dialog stack.
    */
-  openDialog<T>(component: Type<any>, data: T, header: string, config?: Partial<DynamicDialogConfig>, handleCloseIcon: boolean = false): DynamicDialogRef {
-    this.previousModelSucceeded = false;
+  openDialog<T>(
+    component: Type<any>, 
+    data: T, 
+    header: string, 
+    config?: Partial<DynamicDialogConfig>, 
+    handleCloseIcon: boolean = false): DynamicDialogRef {
+    // this.isLastClosedSuccessfully = false;
+    this.handleCloseIcon = handleCloseIcon;
     const mergedConfig = { ...this.defaultConfig, ...config, data: data, header: header };
     const ref = this.dialogService.open(component, mergedConfig);
 
@@ -87,11 +94,12 @@ export class CustomDialogService {
     this.dataSubject.next(data);
 
     ref.onClose.subscribe((result) => {
-      if(result != undefined){
-        this.previousModelSucceeded = result;
-      }
-      if(this.previousModelSucceeded && handleCloseIcon){
-        this.handelCloseIconClick.next(handleCloseIcon)
+      // if(result != undefined){
+      //   this.isLastClosedSuccessfully = result;
+      // }
+      if(this.handleCloseIcon){
+        this.handelCloseIconClick.next(handleCloseIcon);
+        this.handleCloseIcon = false;
       }
     });
 

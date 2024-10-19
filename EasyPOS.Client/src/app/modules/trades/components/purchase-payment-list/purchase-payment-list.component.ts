@@ -6,6 +6,7 @@ import { ToastService } from 'src/app/shared/services/toast.service';
 import { CommonUtils } from 'src/app/shared/Utilities/common-utilities';
 import { PurchasePaymentDetailComponent } from '../purchase-payment-detail/purchase-payment-detail.component';
 import { CommonConstants } from 'src/app/core/contants/common';
+import { ConfirmDialogService } from 'src/app/shared/services/confirm-dialog.service';
 
 interface Column {
   field: string;
@@ -16,7 +17,7 @@ interface Column {
   selector: 'app-purchase-payment-list',
   templateUrl: './purchase-payment-list.component.html',
   styleUrl: './purchase-payment-list.component.scss',
-  providers: [PurchasePaymentsClient]
+  providers: [PurchasePaymentsClient, ConfirmDialogService]
 })
 export class PurchasePaymentListComponent {
   purchaseModel: PurchaseModel;
@@ -26,11 +27,13 @@ export class PurchasePaymentListComponent {
 
   actionDropdownOptions: MenuItem[];
 
-  isEditOrDeleteSucceeded: boolean = false;
+  // isUpdateSucceeded: boolean = false;
+  // isDeleteSucceeded: boolean = false;
 
   constructor(private customDialogService: CustomDialogService,
     private entityClient: PurchasePaymentsClient,
-    private toast: ToastService
+    private toast: ToastService,
+    private confirmDialogService: ConfirmDialogService
   ) {
 
     this.actionDropdownOptions = [
@@ -51,7 +54,6 @@ export class PurchasePaymentListComponent {
 
   ngOnInit(): void {
     this.purchaseModel = this.customDialogService.getConfigData();
-    console.log(this.purchaseModel);
 
     this.cols = [
       // { field: 'paymentDate', header: 'Payment Date' },
@@ -69,7 +71,7 @@ export class PurchasePaymentListComponent {
     if (event?.menuItem?.id === 'edit' && event?.data?.id && event?.data?.id !== CommonConstants.EmptyGuid) {
       this.update(event.data)
     } else if (event?.menuItem?.id === 'delete') {
-
+      this.delete(event.data)
     }
   }
 
@@ -95,10 +97,9 @@ export class PurchasePaymentListComponent {
 
     updatePaymentDialogRef.onClose.subscribe({
       next: (updateSucceeded) => {
-        this.isEditOrDeleteSucceeded = updateSucceeded;
+        // this.isUpdateSucceeded = updateSucceeded;
         if (updateSucceeded) {
           // Close the current Payment List dialog after update succeeds
-          // this.customDialogService.closeLastDialog(true);
           this.getList(data.purchaseId);
         }
       },
@@ -107,9 +108,23 @@ export class PurchasePaymentListComponent {
     });
   }
 
-  delete(rowData: PurchasePaymentModel) {
-    console.log("Delete row:", rowData);
-    // Handle the delete logic here
+  delete(data: PurchasePaymentModel) {
+
+    this.confirmDialogService.confirm(`Do you confirm?`).subscribe((confirmed) => {
+      if (confirmed) {
+        this.entityClient.delete(data.id).subscribe({
+          next: () => {
+            this.toast.deleted();
+            // this.isDeleteSucceeded = true;
+            this.getList(data.purchaseId);
+          },
+          error: (error) => {
+            this.toast.showError(CommonUtils.getErrorMessage(error));
+          }
+        });
+      }
+    });
+
   }
 
 
