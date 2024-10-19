@@ -1,4 +1,6 @@
-﻿namespace EasyPOS.Application.Features.Trades.PurchasePayments.Queries;
+﻿using EasyPOS.Application.Common.Enums;
+
+namespace EasyPOS.Application.Features.Trades.PurchasePayments.Queries;
 
 public record GetPurchasePaymentByIdQuery(Guid Id) : ICacheableQuery<PurchasePaymentModel>
 {
@@ -6,10 +8,10 @@ public record GetPurchasePaymentByIdQuery(Guid Id) : ICacheableQuery<PurchasePay
     public string CacheKey => $"{CacheKeys.PurchasePayment}_{Id}";
     [JsonIgnore]
     public TimeSpan? Expiration => null;
-    public bool? AllowCache => true;
+    public bool? AllowCache => false;
 }
 
-internal sealed class GetPurchasePaymentByIdQueryHandler(ISqlConnectionFactory sqlConnection)
+internal sealed class GetPurchasePaymentByIdQueryHandler(ISqlConnectionFactory sqlConnection, ICommonQueryService commonQueryService)
      : IQueryHandler<GetPurchasePaymentByIdQuery, PurchasePaymentModel>
 {
 
@@ -17,7 +19,10 @@ internal sealed class GetPurchasePaymentByIdQueryHandler(ISqlConnectionFactory s
     {
         if (request.Id.IsNullOrEmpty())
         {
-            return new PurchasePaymentModel();
+            return new PurchasePaymentModel
+            {
+                PaymentType = await commonQueryService.GetLookupDetailIdAsync((int)PaymentType.Cach)
+            };
         }
         var connection = sqlConnection.GetOpenConnection();
 

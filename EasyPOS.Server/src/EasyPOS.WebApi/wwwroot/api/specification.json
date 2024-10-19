@@ -7508,7 +7508,8 @@
           },
           "paymentType": {
             "type": "string",
-            "format": "guid"
+            "format": "guid",
+            "nullable": true
           },
           "paymentTypeName": {
             "type": "string"

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { CommonConstants } from 'src/app/core/contants/common';
-import { PurchaseModel, PurchasePaymentsClient } from 'src/app/modules/generated-clients/api-service';
+import { PurchaseModel, PurchasePaymentModel, PurchasePaymentsClient } from 'src/app/modules/generated-clients/api-service';
 import { CustomDialogService } from 'src/app/shared/services/custom-dialog.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { CommonUtils } from 'src/app/shared/Utilities/common-utilities';
@@ -37,13 +37,8 @@ export class PurchasePaymentDetailComponent implements OnInit {
     if(this.id && this.id !== CommonConstants.EmptyGuid){
       this.getById(this.id)
     } else {
-      this.getById(CommonConstants.EmptyGuid)
       this.purchaseModel = configData.purchase;
-      this.form.patchValue({
-        receivedAmount: this.purchaseModel?.dueAmount,
-        payingAmount: this.purchaseModel?.dueAmount,
-        purchaseId: this.purchaseModel?.id
-      });
+      this.getById(CommonConstants.EmptyGuid)
     }
 
   }
@@ -51,11 +46,18 @@ export class PurchasePaymentDetailComponent implements OnInit {
   
   getById(id: string) {
     this.entityClient.get(id).subscribe({
-      next: (res: any) => {
+      next: (res: PurchasePaymentModel) => {
         this.optionsDataSources = res.optionsDataSources;
         if(id && id !== CommonConstants.EmptyGuid){
           this.form.patchValue({
             ...res
+          });
+        } else {
+          this.form.patchValue({
+            receivedAmount: this.purchaseModel?.dueAmount,
+            payingAmount: this.purchaseModel?.dueAmount,
+            purchaseId: this.purchaseModel?.id,
+            paymentType: res.paymentType
           });
         }
       },

@@ -11596,7 +11596,7 @@ export class PurchasePaymentModel implements IPurchasePaymentModel {
     receivedAmount?: number;
     payingAmount?: number;
     changeAmount?: number;
-    paymentType?: string;
+    paymentType?: string | undefined;
     paymentTypeName?: string;
     createdBy?: string;
     note?: string | undefined;
@@ -11673,7 +11673,7 @@ export interface IPurchasePaymentModel {
     receivedAmount?: number;
     payingAmount?: number;
     changeAmount?: number;
-    paymentType?: string;
+    paymentType?: string | undefined;
     paymentTypeName?: string;
     createdBy?: string;
     note?: string | undefined;

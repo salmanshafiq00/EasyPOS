@@ -8,7 +8,7 @@ public record PurchasePaymentModel
     public decimal ReceivedAmount {get;set;} 
     public decimal PayingAmount {get;set;} 
     public decimal ChangeAmount {get;set;} 
-    public Guid PaymentType {get;set;} 
+    public Guid? PaymentType {get;set;} 
     public string PaymentTypeName {get;set;} 
     public string CreatedBy {get;set;} 
     public string? Note {get;set;} 
