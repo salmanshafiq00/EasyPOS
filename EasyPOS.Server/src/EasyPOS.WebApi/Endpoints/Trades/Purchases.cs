@@ -20,6 +20,11 @@ public class Purchases : EndpointGroupBase
              .WithName("GetPurchase")
              .Produces<PurchaseModel>(StatusCodes.Status200OK);
 
+        group.MapGet("GetDetail/{id:Guid}", GetDetail)
+             .WithName("GetPurchaseDetail")
+             .Produces<PurchaseModel>(StatusCodes.Status200OK);
+
+
         group.MapPost("Create", Create)
              .WithName("CreatePurchase")
              .Produces<Guid>(StatusCodes.Status201Created)
@@ -109,6 +114,13 @@ public class Purchases : EndpointGroupBase
         result.Value.OptionsDataSources.Add("productUnitSelectList", productUnitSelectList.Value);
 
 
+
+        return TypedResults.Ok(result.Value);
+    }
+
+    private async Task<IResult> GetDetail(ISender sender, Guid id)
+    {
+        var result = await sender.Send(new GetPurchaseDetailByIdQuery(id));
 
         return TypedResults.Ok(result.Value);
     }

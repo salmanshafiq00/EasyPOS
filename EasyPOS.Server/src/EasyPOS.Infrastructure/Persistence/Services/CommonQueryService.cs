@@ -2,13 +2,16 @@
 using Dapper;
 using EasyPOS.Application.Common.Abstractions;
 using EasyPOS.Application.Common.DapperQueries;
+using EasyPOS.Application.Features.Settings.CompanyInfos.Queries;
 using EasyPOS.Domain.Common;
 
 namespace EasyPOS.Infrastructure.Persistence.Services;
 
 internal sealed class CommonQueryService(ISqlConnectionFactory sqlConnection) : ICommonQueryService
 {
-    public async Task<Guid?> GetLookupDetailIdAsync(int lookupDetailDevCode)
+    public async Task<Guid?> GetLookupDetailIdAsync(
+        int lookupDetailDevCode, 
+        CancellationToken cancellationToken = default)
     {
         var connection = sqlConnection.GetOpenConnection();
 
@@ -20,7 +23,9 @@ internal sealed class CommonQueryService(ISqlConnectionFactory sqlConnection) : 
         return await connection.QueryFirstOrDefaultAsync<Guid?>(sql, new {DevCode = lookupDetailDevCode});
     }
 
-    public async Task<List<LookupDetail>> GetLookupDetailsAsync(int lookupDevCode)
+    public async Task<List<LookupDetail>> GetLookupDetailsAsync(
+        int lookupDevCode, 
+        CancellationToken cancellationToken = default)
     {
         var connection = sqlConnection.GetOpenConnection();
 
@@ -44,6 +49,31 @@ internal sealed class CommonQueryService(ISqlConnectionFactory sqlConnection) : 
         var result = await connection.QueryAsync<LookupDetail>(sql, new { DevCode = lookupDevCode });
 
         return result.AsList();
+    }
+
+    public async Task<CompanyInfoModel> GetCompanyInfoAsync(
+        CancellationToken cancellationToken = default)
+    {
+        var connection = sqlConnection.GetOpenConnection();
+
+        var sql = $"""
+            SELECT TOP 1
+                t.Id AS {nameof(CompanyInfoModel.Id)},
+                t.Name AS {nameof(CompanyInfoModel.Name)},
+                t.Phone AS {nameof(CompanyInfoModel.Phone)},
+                t.Mobile AS {nameof(CompanyInfoModel.Mobile)},
+                t.Country AS {nameof(CompanyInfoModel.Country)},
+                t.State AS {nameof(CompanyInfoModel.State)},
+                t.City AS {nameof(CompanyInfoModel.City)},
+                t.PostalCode AS {nameof(CompanyInfoModel.PostalCode)},
+                t.Address AS {nameof(CompanyInfoModel.Address)},
+                t.LogoUrl AS {nameof(CompanyInfoModel.LogoUrl)},
+                t.SignatureUrl AS {nameof(CompanyInfoModel.SignatureUrl)},
+                t.Website AS {nameof(CompanyInfoModel.Website)}
+            FROM dbo.CompanyInfos AS t
+            """;
+
+        return await connection.QueryFirstOrDefaultAsync<CompanyInfoModel>(sql);
     }
 
     public async Task<bool> IsExistAsync(

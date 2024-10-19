@@ -23,7 +23,9 @@ internal sealed class LookupConfiguration : IEntityTypeConfiguration<Lookup>
 
         builder.Property(t => t.Code)
             .HasMaxLength(10)
-            .IsRequired();
+            .IsRequired(false);
+
+        builder.HasIndex(t => t.DevCode);
 
         builder.Property(t => t.Description)
             .HasMaxLength(500);

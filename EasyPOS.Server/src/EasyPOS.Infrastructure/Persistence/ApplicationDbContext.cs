@@ -4,6 +4,7 @@ using EasyPOS.Domain.Accounts;
 using EasyPOS.Domain.Admin;
 using EasyPOS.Domain.Common;
 using EasyPOS.Domain.Products;
+using EasyPOS.Domain.Settings;
 using EasyPOS.Domain.Stakeholders;
 using EasyPOS.Domain.Trades;
 
@@ -59,6 +60,11 @@ public sealed class ApplicationDbContext : DbContext, IApplicationDbContext
     #region Accounts
     public DbSet<Account> Accounts => Set<Account>();
     public DbSet<MoneyTransfer> MoneyTransfers => Set<MoneyTransfer>();
+
+    #endregion
+
+    #region Settings
+    public DbSet<CompanyInfo> CompanyInfos => Set<CompanyInfo>();
 
     #endregion
 

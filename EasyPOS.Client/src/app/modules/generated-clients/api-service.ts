@@ -2552,6 +2552,7 @@ export class SuppliersClient implements ISuppliersClient {
 export interface IPurchasesClient {
     getAll(query: GetPurchaseListQuery): Observable<PaginatedResponseOfPurchaseModel>;
     get(id: string): Observable<PurchaseModel>;
+    getDetail(id: string): Observable<PurchaseModel>;
     create(command: CreatePurchaseCommand): Observable<string>;
     update(command: UpdatePurchaseCommand): Observable<void>;
     delete(id: string): Observable<void>;
@@ -2655,6 +2656,58 @@ export class PurchasesClient implements IPurchasesClient {
     }
 
     protected processGet(response: HttpResponseBase): Observable<PurchaseModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PurchaseModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    getDetail(id: string): Observable<PurchaseModel> {
+        let url_ = this.baseUrl + "/api/Purchases/GetDetail/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetDetail(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetDetail(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PurchaseModel>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PurchaseModel>;
+        }));
+    }
+
+    protected processGetDetail(response: HttpResponseBase): Observable<PurchaseModel> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3979,6 +4032,194 @@ export class SalesClient implements ISalesClient {
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
+export interface ICompanyInfosClient {
+    get(): Observable<CompanyInfoModel>;
+    create(command: CreateCompanyInfoCommand): Observable<string>;
+    update(command: UpdateCompanyInfoCommand): Observable<void>;
+}
+
+@Injectable()
+export class CompanyInfosClient implements ICompanyInfosClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ?? "";
+    }
+
+    get(): Observable<CompanyInfoModel> {
+        let url_ = this.baseUrl + "/api/CompanyInfos/Get";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<CompanyInfoModel>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<CompanyInfoModel>;
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<CompanyInfoModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CompanyInfoModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    create(command: CreateCompanyInfoCommand): Observable<string> {
+        let url_ = this.baseUrl + "/api/CompanyInfos/Create";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<string>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<string>;
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<string> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 201) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result201: any = null;
+            let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result201 = resultData201 !== undefined ? resultData201 : <any>null;
+    
+            return _observableOf(result201);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    update(command: UpdateCompanyInfoCommand): Observable<void> {
+        let url_ = this.baseUrl + "/api/CompanyInfos/Update";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdate(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processUpdate(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
@@ -10917,6 +11158,7 @@ export class PurchaseModel implements IPurchaseModel {
     purchaseStatus?: string;
     paymentStatusId?: string;
     purchaseDetails?: PurchaseDetailModel[];
+    paymentDetails?: PurchasePaymentModel[];
     optionsDataSources?: { [key: string]: any; };
 
     constructor(data?: IPurchaseModel) {
@@ -10955,6 +11197,11 @@ export class PurchaseModel implements IPurchaseModel {
                 this.purchaseDetails = [] as any;
                 for (let item of _data["purchaseDetails"])
                     this.purchaseDetails!.push(PurchaseDetailModel.fromJS(item));
+            }
+            if (Array.isArray(_data["paymentDetails"])) {
+                this.paymentDetails = [] as any;
+                for (let item of _data["paymentDetails"])
+                    this.paymentDetails!.push(PurchasePaymentModel.fromJS(item));
             }
             if (_data["optionsDataSources"]) {
                 this.optionsDataSources = {} as any;
@@ -11001,6 +11248,11 @@ export class PurchaseModel implements IPurchaseModel {
             for (let item of this.purchaseDetails)
                 data["purchaseDetails"].push(item.toJSON());
         }
+        if (Array.isArray(this.paymentDetails)) {
+            data["paymentDetails"] = [];
+            for (let item of this.paymentDetails)
+                data["paymentDetails"].push(item.toJSON());
+        }
         if (this.optionsDataSources) {
             data["optionsDataSources"] = {};
             for (let key in this.optionsDataSources) {
@@ -11035,6 +11287,7 @@ export interface IPurchaseModel {
     purchaseStatus?: string;
     paymentStatusId?: string;
     purchaseDetails?: PurchaseDetailModel[];
+    paymentDetails?: PurchasePaymentModel[];
     optionsDataSources?: { [key: string]: any; };
 }
 
@@ -11166,6 +11419,98 @@ export interface IPurchaseDetailModel {
 export enum TaxMethod {
     Exclusive = 1,
     Inclusive = 2,
+}
+
+export class PurchasePaymentModel implements IPurchasePaymentModel {
+    id?: string;
+    purchaseId?: string;
+    paymentDate?: Date;
+    receivedAmount?: number;
+    payingAmount?: number;
+    changeAmount?: number;
+    paymentType?: string | undefined;
+    paymentTypeName?: string;
+    createdBy?: string;
+    note?: string | undefined;
+    paymentDateString?: string | undefined;
+    optionsDataSources?: { [key: string]: any; };
+
+    constructor(data?: IPurchasePaymentModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.purchaseId = _data["purchaseId"];
+            this.paymentDate = _data["paymentDate"] ? new Date(_data["paymentDate"].toString()) : <any>undefined;
+            this.receivedAmount = _data["receivedAmount"];
+            this.payingAmount = _data["payingAmount"];
+            this.changeAmount = _data["changeAmount"];
+            this.paymentType = _data["paymentType"];
+            this.paymentTypeName = _data["paymentTypeName"];
+            this.createdBy = _data["createdBy"];
+            this.note = _data["note"];
+            this.paymentDateString = _data["paymentDateString"];
+            if (_data["optionsDataSources"]) {
+                this.optionsDataSources = {} as any;
+                for (let key in _data["optionsDataSources"]) {
+                    if (_data["optionsDataSources"].hasOwnProperty(key))
+                        (<any>this.optionsDataSources)![key] = _data["optionsDataSources"][key];
+                }
+            }
+        }
+    }
+
+    static fromJS(data: any): PurchasePaymentModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new PurchasePaymentModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["purchaseId"] = this.purchaseId;
+        data["paymentDate"] = this.paymentDate ? this.paymentDate.toISOString() : <any>undefined;
+        data["receivedAmount"] = this.receivedAmount;
+        data["payingAmount"] = this.payingAmount;
+        data["changeAmount"] = this.changeAmount;
+        data["paymentType"] = this.paymentType;
+        data["paymentTypeName"] = this.paymentTypeName;
+        data["createdBy"] = this.createdBy;
+        data["note"] = this.note;
+        data["paymentDateString"] = this.paymentDateString;
+        if (this.optionsDataSources) {
+            data["optionsDataSources"] = {};
+            for (let key in this.optionsDataSources) {
+                if (this.optionsDataSources.hasOwnProperty(key))
+                    (<any>data["optionsDataSources"])[key] = (<any>this.optionsDataSources)[key];
+            }
+        }
+        return data;
+    }
+}
+
+export interface IPurchasePaymentModel {
+    id?: string;
+    purchaseId?: string;
+    paymentDate?: Date;
+    receivedAmount?: number;
+    payingAmount?: number;
+    changeAmount?: number;
+    paymentType?: string | undefined;
+    paymentTypeName?: string;
+    createdBy?: string;
+    note?: string | undefined;
+    paymentDateString?: string | undefined;
+    optionsDataSources?: { [key: string]: any; };
 }
 
 export class GetPurchaseListQuery extends DataGridModel implements IGetPurchaseListQuery {
@@ -11586,98 +11931,6 @@ export interface IPaginatedResponseOfPurchasePaymentModel {
     totalCount?: number;
     hasPreviousPage?: boolean;
     hasNextPage?: boolean;
-    optionsDataSources?: { [key: string]: any; };
-}
-
-export class PurchasePaymentModel implements IPurchasePaymentModel {
-    id?: string;
-    purchaseId?: string;
-    paymentDate?: Date;
-    receivedAmount?: number;
-    payingAmount?: number;
-    changeAmount?: number;
-    paymentType?: string | undefined;
-    paymentTypeName?: string;
-    createdBy?: string;
-    note?: string | undefined;
-    paymentDateString?: string | undefined;
-    optionsDataSources?: { [key: string]: any; };
-
-    constructor(data?: IPurchasePaymentModel) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.purchaseId = _data["purchaseId"];
-            this.paymentDate = _data["paymentDate"] ? new Date(_data["paymentDate"].toString()) : <any>undefined;
-            this.receivedAmount = _data["receivedAmount"];
-            this.payingAmount = _data["payingAmount"];
-            this.changeAmount = _data["changeAmount"];
-            this.paymentType = _data["paymentType"];
-            this.paymentTypeName = _data["paymentTypeName"];
-            this.createdBy = _data["createdBy"];
-            this.note = _data["note"];
-            this.paymentDateString = _data["paymentDateString"];
-            if (_data["optionsDataSources"]) {
-                this.optionsDataSources = {} as any;
-                for (let key in _data["optionsDataSources"]) {
-                    if (_data["optionsDataSources"].hasOwnProperty(key))
-                        (<any>this.optionsDataSources)![key] = _data["optionsDataSources"][key];
-                }
-            }
-        }
-    }
-
-    static fromJS(data: any): PurchasePaymentModel {
-        data = typeof data === 'object' ? data : {};
-        let result = new PurchasePaymentModel();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["purchaseId"] = this.purchaseId;
-        data["paymentDate"] = this.paymentDate ? this.paymentDate.toISOString() : <any>undefined;
-        data["receivedAmount"] = this.receivedAmount;
-        data["payingAmount"] = this.payingAmount;
-        data["changeAmount"] = this.changeAmount;
-        data["paymentType"] = this.paymentType;
-        data["paymentTypeName"] = this.paymentTypeName;
-        data["createdBy"] = this.createdBy;
-        data["note"] = this.note;
-        data["paymentDateString"] = this.paymentDateString;
-        if (this.optionsDataSources) {
-            data["optionsDataSources"] = {};
-            for (let key in this.optionsDataSources) {
-                if (this.optionsDataSources.hasOwnProperty(key))
-                    (<any>data["optionsDataSources"])[key] = (<any>this.optionsDataSources)[key];
-            }
-        }
-        return data;
-    }
-}
-
-export interface IPurchasePaymentModel {
-    id?: string;
-    purchaseId?: string;
-    paymentDate?: Date;
-    receivedAmount?: number;
-    payingAmount?: number;
-    changeAmount?: number;
-    paymentType?: string | undefined;
-    paymentTypeName?: string;
-    createdBy?: string;
-    note?: string | undefined;
-    paymentDateString?: string | undefined;
     optionsDataSources?: { [key: string]: any; };
 }
 
@@ -12462,6 +12715,266 @@ export class UpdateSaleCommand extends UpsertSaleModel implements IUpdateSaleCom
 }
 
 export interface IUpdateSaleCommand extends IUpsertSaleModel {
+    cacheKey?: string;
+}
+
+export class CompanyInfoModel implements ICompanyInfoModel {
+    id?: string;
+    name?: string;
+    phone?: string | undefined;
+    mobile?: string | undefined;
+    country?: string | undefined;
+    state?: string | undefined;
+    city?: string | undefined;
+    postalCode?: string | undefined;
+    address?: string | undefined;
+    logoUrl?: string | undefined;
+    signatureUrl?: string | undefined;
+    website?: string | undefined;
+    optionsDataSources?: { [key: string]: any; };
+
+    constructor(data?: ICompanyInfoModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.phone = _data["phone"];
+            this.mobile = _data["mobile"];
+            this.country = _data["country"];
+            this.state = _data["state"];
+            this.city = _data["city"];
+            this.postalCode = _data["postalCode"];
+            this.address = _data["address"];
+            this.logoUrl = _data["logoUrl"];
+            this.signatureUrl = _data["signatureUrl"];
+            this.website = _data["website"];
+            if (_data["optionsDataSources"]) {
+                this.optionsDataSources = {} as any;
+                for (let key in _data["optionsDataSources"]) {
+                    if (_data["optionsDataSources"].hasOwnProperty(key))
+                        (<any>this.optionsDataSources)![key] = _data["optionsDataSources"][key];
+                }
+            }
+        }
+    }
+
+    static fromJS(data: any): CompanyInfoModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new CompanyInfoModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["phone"] = this.phone;
+        data["mobile"] = this.mobile;
+        data["country"] = this.country;
+        data["state"] = this.state;
+        data["city"] = this.city;
+        data["postalCode"] = this.postalCode;
+        data["address"] = this.address;
+        data["logoUrl"] = this.logoUrl;
+        data["signatureUrl"] = this.signatureUrl;
+        data["website"] = this.website;
+        if (this.optionsDataSources) {
+            data["optionsDataSources"] = {};
+            for (let key in this.optionsDataSources) {
+                if (this.optionsDataSources.hasOwnProperty(key))
+                    (<any>data["optionsDataSources"])[key] = (<any>this.optionsDataSources)[key];
+            }
+        }
+        return data;
+    }
+}
+
+export interface ICompanyInfoModel {
+    id?: string;
+    name?: string;
+    phone?: string | undefined;
+    mobile?: string | undefined;
+    country?: string | undefined;
+    state?: string | undefined;
+    city?: string | undefined;
+    postalCode?: string | undefined;
+    address?: string | undefined;
+    logoUrl?: string | undefined;
+    signatureUrl?: string | undefined;
+    website?: string | undefined;
+    optionsDataSources?: { [key: string]: any; };
+}
+
+export class CreateCompanyInfoCommand implements ICreateCompanyInfoCommand {
+    name?: string;
+    phone?: string | undefined;
+    mobile?: string | undefined;
+    country?: string | undefined;
+    state?: string | undefined;
+    city?: string | undefined;
+    postalCode?: string | undefined;
+    address?: string | undefined;
+    logoUrl?: string | undefined;
+    signatureUrl?: string | undefined;
+    website?: string | undefined;
+    cacheKey?: string;
+
+    constructor(data?: ICreateCompanyInfoCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.phone = _data["phone"];
+            this.mobile = _data["mobile"];
+            this.country = _data["country"];
+            this.state = _data["state"];
+            this.city = _data["city"];
+            this.postalCode = _data["postalCode"];
+            this.address = _data["address"];
+            this.logoUrl = _data["logoUrl"];
+            this.signatureUrl = _data["signatureUrl"];
+            this.website = _data["website"];
+            this.cacheKey = _data["cacheKey"];
+        }
+    }
+
+    static fromJS(data: any): CreateCompanyInfoCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateCompanyInfoCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["phone"] = this.phone;
+        data["mobile"] = this.mobile;
+        data["country"] = this.country;
+        data["state"] = this.state;
+        data["city"] = this.city;
+        data["postalCode"] = this.postalCode;
+        data["address"] = this.address;
+        data["logoUrl"] = this.logoUrl;
+        data["signatureUrl"] = this.signatureUrl;
+        data["website"] = this.website;
+        data["cacheKey"] = this.cacheKey;
+        return data;
+    }
+}
+
+export interface ICreateCompanyInfoCommand {
+    name?: string;
+    phone?: string | undefined;
+    mobile?: string | undefined;
+    country?: string | undefined;
+    state?: string | undefined;
+    city?: string | undefined;
+    postalCode?: string | undefined;
+    address?: string | undefined;
+    logoUrl?: string | undefined;
+    signatureUrl?: string | undefined;
+    website?: string | undefined;
+    cacheKey?: string;
+}
+
+export class UpdateCompanyInfoCommand implements IUpdateCompanyInfoCommand {
+    id!: string;
+    name?: string;
+    phone?: string | undefined;
+    mobile?: string | undefined;
+    country?: string | undefined;
+    state?: string | undefined;
+    city?: string | undefined;
+    postalCode?: string | undefined;
+    address?: string | undefined;
+    logoUrl?: string | undefined;
+    signatureUrl?: string | undefined;
+    website?: string | undefined;
+    cacheKey?: string;
+
+    constructor(data?: IUpdateCompanyInfoCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.phone = _data["phone"];
+            this.mobile = _data["mobile"];
+            this.country = _data["country"];
+            this.state = _data["state"];
+            this.city = _data["city"];
+            this.postalCode = _data["postalCode"];
+            this.address = _data["address"];
+            this.logoUrl = _data["logoUrl"];
+            this.signatureUrl = _data["signatureUrl"];
+            this.website = _data["website"];
+            this.cacheKey = _data["cacheKey"];
+        }
+    }
+
+    static fromJS(data: any): UpdateCompanyInfoCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateCompanyInfoCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["phone"] = this.phone;
+        data["mobile"] = this.mobile;
+        data["country"] = this.country;
+        data["state"] = this.state;
+        data["city"] = this.city;
+        data["postalCode"] = this.postalCode;
+        data["address"] = this.address;
+        data["logoUrl"] = this.logoUrl;
+        data["signatureUrl"] = this.signatureUrl;
+        data["website"] = this.website;
+        data["cacheKey"] = this.cacheKey;
+        return data;
+    }
+}
+
+export interface IUpdateCompanyInfoCommand {
+    id: string;
+    name?: string;
+    phone?: string | undefined;
+    mobile?: string | undefined;
+    country?: string | undefined;
+    state?: string | undefined;
+    city?: string | undefined;
+    postalCode?: string | undefined;
+    address?: string | undefined;
+    logoUrl?: string | undefined;
+    signatureUrl?: string | undefined;
+    website?: string | undefined;
     cacheKey?: string;
 }
 

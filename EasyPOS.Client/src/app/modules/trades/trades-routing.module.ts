@@ -8,6 +8,7 @@ import { UpdateSaleDetailComponent } from "./components/update-sale-detail/updat
 import { UpdatePurchaseOrderDetailComponent } from "./components/update-purchase-order-detail/update-purchase-order-detail.component";
 import { PurchasePaymentDetailComponent } from "./components/purchase-payment-detail/purchase-payment-detail.component";
 import { PurchasePaymentListComponent } from "./components/purchase-payment-list/purchase-payment-list.component";
+import { PurchaseInfoDetailComponent } from "./components/purchase-info-detail/purchase-info-detail.component";
 
 const routes: Routes = [
   {path: 'sales', component: SaleListComponent},
@@ -15,7 +16,8 @@ const routes: Routes = [
   {path: 'add-sale', component: SaleDetailComponent},
   {path: 'purchases', component: PurchaseListComponent},
   {path: 'purchase/:id', component: PurchaseDetailComponent},
-  {path: 'add-purchase', component: PurchaseDetailComponent}
+  {path: 'add-purchase', component: PurchaseDetailComponent},
+  {path: 'purchase-detail/:id', component: PurchaseInfoDetailComponent}
 ];
 
 @NgModule({
@@ -32,5 +34,6 @@ export const TradesRoutingComponents = [
   UpdateSaleDetailComponent,
   UpdatePurchaseOrderDetailComponent,
   PurchasePaymentDetailComponent,
-  PurchasePaymentListComponent
+  PurchasePaymentListComponent,
+  PurchaseInfoDetailComponent
 ];

@@ -9,15 +9,9 @@ public record GetPurchaseByIdQuery(Guid Id) : ICacheableQuery<PurchaseModel>
     public bool? AllowCache => false;
 }
 
-internal sealed class GetPurchaseByIdQueryHandler : IQueryHandler<GetPurchaseByIdQuery, PurchaseModel>
+internal sealed class GetPurchaseByIdQueryHandler(ISqlConnectionFactory sqlConnectionFactory) 
+    : IQueryHandler<GetPurchaseByIdQuery, PurchaseModel>
 {
-    private readonly ISqlConnectionFactory _sqlConnectionFactory;
-
-    public GetPurchaseByIdQueryHandler(ISqlConnectionFactory sqlConnectionFactory)
-    {
-        _sqlConnectionFactory = sqlConnectionFactory;
-    }
-
     public async Task<Result<PurchaseModel>> Handle(GetPurchaseByIdQuery request, CancellationToken cancellationToken)
     {
         if (request.Id == Guid.Empty)
@@ -25,7 +19,7 @@ internal sealed class GetPurchaseByIdQueryHandler : IQueryHandler<GetPurchaseByI
             return new PurchaseModel();
         }
 
-        var connection = _sqlConnectionFactory.GetOpenConnection();
+        var connection = sqlConnectionFactory.GetOpenConnection();
 
         // SQL query to get both Purchase and PurchaseDetails with necessary fields
         var sql = $"""

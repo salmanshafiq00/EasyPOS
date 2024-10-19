@@ -43,6 +43,15 @@ public static class SelectListSqls
         ORDER BY ld.Name
         """;
 
+    public const string LookupDetailNameKeySelectListByDevCodeSql = """
+        SELECT ld.Name Id, ld.Name 
+        FROM dbo.Lookups l
+        INNER JOIN dbo.LookupDetails ld ON ld.LookupId = l.Id
+        WHERE 1 = 1
+        AND l.DevCode = @DevCode
+        ORDER BY ld.Name
+        """;
+
     #endregion
 
     #region Admin

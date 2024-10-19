@@ -1,4 +1,5 @@
-﻿using EasyPOS.Domain.Common.Enums;
+﻿using EasyPOS.Application.Features.Trades.PurchasePayments.Queries;
+using EasyPOS.Domain.Common.Enums;
 using EasyPOS.Domain.Enums;
 
 namespace EasyPOS.Application.Features.Trades.Purchases.Queries;
@@ -29,6 +30,7 @@ public record PurchaseModel
     public string PaymentStatusId { get; set; }
 
     public List<PurchaseDetailModel> PurchaseDetails { get; set; } = [];
+    public List<PurchasePaymentModel> PaymentDetails { get; set; } = [];
 
     public Dictionary<string, object> OptionsDataSources { get; set; } = [];
 

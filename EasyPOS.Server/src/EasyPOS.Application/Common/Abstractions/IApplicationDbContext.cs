@@ -2,6 +2,7 @@
 using EasyPOS.Domain.Admin;
 using EasyPOS.Domain.Common;
 using EasyPOS.Domain.Products;
+using EasyPOS.Domain.Settings;
 using EasyPOS.Domain.Stakeholders;
 using EasyPOS.Domain.Trades;
 using Unit = EasyPOS.Domain.Products.Unit;
@@ -62,6 +63,10 @@ public interface IApplicationDbContext
     DbSet<Account> Accounts { get; }
     DbSet<MoneyTransfer> MoneyTransfers { get; }
 
+    #endregion
+
+    #region Settings
+    DbSet<CompanyInfo> CompanyInfos { get; }
     #endregion
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);

@@ -67,4 +67,8 @@ public static class CacheKeys
     public const string MoneyTransfer_All_SelectList = nameof(MoneyTransfer_All_SelectList);
 
     #endregion
+
+    #region Settings
+    public const string CompanyInfo = nameof(CompanyInfo);
+    #endregion
 }

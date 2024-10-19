@@ -253,4 +253,14 @@ public static class Permissions
     }
 
     #endregion
+
+    #region Settings
+    public static class CompanyInfos
+    {
+        public const string View = "Permissions.CompanyInfos.View";
+        public const string Create = "Permissions.CompanyInfos.Create";
+        public const string Edit = "Permissions.CompanyInfos.Edit";
+        public const string Delete = "Permissions.CompanyInfos.Delete";
+    }
+    #endregion
 }

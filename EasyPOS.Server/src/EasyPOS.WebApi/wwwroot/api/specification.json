@@ -1774,6 +1774,43 @@
         ]
       }
     },
+    "/api/Purchases/GetDetail/{id}": {
+      "get": {
+        "tags": [
+          "Purchases"
+        ],
+        "operationId": "GetPurchaseDetail",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PurchaseModel"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
     "/api/Purchases/Create": {
       "post": {
         "tags": [
@@ -2672,6 +2709,122 @@
                 }
               }
             }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
+    "/api/CompanyInfos/Get": {
+      "get": {
+        "tags": [
+          "CompanyInfos"
+        ],
+        "operationId": "GetCompanyInfo",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompanyInfoModel"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
+    "/api/CompanyInfos/Create": {
+      "post": {
+        "tags": [
+          "CompanyInfos"
+        ],
+        "operationId": "CreateCompanyInfo",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCompanyInfoCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "guid"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
+    "/api/CompanyInfos/Update": {
+      "put": {
+        "tags": [
+          "CompanyInfos"
+        ],
+        "operationId": "UpdateCompanyInfo",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCompanyInfoCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": ""
           }
         },
         "security": [
@@ -7104,6 +7257,12 @@
               "$ref": "#/components/schemas/PurchaseDetailModel"
             }
           },
+          "paymentDetails": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PurchasePaymentModel"
+            }
+          },
           "optionsDataSources": {
             "type": "object",
             "additionalProperties": {}
@@ -7224,6 +7383,59 @@
           1,
           2
         ]
+      },
+      "PurchasePaymentModel": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "purchaseId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "paymentDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "receivedAmount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "payingAmount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "changeAmount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "paymentType": {
+            "type": "string",
+            "format": "guid",
+            "nullable": true
+          },
+          "paymentTypeName": {
+            "type": "string"
+          },
+          "createdBy": {
+            "type": "string"
+          },
+          "note": {
+            "type": "string",
+            "nullable": true
+          },
+          "paymentDateString": {
+            "type": "string",
+            "nullable": true
+          },
+          "optionsDataSources": {
+            "type": "object",
+            "additionalProperties": {}
+          }
+        }
       },
       "GetPurchaseListQuery": {
         "allOf": [
@@ -7471,59 +7683,6 @@
           },
           "hasNextPage": {
             "type": "boolean"
-          },
-          "optionsDataSources": {
-            "type": "object",
-            "additionalProperties": {}
-          }
-        }
-      },
-      "PurchasePaymentModel": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "guid"
-          },
-          "purchaseId": {
-            "type": "string",
-            "format": "guid"
-          },
-          "paymentDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "receivedAmount": {
-            "type": "number",
-            "format": "decimal"
-          },
-          "payingAmount": {
-            "type": "number",
-            "format": "decimal"
-          },
-          "changeAmount": {
-            "type": "number",
-            "format": "decimal"
-          },
-          "paymentType": {
-            "type": "string",
-            "format": "guid",
-            "nullable": true
-          },
-          "paymentTypeName": {
-            "type": "string"
-          },
-          "createdBy": {
-            "type": "string"
-          },
-          "note": {
-            "type": "string",
-            "nullable": true
-          },
-          "paymentDateString": {
-            "type": "string",
-            "nullable": true
           },
           "optionsDataSources": {
             "type": "object",
@@ -8019,6 +8178,174 @@
             }
           }
         ]
+      },
+      "CompanyInfoModel": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true
+          },
+          "mobile": {
+            "type": "string",
+            "nullable": true
+          },
+          "country": {
+            "type": "string",
+            "nullable": true
+          },
+          "state": {
+            "type": "string",
+            "nullable": true
+          },
+          "city": {
+            "type": "string",
+            "nullable": true
+          },
+          "postalCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "address": {
+            "type": "string",
+            "nullable": true
+          },
+          "logoUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "signatureUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "website": {
+            "type": "string",
+            "nullable": true
+          },
+          "optionsDataSources": {
+            "type": "object",
+            "additionalProperties": {}
+          }
+        }
+      },
+      "CreateCompanyInfoCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true
+          },
+          "mobile": {
+            "type": "string",
+            "nullable": true
+          },
+          "country": {
+            "type": "string",
+            "nullable": true
+          },
+          "state": {
+            "type": "string",
+            "nullable": true
+          },
+          "city": {
+            "type": "string",
+            "nullable": true
+          },
+          "postalCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "address": {
+            "type": "string",
+            "nullable": true
+          },
+          "logoUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "signatureUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "website": {
+            "type": "string",
+            "nullable": true
+          },
+          "cacheKey": {
+            "type": "string"
+          }
+        }
+      },
+      "UpdateCompanyInfoCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true
+          },
+          "mobile": {
+            "type": "string",
+            "nullable": true
+          },
+          "country": {
+            "type": "string",
+            "nullable": true
+          },
+          "state": {
+            "type": "string",
+            "nullable": true
+          },
+          "city": {
+            "type": "string",
+            "nullable": true
+          },
+          "postalCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "address": {
+            "type": "string",
+            "nullable": true
+          },
+          "logoUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "signatureUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "website": {
+            "type": "string",
+            "nullable": true
+          },
+          "cacheKey": {
+            "type": "string"
+          }
+        }
       },
       "PaginatedResponseOfBrandModel": {
         "type": "object",
