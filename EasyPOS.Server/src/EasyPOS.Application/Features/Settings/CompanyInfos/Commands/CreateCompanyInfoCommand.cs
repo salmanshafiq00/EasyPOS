@@ -6,6 +6,7 @@ public record CreateCompanyInfoCommand(
     string Name, 
     string? Phone, 
     string? Mobile, 
+    string? Email, 
     string? Country, 
     string? State, 
     string? City, 

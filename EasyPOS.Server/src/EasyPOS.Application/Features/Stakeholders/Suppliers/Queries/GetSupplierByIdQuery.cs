@@ -26,7 +26,7 @@ internal sealed class GetSupplierByIdQueryHandler(ISqlConnectionFactory sqlConne
                 t.Email AS {nameof(SupplierModel.Email)},
                 t.PhoneNo AS {nameof(SupplierModel.PhoneNo)},
                 t.Mobile AS {nameof(SupplierModel.Mobile)},
-                t.CountryId AS {nameof(SupplierModel.CountryId)},
+                t.Country AS {nameof(SupplierModel.Country)},
                 t.City AS {nameof(SupplierModel.City)},
                 t.Address AS {nameof(SupplierModel.Address)},
                 t.IsActive AS {nameof(SupplierModel.IsActive)}

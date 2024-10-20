@@ -91,6 +91,7 @@ export class CompanyInfoDetailComponent {
       name: [null],
       phone: [null],
       mobile: [null],
+      email: [null],
       country: [null],
       state: [null],
       city: [null],

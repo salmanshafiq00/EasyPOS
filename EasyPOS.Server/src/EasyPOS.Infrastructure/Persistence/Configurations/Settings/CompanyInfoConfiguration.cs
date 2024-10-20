@@ -24,6 +24,10 @@ public class CompanyInfoConfiguration : IEntityTypeConfiguration<CompanyInfo>
             .HasMaxLength(50)
             .IsRequired(false);
 
+        builder.Property(t => t.Email)
+            .HasMaxLength(100)
+            .IsRequired(false);
+
         builder.Property(t => t.Country)
             .HasMaxLength(100)
             .IsRequired();

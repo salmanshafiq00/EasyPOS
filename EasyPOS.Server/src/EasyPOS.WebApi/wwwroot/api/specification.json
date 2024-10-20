@@ -1798,7 +1798,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PurchaseModel"
+                  "$ref": "#/components/schemas/PurchaseInfoModel"
                 }
               }
             }
@@ -6778,12 +6778,7 @@
             "type": "string",
             "nullable": true
           },
-          "countryId": {
-            "type": "string",
-            "format": "guid",
-            "nullable": true
-          },
-          "countryName": {
+          "country": {
             "type": "string",
             "nullable": true
           },
@@ -6852,9 +6847,8 @@
             "type": "string",
             "nullable": true
           },
-          "countryId": {
+          "country": {
             "type": "string",
-            "format": "guid",
             "nullable": true
           },
           "city": {
@@ -6903,9 +6897,8 @@
             "type": "string",
             "nullable": true
           },
-          "countryId": {
+          "country": {
             "type": "string",
-            "format": "guid",
             "nullable": true
           },
           "city": {
@@ -6982,12 +6975,7 @@
             "type": "string",
             "nullable": true
           },
-          "countryId": {
-            "type": "string",
-            "format": "guid",
-            "nullable": true
-          },
-          "countryName": {
+          "country": {
             "type": "string"
           },
           "city": {
@@ -7055,9 +7043,8 @@
             "type": "string",
             "nullable": true
           },
-          "countryId": {
+          "country": {
             "type": "string",
-            "format": "guid",
             "nullable": true
           },
           "city": {
@@ -7106,9 +7093,8 @@
             "type": "string",
             "nullable": true
           },
-          "countryId": {
+          "country": {
             "type": "string",
-            "format": "guid",
             "nullable": true
           },
           "city": {
@@ -7452,6 +7438,175 @@
             }
           }
         ]
+      },
+      "PurchaseInfoModel": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "purchaseDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "referenceNo": {
+            "type": "string"
+          },
+          "warehouseId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "supplierId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "purchaseStatusId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "attachmentUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "subTotal": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "taxRate": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "taxAmount": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "discountType": {
+            "$ref": "#/components/schemas/DiscountType"
+          },
+          "discountRate": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "discountAmount": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "shippingCost": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "grandTotal": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "paidAmount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "dueAmount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "note": {
+            "type": "string",
+            "nullable": true
+          },
+          "supplierName": {
+            "type": "string"
+          },
+          "purchaseStatus": {
+            "type": "string"
+          },
+          "paymentStatusId": {
+            "type": "string"
+          },
+          "companyInfo": {
+            "$ref": "#/components/schemas/CompanyInfoModel"
+          },
+          "supplier": {
+            "$ref": "#/components/schemas/SupplierModel"
+          },
+          "purchaseDetails": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PurchaseDetailModel"
+            }
+          },
+          "paymentDetails": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PurchasePaymentModel"
+            }
+          }
+        }
+      },
+      "CompanyInfoModel": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true
+          },
+          "mobile": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "country": {
+            "type": "string",
+            "nullable": true
+          },
+          "state": {
+            "type": "string",
+            "nullable": true
+          },
+          "city": {
+            "type": "string",
+            "nullable": true
+          },
+          "postalCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "address": {
+            "type": "string",
+            "nullable": true
+          },
+          "logoUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "signatureUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "website": {
+            "type": "string",
+            "nullable": true
+          },
+          "optionsDataSources": {
+            "type": "object",
+            "additionalProperties": {}
+          }
+        }
       },
       "CreatePurchaseCommand": {
         "type": "object",
@@ -8179,63 +8334,6 @@
           }
         ]
       },
-      "CompanyInfoModel": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "guid"
-          },
-          "name": {
-            "type": "string"
-          },
-          "phone": {
-            "type": "string",
-            "nullable": true
-          },
-          "mobile": {
-            "type": "string",
-            "nullable": true
-          },
-          "country": {
-            "type": "string",
-            "nullable": true
-          },
-          "state": {
-            "type": "string",
-            "nullable": true
-          },
-          "city": {
-            "type": "string",
-            "nullable": true
-          },
-          "postalCode": {
-            "type": "string",
-            "nullable": true
-          },
-          "address": {
-            "type": "string",
-            "nullable": true
-          },
-          "logoUrl": {
-            "type": "string",
-            "nullable": true
-          },
-          "signatureUrl": {
-            "type": "string",
-            "nullable": true
-          },
-          "website": {
-            "type": "string",
-            "nullable": true
-          },
-          "optionsDataSources": {
-            "type": "object",
-            "additionalProperties": {}
-          }
-        }
-      },
       "CreateCompanyInfoCommand": {
         "type": "object",
         "additionalProperties": false,
@@ -8248,6 +8346,10 @@
             "nullable": true
           },
           "mobile": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
             "type": "string",
             "nullable": true
           },
@@ -8307,6 +8409,10 @@
             "nullable": true
           },
           "mobile": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
             "type": "string",
             "nullable": true
           },

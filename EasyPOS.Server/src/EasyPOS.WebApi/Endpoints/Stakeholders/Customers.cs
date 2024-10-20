@@ -1,4 +1,5 @@
-﻿using EasyPOS.Application.Features.Customers.Commands;
+﻿using EasyPOS.Application.Features.Common.Queries;
+using EasyPOS.Application.Features.Customers.Commands;
 using EasyPOS.Application.Features.Customers.Queries;
 
 namespace EasyPOS.WebApi.Endpoints;
@@ -56,6 +57,15 @@ public class Customers : EndpointGroupBase
     private async Task<IResult> Get(ISender sender, Guid id)
     {
         var result = await sender.Send(new GetCustomerByIdQuery(id));
+
+        var countrySelectList = await sender.Send(new GetSelectListQuery(
+            Sql: SelectListSqls.LookupDetailNameKeySelectListByDevCodeSql,
+            Parameters: new { DevCode = (int)LookupDevCode.Country },
+            Key: $"{CacheKeys.LookupDetail}_{LookupDevCode.BarCodeSymbol}",
+            AllowCacheList: true)
+        );
+
+        result.Value.OptionsDataSources.Add("countrySelectList", countrySelectList.Value);
 
         return TypedResults.Ok(result.Value);
     }

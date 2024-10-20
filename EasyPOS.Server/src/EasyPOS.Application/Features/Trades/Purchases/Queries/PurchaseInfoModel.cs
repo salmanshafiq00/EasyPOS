@@ -1,4 +1,5 @@
 ﻿using EasyPOS.Application.Features.Settings.CompanyInfos.Queries;
+using EasyPOS.Application.Features.Suppliers.Queries;
 using EasyPOS.Application.Features.Trades.PurchasePayments.Queries;
 using EasyPOS.Domain.Common.Enums;
 using EasyPOS.Domain.Settings;
@@ -30,7 +31,8 @@ public class PurchaseInfoModel
     public string PurchaseStatus { get; set; }
     public string PaymentStatusId { get; set; }
 
-    public CompanyInfoModel CompanyInfoModel { get; set; } = default!;
+    public CompanyInfoModel CompanyInfo { get; set; } = default!;
+    public SupplierModel Supplier { get; set; } = default!;
     public List<PurchaseDetailModel> PurchaseDetails { get; set; } = [];
     public List<PurchasePaymentModel> PaymentDetails { get; set; } = [];
 

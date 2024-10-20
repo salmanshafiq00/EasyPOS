@@ -32,6 +32,10 @@ internal sealed class SupplierConfiguration : IEntityTypeConfiguration<Supplier>
            .HasMaxLength(20)
            .IsRequired(false);
 
+        builder.Property(p => p.Country)
+            .HasMaxLength(100)
+            .IsRequired(false);
+
         builder.Property(p => p.City)
            .HasMaxLength(200)
            .IsRequired(false);

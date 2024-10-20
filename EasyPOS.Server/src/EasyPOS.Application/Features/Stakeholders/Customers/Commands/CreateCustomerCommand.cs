@@ -8,7 +8,7 @@ public record CreateCustomerCommand(
     string? Email,
     string? PhoneNo,
     string? Mobile,
-    Guid? CountryId,
+    string? Country,
     string? City,
     string? Address,
     bool IsActive) : ICacheInvalidatorCommand<Guid>

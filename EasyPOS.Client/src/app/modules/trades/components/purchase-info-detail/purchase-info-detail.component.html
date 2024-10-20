@@ -1,69 +1,180 @@
 <div class="card">
   <h3>Purchase Details</h3>
-  <div class="grid">
-    <div class="col-md-4">
+  <div class="grid p-fluid">
+    <div *ngIf="item?.companyInfo" class="col-12 md:col-4">
       <div>
         <span>From:</span>
       </div>
       <div>
-        <span>Name: {{item.discountRate}}</span>
+        <span>{{item.companyInfo.name}}</span>
       </div>
       <div>
-        <span>{{item.discountRate}}</span>
+        <span>{{item.companyInfo.address}} {{item.companyInfo.city}} {{item.companyInfo.country}}</span>
+      </div>
+      <div>
+        <span>Phone: {{item.companyInfo.phone}}, {{item.companyInfo.mobile}} </span>
+      </div>
+      <div>
+        <span>Email: {{item.companyInfo.email}}</span>
+      </div>
+    </div>
+    <div *ngIf="item?.supplier" class="col-12 md:col-4">
+      <div>
+        <span>Supplier Details:</span>
+      </div>
+      <div>
+        <span>{{item.supplier.name}}</span>
+      </div>
+      <div>
+        <span>{{item.supplier.address}} {{item.supplier.city}} {{item.supplier.country}}</span>
+      </div>
+      <div>
+        <span>Phone: {{item.supplier.phoneNo}}, {{item.supplier.mobile}} </span>
+      </div>
+      <div>
+        <span>Email: {{item.supplier.email}}</span>
+      </div>
+    </div>
+    <div class="col-12 md:col-4">
+      <div>
+        <span>Invoice: {{item.id}}</span>
+      </div>
+      <div>
+        <span>Purchase Status: {{item.purchaseStatus}}</span>
+      </div>
+      <div>
+        <span>Payment Status: {{item.paymentStatusId}}</span>
       </div>
     </div>
   </div>
-</div>
 
-        <!-- <table width="100%" style="text-align: right;">
-          <tbody>
-            <tr>
-              <td class="" colspan="4">
-                <strong>Items</strong>
-              </td>
-              <td class="">
-                <span>{{totalItems}}</span>
-              </td>
-            </tr>
-            <tr>
-              <td class="" colspan="4">
-                <strong>Total</strong>
-              </td>
-              <td class="">
-                <span>{{ subTotal }}</span>
-              </td>
-            </tr>
-            <tr>
-              <td class="" colspan="4">
-                <strong>Order Tax</strong>
-              </td>
-              <td class="">
-                <span>{{ orderTaxAmount }}</span>
-              </td>
-            </tr>
-            <tr>
-              <td class="" colspan="4">
-                <strong>Order Discount</strong>
-              </td>
-              <td class="">
-                <span>{{ orderDiscountAmount }}</span>
-              </td>
-            </tr>
-            <tr>
-              <td class="" colspan="4">
-                <strong>Shipping Cost</strong>
-              </td>
-              <td class="">
-                <span>{{ shippingCostAmount }}</span>
-              </td>
-            </tr>
-            <tr>
-              <td class="" colspan="4">
-                <strong>Grand Total</strong>
-              </td>
-              <td class="font-bold">
-                <span>{{ grandTotalAmount }}</span>
-              </td>
-            </tr>
-          </tbody>
-        </table> -->
+  <!-- Sale Details List -->
+  <div class="col-12">
+    <p-table [value]="item.purchaseDetails" [scrollable]="true" scrollHeight="600px" styleClass="p-datatable-gridlines">
+      <ng-template pTemplate="header">
+        <tr class="text-center">
+          <th>#</th>
+          <th style="min-width:100px; text-align: center;">Name</th>
+          <th style="min-width:70px; text-align: center;">Quantity</th>
+          <th style="min-width:70px; text-align: center;">Unit Price</th>
+          <th style="min-width:70px; text-align: center;">Discount</th>
+          <th style="min-width:70px; text-align: center;">Tax</th>
+          <th style="min-width:70px; text-align: center;">Sub Total</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-detail let-i="rowIndex">
+        <tr>
+          <td>{{i + 1}}</td>
+          <td>{{ detail.productName }} ({{ detail.productCode }}) </td>
+          <td class="text-center">
+            {{detail.quantity}}
+          </td>
+          <td class="text-right">
+            {{detail.netUnitCost}}
+          </td>
+          <td class="text-right">
+            {{detail.discountAmount}}
+          </td>
+          <td class="text-right">
+            {{detail.taxAmount}}
+          </td>
+          <td class="text-right">
+            <div class="text-right mr-2">
+              {{ detail.totalPrice }}
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="footer">
+        <tr>
+          <td colspan="2" class="text-left">Total</td>
+          <td class="text-center">{{ totalQuantity }}</td>
+          <td></td>
+          <td class="text-right">{{ totalDiscount }}</td>
+          <td class="text-right">{{ totalTaxAmount }}</td>
+          <td class="text-right">{{ item.subTotal }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  <div class="col-12">
+    <!-- <div class="grid grandTotal">
+      <div class="col-8">
+        <div class="text-right p-3 font-bold">
+          <strong>Items</strong>
+          <strong>Total</strong>
+          <strong>Order Tax</strong>
+          <strong>Order Discount</strong>
+          <strong>Shipping Cost</strong>
+          <strong>Grand Total</strong>
+        </div>
+      </div>
+      <div class="col-fixed col-2" style="min-width:100px">
+        <div class="text-right p-3 font-bold">
+          <span>{{totalItems}}</span>
+          <span>{{item.subTotal}}</span>
+          <span>{{item.taxAmount}}</span>
+          <span>{{item.discountAmount}}</span>
+          <span>{{item.shippingCost}}</span>
+          <span>{{item.grandTotal}}</span>
+        </div>
+      </div>
+    </div> -->
+
+    <table width="100%" style="text-align: right;">
+      <tbody>
+        <tr>
+          <td class="" colspan="4">
+            <strong>Items</strong>
+          </td>
+          <td class="">
+            <span>{{totalItems}}</span>
+          </td>
+        </tr>
+        <tr>
+          <td class="" colspan="4">
+            <strong>Total</strong>
+          </td>
+          <td class="">
+            <span>{{ subTotal }}</span>
+          </td>
+        </tr>
+        <tr>
+          <td class="" colspan="4">
+            <strong>Order Tax</strong>
+          </td>
+          <td class="">
+            <span>{{ item.taxAmount }}</span>
+          </td>
+        </tr>
+        <tr>
+          <td class="" colspan="4">
+            <strong>Order Discount</strong>
+          </td>
+          <td class="">
+            <span>{{ item.discountAmount }}</span>
+          </td>
+        </tr>
+        <tr>
+          <td class="" colspan="4">
+            <strong>Shipping Cost</strong>
+          </td>
+          <td class="">
+            <span>{{ item.shippingCost }}</span>
+          </td>
+        </tr>
+        <tr>
+          <td class="" colspan="4">
+            <strong>Grand Total</strong>
+          </td>
+          <td class="font-bold">
+            <span>{{ item.grandTotal }}</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+
+</div>

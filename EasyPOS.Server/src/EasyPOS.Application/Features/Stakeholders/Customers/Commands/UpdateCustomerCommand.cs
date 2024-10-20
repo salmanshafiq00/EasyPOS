@@ -9,7 +9,7 @@ public record UpdateCustomerCommand(
     string? Email,
     string? PhoneNo,
     string? Mobile,
-    Guid? CountryId,
+    string? Country,
     string? City,
     string? Address,
     bool IsActive) : ICacheInvalidatorCommand

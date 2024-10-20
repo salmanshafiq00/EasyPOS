@@ -1,7 +1,5 @@
 ﻿using ClosedXML.Excel;
 using EasyPOS.Application.Features.Suppliers.Queries;
-using EasyPOS.Application.Features.Trades.Purchases.Queries;
-using EasyPOS.Application.Features.Trades.Sales.Queries;
 using EasyPOS.Domain.Stakeholders;
 using Microsoft.AspNetCore.Http;
 
@@ -28,7 +26,7 @@ internal sealed class CreateSupplierFromExcelCommandHandler(
         {
             var countryId = await dbContext.Lookups
                 .AsNoTracking()
-                .Where(x => x.Name.ToLower() == item.CountryName.ToLower())
+                .Where(x => x.Name.ToLower() == item.Country.ToLower())
                 .Select(x => x.Id)
                 .SingleOrDefaultAsync();
 
@@ -40,7 +38,7 @@ internal sealed class CreateSupplierFromExcelCommandHandler(
                 Email = item.Email,
                 PhoneNo = item.PhoneNo,
                 Mobile = item.Mobile,
-                CountryId = item.CountryId,
+                Country = item.Country,
                 City = item.City,
                 Address = item.Address,
             });
@@ -73,7 +71,7 @@ internal sealed class CreateSupplierFromExcelCommandHandler(
                 Email = row.Cell(3).GetValue<string>(),
                 PhoneNo = row.Cell(4).GetValue<string>(),
                 Mobile = row.Cell(5).GetValue<string>(),
-                CountryName = row.Cell(6).GetValue<string>(),
+                Country = row.Cell(6).GetValue<string>(),
                 City = row.Cell(6).GetValue<string>(),
                 Address = row.Cell(6).GetValue<string>()
             });

@@ -1,8 +1,10 @@
 ﻿using System.Text;
+using Azure.Core;
 using Dapper;
 using EasyPOS.Application.Common.Abstractions;
 using EasyPOS.Application.Common.DapperQueries;
 using EasyPOS.Application.Features.Settings.CompanyInfos.Queries;
+using EasyPOS.Application.Features.Suppliers.Queries;
 using EasyPOS.Domain.Common;
 
 namespace EasyPOS.Infrastructure.Persistence.Services;
@@ -49,6 +51,50 @@ internal sealed class CommonQueryService(ISqlConnectionFactory sqlConnection) : 
         var result = await connection.QueryAsync<LookupDetail>(sql, new { DevCode = lookupDevCode });
 
         return result.AsList();
+    }
+
+    public async Task<SupplierModel> GetSupplierDetail(Guid supplierId, CancellationToken cancellationToken = default)
+    {
+        var connection = sqlConnection.GetOpenConnection();
+
+        var sql = $"""
+            SELECT
+                t.Id AS {nameof(SupplierModel.Id)},
+                t.Name AS {nameof(SupplierModel.Name)},
+                t.Email AS {nameof(SupplierModel.Email)},
+                t.PhoneNo AS {nameof(SupplierModel.PhoneNo)},
+                t.Mobile AS {nameof(SupplierModel.Mobile)},
+                t.Country AS {nameof(SupplierModel.Country)},
+                t.City AS {nameof(SupplierModel.City)},
+                t.Address AS {nameof(SupplierModel.Address)},
+                t.IsActive AS {nameof(SupplierModel.IsActive)}
+            FROM dbo.Suppliers t
+            WHERE t.Id = @Id
+            """
+        ;
+        return await connection.QueryFirstOrDefaultAsync<SupplierModel>(sql, new {Id = supplierId });
+    }
+
+    public async Task<SupplierModel> GetCustomerDetail(Guid customerId, CancellationToken cancellationToken = default)
+    {
+        var connection = sqlConnection.GetOpenConnection();
+
+        var sql = $"""
+            SELECT
+                t.Id AS {nameof(SupplierModel.Id)},
+                t.Name AS {nameof(SupplierModel.Name)},
+                t.Email AS {nameof(SupplierModel.Email)},
+                t.PhoneNo AS {nameof(SupplierModel.PhoneNo)},
+                t.Mobile AS {nameof(SupplierModel.Mobile)},
+                t.Country AS {nameof(SupplierModel.Country)},
+                t.City AS {nameof(SupplierModel.City)},
+                t.Address AS {nameof(SupplierModel.Address)},
+                t.IsActive AS {nameof(SupplierModel.IsActive)}
+            FROM dbo.Customers t
+            WHERE t.Id = @Id
+            """
+        ;
+        return await connection.QueryFirstOrDefaultAsync<SupplierModel>(sql, new { Id = customerId });
     }
 
     public async Task<CompanyInfoModel> GetCompanyInfoAsync(

@@ -22,7 +22,7 @@ public class Purchases : EndpointGroupBase
 
         group.MapGet("GetDetail/{id:Guid}", GetDetail)
              .WithName("GetPurchaseDetail")
-             .Produces<PurchaseModel>(StatusCodes.Status200OK);
+             .Produces<PurchaseInfoModel>(StatusCodes.Status200OK);
 
 
         group.MapPost("Create", Create)

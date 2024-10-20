@@ -23,7 +23,7 @@ export class CustomerDetailComponent extends BaseDetailComponent {
       email: [''],
       phoneNo: [''],
       mobile: [''],
-      countryId: [null],
+      country: [null],
       city: [''],
       address: [''],
       previousDue: [null],

@@ -2552,7 +2552,7 @@ export class SuppliersClient implements ISuppliersClient {
 export interface IPurchasesClient {
     getAll(query: GetPurchaseListQuery): Observable<PaginatedResponseOfPurchaseModel>;
     get(id: string): Observable<PurchaseModel>;
-    getDetail(id: string): Observable<PurchaseModel>;
+    getDetail(id: string): Observable<PurchaseInfoModel>;
     create(command: CreatePurchaseCommand): Observable<string>;
     update(command: UpdatePurchaseCommand): Observable<void>;
     delete(id: string): Observable<void>;
@@ -2677,7 +2677,7 @@ export class PurchasesClient implements IPurchasesClient {
         return _observableOf(null as any);
     }
 
-    getDetail(id: string): Observable<PurchaseModel> {
+    getDetail(id: string): Observable<PurchaseInfoModel> {
         let url_ = this.baseUrl + "/api/Purchases/GetDetail/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -2700,14 +2700,14 @@ export class PurchasesClient implements IPurchasesClient {
                 try {
                     return this.processGetDetail(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<PurchaseModel>;
+                    return _observableThrow(e) as any as Observable<PurchaseInfoModel>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<PurchaseModel>;
+                return _observableThrow(response_) as any as Observable<PurchaseInfoModel>;
         }));
     }
 
-    protected processGetDetail(response: HttpResponseBase): Observable<PurchaseModel> {
+    protected processGetDetail(response: HttpResponseBase): Observable<PurchaseInfoModel> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2718,7 +2718,7 @@ export class PurchasesClient implements IPurchasesClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = PurchaseModel.fromJS(resultData200);
+            result200 = PurchaseInfoModel.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -10443,8 +10443,7 @@ export class CustomerModel implements ICustomerModel {
     email?: string | undefined;
     phoneNo?: string;
     mobile?: string | undefined;
-    countryId?: string | undefined;
-    countryName?: string | undefined;
+    country?: string | undefined;
     city?: string | undefined;
     address?: string | undefined;
     previousDue?: number | undefined;
@@ -10468,8 +10467,7 @@ export class CustomerModel implements ICustomerModel {
             this.email = _data["email"];
             this.phoneNo = _data["phoneNo"];
             this.mobile = _data["mobile"];
-            this.countryId = _data["countryId"];
-            this.countryName = _data["countryName"];
+            this.country = _data["country"];
             this.city = _data["city"];
             this.address = _data["address"];
             this.previousDue = _data["previousDue"];
@@ -10499,8 +10497,7 @@ export class CustomerModel implements ICustomerModel {
         data["email"] = this.email;
         data["phoneNo"] = this.phoneNo;
         data["mobile"] = this.mobile;
-        data["countryId"] = this.countryId;
-        data["countryName"] = this.countryName;
+        data["country"] = this.country;
         data["city"] = this.city;
         data["address"] = this.address;
         data["previousDue"] = this.previousDue;
@@ -10523,8 +10520,7 @@ export interface ICustomerModel {
     email?: string | undefined;
     phoneNo?: string;
     mobile?: string | undefined;
-    countryId?: string | undefined;
-    countryName?: string | undefined;
+    country?: string | undefined;
     city?: string | undefined;
     address?: string | undefined;
     previousDue?: number | undefined;
@@ -10571,7 +10567,7 @@ export class CreateCustomerCommand implements ICreateCustomerCommand {
     email?: string | undefined;
     phoneNo?: string | undefined;
     mobile?: string | undefined;
-    countryId?: string | undefined;
+    country?: string | undefined;
     city?: string | undefined;
     address?: string | undefined;
     isActive?: boolean;
@@ -10592,7 +10588,7 @@ export class CreateCustomerCommand implements ICreateCustomerCommand {
             this.email = _data["email"];
             this.phoneNo = _data["phoneNo"];
             this.mobile = _data["mobile"];
-            this.countryId = _data["countryId"];
+            this.country = _data["country"];
             this.city = _data["city"];
             this.address = _data["address"];
             this.isActive = _data["isActive"];
@@ -10613,7 +10609,7 @@ export class CreateCustomerCommand implements ICreateCustomerCommand {
         data["email"] = this.email;
         data["phoneNo"] = this.phoneNo;
         data["mobile"] = this.mobile;
-        data["countryId"] = this.countryId;
+        data["country"] = this.country;
         data["city"] = this.city;
         data["address"] = this.address;
         data["isActive"] = this.isActive;
@@ -10627,7 +10623,7 @@ export interface ICreateCustomerCommand {
     email?: string | undefined;
     phoneNo?: string | undefined;
     mobile?: string | undefined;
-    countryId?: string | undefined;
+    country?: string | undefined;
     city?: string | undefined;
     address?: string | undefined;
     isActive?: boolean;
@@ -10640,7 +10636,7 @@ export class UpdateCustomerCommand implements IUpdateCustomerCommand {
     email?: string | undefined;
     phoneNo?: string | undefined;
     mobile?: string | undefined;
-    countryId?: string | undefined;
+    country?: string | undefined;
     city?: string | undefined;
     address?: string | undefined;
     isActive?: boolean;
@@ -10662,7 +10658,7 @@ export class UpdateCustomerCommand implements IUpdateCustomerCommand {
             this.email = _data["email"];
             this.phoneNo = _data["phoneNo"];
             this.mobile = _data["mobile"];
-            this.countryId = _data["countryId"];
+            this.country = _data["country"];
             this.city = _data["city"];
             this.address = _data["address"];
             this.isActive = _data["isActive"];
@@ -10684,7 +10680,7 @@ export class UpdateCustomerCommand implements IUpdateCustomerCommand {
         data["email"] = this.email;
         data["phoneNo"] = this.phoneNo;
         data["mobile"] = this.mobile;
-        data["countryId"] = this.countryId;
+        data["country"] = this.country;
         data["city"] = this.city;
         data["address"] = this.address;
         data["isActive"] = this.isActive;
@@ -10699,7 +10695,7 @@ export interface IUpdateCustomerCommand {
     email?: string | undefined;
     phoneNo?: string | undefined;
     mobile?: string | undefined;
-    countryId?: string | undefined;
+    country?: string | undefined;
     city?: string | undefined;
     address?: string | undefined;
     isActive?: boolean;
@@ -10792,8 +10788,7 @@ export class SupplierModel implements ISupplierModel {
     email?: string | undefined;
     phoneNo?: string;
     mobile?: string | undefined;
-    countryId?: string | undefined;
-    countryName?: string;
+    country?: string;
     city?: string | undefined;
     address?: string | undefined;
     openingBalance?: number | undefined;
@@ -10817,8 +10812,7 @@ export class SupplierModel implements ISupplierModel {
             this.email = _data["email"];
             this.phoneNo = _data["phoneNo"];
             this.mobile = _data["mobile"];
-            this.countryId = _data["countryId"];
-            this.countryName = _data["countryName"];
+            this.country = _data["country"];
             this.city = _data["city"];
             this.address = _data["address"];
             this.openingBalance = _data["openingBalance"];
@@ -10848,8 +10842,7 @@ export class SupplierModel implements ISupplierModel {
         data["email"] = this.email;
         data["phoneNo"] = this.phoneNo;
         data["mobile"] = this.mobile;
-        data["countryId"] = this.countryId;
-        data["countryName"] = this.countryName;
+        data["country"] = this.country;
         data["city"] = this.city;
         data["address"] = this.address;
         data["openingBalance"] = this.openingBalance;
@@ -10872,8 +10865,7 @@ export interface ISupplierModel {
     email?: string | undefined;
     phoneNo?: string;
     mobile?: string | undefined;
-    countryId?: string | undefined;
-    countryName?: string;
+    country?: string;
     city?: string | undefined;
     address?: string | undefined;
     openingBalance?: number | undefined;
@@ -10920,7 +10912,7 @@ export class CreateSupplierCommand implements ICreateSupplierCommand {
     email?: string | undefined;
     phoneNo?: string | undefined;
     mobile?: string | undefined;
-    countryId?: string | undefined;
+    country?: string | undefined;
     city?: string | undefined;
     address?: string | undefined;
     isActive?: boolean;
@@ -10941,7 +10933,7 @@ export class CreateSupplierCommand implements ICreateSupplierCommand {
             this.email = _data["email"];
             this.phoneNo = _data["phoneNo"];
             this.mobile = _data["mobile"];
-            this.countryId = _data["countryId"];
+            this.country = _data["country"];
             this.city = _data["city"];
             this.address = _data["address"];
             this.isActive = _data["isActive"];
@@ -10962,7 +10954,7 @@ export class CreateSupplierCommand implements ICreateSupplierCommand {
         data["email"] = this.email;
         data["phoneNo"] = this.phoneNo;
         data["mobile"] = this.mobile;
-        data["countryId"] = this.countryId;
+        data["country"] = this.country;
         data["city"] = this.city;
         data["address"] = this.address;
         data["isActive"] = this.isActive;
@@ -10976,7 +10968,7 @@ export interface ICreateSupplierCommand {
     email?: string | undefined;
     phoneNo?: string | undefined;
     mobile?: string | undefined;
-    countryId?: string | undefined;
+    country?: string | undefined;
     city?: string | undefined;
     address?: string | undefined;
     isActive?: boolean;
@@ -10989,7 +10981,7 @@ export class UpdateSupplierCommand implements IUpdateSupplierCommand {
     email?: string | undefined;
     phoneNo?: string | undefined;
     mobile?: string | undefined;
-    countryId?: string | undefined;
+    country?: string | undefined;
     city?: string | undefined;
     address?: string | undefined;
     isActive?: boolean;
@@ -11011,7 +11003,7 @@ export class UpdateSupplierCommand implements IUpdateSupplierCommand {
             this.email = _data["email"];
             this.phoneNo = _data["phoneNo"];
             this.mobile = _data["mobile"];
-            this.countryId = _data["countryId"];
+            this.country = _data["country"];
             this.city = _data["city"];
             this.address = _data["address"];
             this.isActive = _data["isActive"];
@@ -11033,7 +11025,7 @@ export class UpdateSupplierCommand implements IUpdateSupplierCommand {
         data["email"] = this.email;
         data["phoneNo"] = this.phoneNo;
         data["mobile"] = this.mobile;
-        data["countryId"] = this.countryId;
+        data["country"] = this.country;
         data["city"] = this.city;
         data["address"] = this.address;
         data["isActive"] = this.isActive;
@@ -11048,7 +11040,7 @@ export interface IUpdateSupplierCommand {
     email?: string | undefined;
     phoneNo?: string | undefined;
     mobile?: string | undefined;
-    countryId?: string | undefined;
+    country?: string | undefined;
     city?: string | undefined;
     address?: string | undefined;
     isActive?: boolean;
@@ -11544,6 +11536,254 @@ export class GetPurchaseListQuery extends DataGridModel implements IGetPurchaseL
 
 export interface IGetPurchaseListQuery extends IDataGridModel {
     cacheKey?: string;
+}
+
+export class PurchaseInfoModel implements IPurchaseInfoModel {
+    id?: string;
+    purchaseDate?: Date;
+    referenceNo?: string;
+    warehouseId?: string;
+    supplierId?: string;
+    purchaseStatusId?: string;
+    attachmentUrl?: string | undefined;
+    subTotal?: number;
+    taxRate?: number | undefined;
+    taxAmount?: number | undefined;
+    discountType?: DiscountType;
+    discountRate?: number | undefined;
+    discountAmount?: number | undefined;
+    shippingCost?: number | undefined;
+    grandTotal?: number;
+    paidAmount?: number;
+    dueAmount?: number;
+    note?: string | undefined;
+    supplierName?: string;
+    purchaseStatus?: string;
+    paymentStatusId?: string;
+    companyInfo?: CompanyInfoModel;
+    supplier?: SupplierModel;
+    purchaseDetails?: PurchaseDetailModel[];
+    paymentDetails?: PurchasePaymentModel[];
+
+    constructor(data?: IPurchaseInfoModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.purchaseDate = _data["purchaseDate"] ? new Date(_data["purchaseDate"].toString()) : <any>undefined;
+            this.referenceNo = _data["referenceNo"];
+            this.warehouseId = _data["warehouseId"];
+            this.supplierId = _data["supplierId"];
+            this.purchaseStatusId = _data["purchaseStatusId"];
+            this.attachmentUrl = _data["attachmentUrl"];
+            this.subTotal = _data["subTotal"];
+            this.taxRate = _data["taxRate"];
+            this.taxAmount = _data["taxAmount"];
+            this.discountType = _data["discountType"];
+            this.discountRate = _data["discountRate"];
+            this.discountAmount = _data["discountAmount"];
+            this.shippingCost = _data["shippingCost"];
+            this.grandTotal = _data["grandTotal"];
+            this.paidAmount = _data["paidAmount"];
+            this.dueAmount = _data["dueAmount"];
+            this.note = _data["note"];
+            this.supplierName = _data["supplierName"];
+            this.purchaseStatus = _data["purchaseStatus"];
+            this.paymentStatusId = _data["paymentStatusId"];
+            this.companyInfo = _data["companyInfo"] ? CompanyInfoModel.fromJS(_data["companyInfo"]) : <any>undefined;
+            this.supplier = _data["supplier"] ? SupplierModel.fromJS(_data["supplier"]) : <any>undefined;
+            if (Array.isArray(_data["purchaseDetails"])) {
+                this.purchaseDetails = [] as any;
+                for (let item of _data["purchaseDetails"])
+                    this.purchaseDetails!.push(PurchaseDetailModel.fromJS(item));
+            }
+            if (Array.isArray(_data["paymentDetails"])) {
+                this.paymentDetails = [] as any;
+                for (let item of _data["paymentDetails"])
+                    this.paymentDetails!.push(PurchasePaymentModel.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): PurchaseInfoModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new PurchaseInfoModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["purchaseDate"] = this.purchaseDate ? formatDate(this.purchaseDate) : <any>undefined;
+        data["referenceNo"] = this.referenceNo;
+        data["warehouseId"] = this.warehouseId;
+        data["supplierId"] = this.supplierId;
+        data["purchaseStatusId"] = this.purchaseStatusId;
+        data["attachmentUrl"] = this.attachmentUrl;
+        data["subTotal"] = this.subTotal;
+        data["taxRate"] = this.taxRate;
+        data["taxAmount"] = this.taxAmount;
+        data["discountType"] = this.discountType;
+        data["discountRate"] = this.discountRate;
+        data["discountAmount"] = this.discountAmount;
+        data["shippingCost"] = this.shippingCost;
+        data["grandTotal"] = this.grandTotal;
+        data["paidAmount"] = this.paidAmount;
+        data["dueAmount"] = this.dueAmount;
+        data["note"] = this.note;
+        data["supplierName"] = this.supplierName;
+        data["purchaseStatus"] = this.purchaseStatus;
+        data["paymentStatusId"] = this.paymentStatusId;
+        data["companyInfo"] = this.companyInfo ? this.companyInfo.toJSON() : <any>undefined;
+        data["supplier"] = this.supplier ? this.supplier.toJSON() : <any>undefined;
+        if (Array.isArray(this.purchaseDetails)) {
+            data["purchaseDetails"] = [];
+            for (let item of this.purchaseDetails)
+                data["purchaseDetails"].push(item.toJSON());
+        }
+        if (Array.isArray(this.paymentDetails)) {
+            data["paymentDetails"] = [];
+            for (let item of this.paymentDetails)
+                data["paymentDetails"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IPurchaseInfoModel {
+    id?: string;
+    purchaseDate?: Date;
+    referenceNo?: string;
+    warehouseId?: string;
+    supplierId?: string;
+    purchaseStatusId?: string;
+    attachmentUrl?: string | undefined;
+    subTotal?: number;
+    taxRate?: number | undefined;
+    taxAmount?: number | undefined;
+    discountType?: DiscountType;
+    discountRate?: number | undefined;
+    discountAmount?: number | undefined;
+    shippingCost?: number | undefined;
+    grandTotal?: number;
+    paidAmount?: number;
+    dueAmount?: number;
+    note?: string | undefined;
+    supplierName?: string;
+    purchaseStatus?: string;
+    paymentStatusId?: string;
+    companyInfo?: CompanyInfoModel;
+    supplier?: SupplierModel;
+    purchaseDetails?: PurchaseDetailModel[];
+    paymentDetails?: PurchasePaymentModel[];
+}
+
+export class CompanyInfoModel implements ICompanyInfoModel {
+    id?: string;
+    name?: string;
+    phone?: string | undefined;
+    mobile?: string | undefined;
+    email?: string | undefined;
+    country?: string | undefined;
+    state?: string | undefined;
+    city?: string | undefined;
+    postalCode?: string | undefined;
+    address?: string | undefined;
+    logoUrl?: string | undefined;
+    signatureUrl?: string | undefined;
+    website?: string | undefined;
+    optionsDataSources?: { [key: string]: any; };
+
+    constructor(data?: ICompanyInfoModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.phone = _data["phone"];
+            this.mobile = _data["mobile"];
+            this.email = _data["email"];
+            this.country = _data["country"];
+            this.state = _data["state"];
+            this.city = _data["city"];
+            this.postalCode = _data["postalCode"];
+            this.address = _data["address"];
+            this.logoUrl = _data["logoUrl"];
+            this.signatureUrl = _data["signatureUrl"];
+            this.website = _data["website"];
+            if (_data["optionsDataSources"]) {
+                this.optionsDataSources = {} as any;
+                for (let key in _data["optionsDataSources"]) {
+                    if (_data["optionsDataSources"].hasOwnProperty(key))
+                        (<any>this.optionsDataSources)![key] = _data["optionsDataSources"][key];
+                }
+            }
+        }
+    }
+
+    static fromJS(data: any): CompanyInfoModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new CompanyInfoModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["phone"] = this.phone;
+        data["mobile"] = this.mobile;
+        data["email"] = this.email;
+        data["country"] = this.country;
+        data["state"] = this.state;
+        data["city"] = this.city;
+        data["postalCode"] = this.postalCode;
+        data["address"] = this.address;
+        data["logoUrl"] = this.logoUrl;
+        data["signatureUrl"] = this.signatureUrl;
+        data["website"] = this.website;
+        if (this.optionsDataSources) {
+            data["optionsDataSources"] = {};
+            for (let key in this.optionsDataSources) {
+                if (this.optionsDataSources.hasOwnProperty(key))
+                    (<any>data["optionsDataSources"])[key] = (<any>this.optionsDataSources)[key];
+            }
+        }
+        return data;
+    }
+}
+
+export interface ICompanyInfoModel {
+    id?: string;
+    name?: string;
+    phone?: string | undefined;
+    mobile?: string | undefined;
+    email?: string | undefined;
+    country?: string | undefined;
+    state?: string | undefined;
+    city?: string | undefined;
+    postalCode?: string | undefined;
+    address?: string | undefined;
+    logoUrl?: string | undefined;
+    signatureUrl?: string | undefined;
+    website?: string | undefined;
+    optionsDataSources?: { [key: string]: any; };
 }
 
 export class CreatePurchaseCommand implements ICreatePurchaseCommand {
@@ -12718,106 +12958,11 @@ export interface IUpdateSaleCommand extends IUpsertSaleModel {
     cacheKey?: string;
 }
 
-export class CompanyInfoModel implements ICompanyInfoModel {
-    id?: string;
-    name?: string;
-    phone?: string | undefined;
-    mobile?: string | undefined;
-    country?: string | undefined;
-    state?: string | undefined;
-    city?: string | undefined;
-    postalCode?: string | undefined;
-    address?: string | undefined;
-    logoUrl?: string | undefined;
-    signatureUrl?: string | undefined;
-    website?: string | undefined;
-    optionsDataSources?: { [key: string]: any; };
-
-    constructor(data?: ICompanyInfoModel) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.name = _data["name"];
-            this.phone = _data["phone"];
-            this.mobile = _data["mobile"];
-            this.country = _data["country"];
-            this.state = _data["state"];
-            this.city = _data["city"];
-            this.postalCode = _data["postalCode"];
-            this.address = _data["address"];
-            this.logoUrl = _data["logoUrl"];
-            this.signatureUrl = _data["signatureUrl"];
-            this.website = _data["website"];
-            if (_data["optionsDataSources"]) {
-                this.optionsDataSources = {} as any;
-                for (let key in _data["optionsDataSources"]) {
-                    if (_data["optionsDataSources"].hasOwnProperty(key))
-                        (<any>this.optionsDataSources)![key] = _data["optionsDataSources"][key];
-                }
-            }
-        }
-    }
-
-    static fromJS(data: any): CompanyInfoModel {
-        data = typeof data === 'object' ? data : {};
-        let result = new CompanyInfoModel();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["name"] = this.name;
-        data["phone"] = this.phone;
-        data["mobile"] = this.mobile;
-        data["country"] = this.country;
-        data["state"] = this.state;
-        data["city"] = this.city;
-        data["postalCode"] = this.postalCode;
-        data["address"] = this.address;
-        data["logoUrl"] = this.logoUrl;
-        data["signatureUrl"] = this.signatureUrl;
-        data["website"] = this.website;
-        if (this.optionsDataSources) {
-            data["optionsDataSources"] = {};
-            for (let key in this.optionsDataSources) {
-                if (this.optionsDataSources.hasOwnProperty(key))
-                    (<any>data["optionsDataSources"])[key] = (<any>this.optionsDataSources)[key];
-            }
-        }
-        return data;
-    }
-}
-
-export interface ICompanyInfoModel {
-    id?: string;
-    name?: string;
-    phone?: string | undefined;
-    mobile?: string | undefined;
-    country?: string | undefined;
-    state?: string | undefined;
-    city?: string | undefined;
-    postalCode?: string | undefined;
-    address?: string | undefined;
-    logoUrl?: string | undefined;
-    signatureUrl?: string | undefined;
-    website?: string | undefined;
-    optionsDataSources?: { [key: string]: any; };
-}
-
 export class CreateCompanyInfoCommand implements ICreateCompanyInfoCommand {
     name?: string;
     phone?: string | undefined;
     mobile?: string | undefined;
+    email?: string | undefined;
     country?: string | undefined;
     state?: string | undefined;
     city?: string | undefined;
@@ -12842,6 +12987,7 @@ export class CreateCompanyInfoCommand implements ICreateCompanyInfoCommand {
             this.name = _data["name"];
             this.phone = _data["phone"];
             this.mobile = _data["mobile"];
+            this.email = _data["email"];
             this.country = _data["country"];
             this.state = _data["state"];
             this.city = _data["city"];
@@ -12866,6 +13012,7 @@ export class CreateCompanyInfoCommand implements ICreateCompanyInfoCommand {
         data["name"] = this.name;
         data["phone"] = this.phone;
         data["mobile"] = this.mobile;
+        data["email"] = this.email;
         data["country"] = this.country;
         data["state"] = this.state;
         data["city"] = this.city;
@@ -12883,6 +13030,7 @@ export interface ICreateCompanyInfoCommand {
     name?: string;
     phone?: string | undefined;
     mobile?: string | undefined;
+    email?: string | undefined;
     country?: string | undefined;
     state?: string | undefined;
     city?: string | undefined;
@@ -12899,6 +13047,7 @@ export class UpdateCompanyInfoCommand implements IUpdateCompanyInfoCommand {
     name?: string;
     phone?: string | undefined;
     mobile?: string | undefined;
+    email?: string | undefined;
     country?: string | undefined;
     state?: string | undefined;
     city?: string | undefined;
@@ -12924,6 +13073,7 @@ export class UpdateCompanyInfoCommand implements IUpdateCompanyInfoCommand {
             this.name = _data["name"];
             this.phone = _data["phone"];
             this.mobile = _data["mobile"];
+            this.email = _data["email"];
             this.country = _data["country"];
             this.state = _data["state"];
             this.city = _data["city"];
@@ -12949,6 +13099,7 @@ export class UpdateCompanyInfoCommand implements IUpdateCompanyInfoCommand {
         data["name"] = this.name;
         data["phone"] = this.phone;
         data["mobile"] = this.mobile;
+        data["email"] = this.email;
         data["country"] = this.country;
         data["state"] = this.state;
         data["city"] = this.city;
@@ -12967,6 +13118,7 @@ export interface IUpdateCompanyInfoCommand {
     name?: string;
     phone?: string | undefined;
     mobile?: string | undefined;
+    email?: string | undefined;
     country?: string | undefined;
     state?: string | undefined;
     city?: string | undefined;

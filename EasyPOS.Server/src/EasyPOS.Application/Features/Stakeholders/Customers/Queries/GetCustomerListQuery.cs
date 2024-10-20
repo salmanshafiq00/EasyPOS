@@ -22,7 +22,7 @@ internal sealed class GetCustomerListQueryHandler(ISqlConnectionFactory sqlConne
                 t.Email AS {nameof(CustomerModel.Email)},
                 t.PhoneNo AS {nameof(CustomerModel.PhoneNo)},
                 t.Mobile AS {nameof(CustomerModel.Mobile)},
-                t.CountryId AS {nameof(CustomerModel.CountryId)},
+                t.Country AS {nameof(CustomerModel.Country)},
                 t.City AS {nameof(CustomerModel.City)},
                 t.Address AS {nameof(CustomerModel.Address)},
                 IIF(t.IsActive = 1, 'Active', 'Inactive') AS {nameof(CustomerModel.Active)}

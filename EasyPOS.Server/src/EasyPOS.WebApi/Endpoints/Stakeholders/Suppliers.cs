@@ -1,4 +1,5 @@
-﻿using EasyPOS.Application.Features.Suppliers.Commands;
+﻿using EasyPOS.Application.Features.Common.Queries;
+using EasyPOS.Application.Features.Suppliers.Commands;
 using EasyPOS.Application.Features.Suppliers.Queries;
 using EasyPOS.Application.Features.Trades.Purchases.Commands;
 using EasyPOS.Application.Features.Trades.Purchases.Queries;
@@ -60,6 +61,15 @@ public class Suppliers : EndpointGroupBase
     private async Task<IResult> Get(ISender sender, Guid id)
     {
         var result = await sender.Send(new GetSupplierByIdQuery(id));
+
+        var countrySelectList = await sender.Send(new GetSelectListQuery(
+            Sql: SelectListSqls.LookupDetailNameKeySelectListByDevCodeSql,
+            Parameters: new { DevCode = (int)LookupDevCode.Country },
+            Key: $"{CacheKeys.LookupDetail}_{LookupDevCode.BarCodeSymbol}",
+            AllowCacheList: true)
+        );
+
+        result.Value.OptionsDataSources.Add("countrySelectList", countrySelectList.Value);
 
         return TypedResults.Ok(result.Value);
     }

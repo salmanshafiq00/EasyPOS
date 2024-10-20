@@ -16,6 +16,10 @@
         <app-validator-msg [control]="f['mobile']" />
     </div>
     <div class="field col-12 md:col-6">
+        <app-input-text label="Email" formControlName="email" [required]="false" [readonly]="false" />
+        <app-validator-msg [control]="f['email']" />
+    </div>
+    <div class="field col-12 md:col-6">
         <app-input-select label="Country" formControlName="country" [required]="true" [options]="optionsDataSources?.['countrySelectList']" />
         <app-validator-msg [control]="f['country']" />
     </div>

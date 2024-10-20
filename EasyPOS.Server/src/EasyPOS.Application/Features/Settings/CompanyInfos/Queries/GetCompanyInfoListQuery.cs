@@ -22,6 +22,7 @@ internal sealed class GetCompanyInfoQueryHandler(ISqlConnectionFactory sqlConnec
                 t.Name AS {nameof(CompanyInfoModel.Name)},
                 t.Phone AS {nameof(CompanyInfoModel.Phone)},
                 t.Mobile AS {nameof(CompanyInfoModel.Mobile)},
+                t.Email AS {nameof(CompanyInfoModel.Email)},
                 t.Country AS {nameof(CompanyInfoModel.Country)},
                 t.State AS {nameof(CompanyInfoModel.State)},
                 t.City AS {nameof(CompanyInfoModel.City)},

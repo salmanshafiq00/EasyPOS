@@ -85,6 +85,8 @@ internal sealed class GetPurchaseDetailByIdQueryHandler(
             """;
 
         var purchaseDictionary = new Dictionary<Guid, PurchaseInfoModel>();
+        var purchaseDetailDictionary = new Dictionary<Guid, PurchaseDetailModel>(); // Track details
+        var purchasePaymentDictionary = new Dictionary<Guid, PurchasePaymentModel>(); // Track payments
 
         var result = await connection.QueryAsync<PurchaseInfoModel, PurchaseDetailModel, PurchasePaymentModel, PurchaseInfoModel>(
             sql,
@@ -93,18 +95,23 @@ internal sealed class GetPurchaseDetailByIdQueryHandler(
                 if (!purchaseDictionary.TryGetValue(purchase.Id, out var purchaseEntry))
                 {
                     purchaseEntry = purchase;
-                    purchaseEntry.PurchaseDetails = [];
+                    purchaseEntry.PurchaseDetails = new List<PurchaseDetailModel>();
+                    purchaseEntry.PaymentDetails = new List<PurchasePaymentModel>();
                     purchaseDictionary.Add(purchase.Id, purchaseEntry);
                 }
 
-                if (detail != null)
+                // Add distinct PurchaseDetails
+                if (detail != null && !purchaseDetailDictionary.ContainsKey(detail.Id))
                 {
                     purchaseEntry.PurchaseDetails.Add(detail);
+                    purchaseDetailDictionary[detail.Id] = detail; // Keep track of added details
                 }
 
-                if (payments != null)
+                // Add distinct PurchasePayments
+                if (payments != null && !purchasePaymentDictionary.ContainsKey(payments.Id))
                 {
                     purchaseEntry.PaymentDetails.Add(payments);
+                    purchasePaymentDictionary[payments.Id] = payments; // Keep track of added payments
                 }
 
                 return purchaseEntry;
@@ -116,7 +123,8 @@ internal sealed class GetPurchaseDetailByIdQueryHandler(
         var purchase = purchaseDictionary.Values.FirstOrDefault();
         if(purchase is not null)
         {
-            purchase.CompanyInfoModel = await commonQueryService.GetCompanyInfoAsync(cancellationToken);
+            purchase.CompanyInfo = await commonQueryService.GetCompanyInfoAsync(cancellationToken);
+            purchase.Supplier = await commonQueryService.GetSupplierDetail(purchase.SupplierId, cancellationToken);
             return purchase;
         }
         else

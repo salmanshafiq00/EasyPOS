@@ -1,6 +1,4 @@
 ﻿using EasyPOS.Domain.Stakeholders;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EasyPOS.Infrastructure.Persistence.Configurations.Products;
 
@@ -32,6 +30,10 @@ internal sealed class CustomerConfiguration : IEntityTypeConfiguration<Customer>
 
         builder.Property(p => p.Mobile)
            .HasMaxLength(20)
+           .IsRequired(false);
+
+        builder.Property(p => p.Country)
+           .HasMaxLength(100)
            .IsRequired(false);
 
         builder.Property(p => p.City)
