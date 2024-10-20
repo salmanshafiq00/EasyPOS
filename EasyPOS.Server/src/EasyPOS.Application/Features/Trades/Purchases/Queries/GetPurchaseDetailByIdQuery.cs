@@ -95,8 +95,8 @@ internal sealed class GetPurchaseDetailByIdQueryHandler(
                 if (!purchaseDictionary.TryGetValue(purchase.Id, out var purchaseEntry))
                 {
                     purchaseEntry = purchase;
-                    purchaseEntry.PurchaseDetails = new List<PurchaseDetailModel>();
-                    purchaseEntry.PaymentDetails = new List<PurchasePaymentModel>();
+                    purchaseEntry.PurchaseDetails = [];
+                    purchaseEntry.PaymentDetails = [];
                     purchaseDictionary.Add(purchase.Id, purchaseEntry);
                 }
 

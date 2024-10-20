@@ -63,9 +63,6 @@ export class PurchaseInfoDetailComponent {
     this.totalQuantity = this.item.purchaseDetails.reduce((total, detail) => total + detail.quantity, 0);
     this.totalDiscount = this.item.purchaseDetails.reduce((total, detail) => total + (detail.discountAmount || 0), 0);
     this.totalTaxAmount = this.item.purchaseDetails.reduce((total, detail) => total + (detail.taxAmount || 0), 0);
-    const subTotal = this.item.purchaseDetails.reduce((total, saleDetail) => {
-      return total + saleDetail.totalPrice;
-    }, 0) || 0;
-    this.item.subTotal = subTotal;
+    this.totalItems = this.item.purchaseDetails.length > 0 ? `${this.item.purchaseDetails.length} (${this.totalQuantity})` : '0';
   }
 }
