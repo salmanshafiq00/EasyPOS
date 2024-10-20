@@ -37,13 +37,13 @@
     </div>
     <div class="col-12 md:col-4">
       <div>
-        <span>Reference: {{item.referenceNo}}</span>
+        <span>Reference: {{item?.referenceNo}}</span>
       </div>
       <div>
-        <span>Purchase Status: {{item.purchaseStatus}}</span>
+        <span>Purchase Status: {{item?.purchaseStatus}}</span>
       </div>
       <div>
-        <span>Payment Status: {{item.paymentStatusId}}</span>
+        <span>Payment Status: {{item?.paymentStatusId}}</span>
       </div>
     </div>
   </div>
@@ -52,7 +52,7 @@
 
   <div class="grid p-fluid">
     <div class="col-12">
-      <p-table [value]="item.purchaseDetails" [scrollable]="true" scrollHeight="600px" styleClass="p-datatable-gridlines">
+      <p-table [value]="item?.purchaseDetails" [scrollable]="true" scrollHeight="600px" styleClass="p-datatable-gridlines">
         <ng-template pTemplate="header">
           <tr class="text-center">
             <th>#</th>
@@ -99,7 +99,7 @@
             <td></td>
             <td class="text-right">{{ totalDiscount | number:'1.2-2'}}</td>
             <td class="text-right">{{ totalTaxAmount | number:'1.2-2'}}</td>
-            <td class="text-right">{{ item.subTotal | number:'1.2-2'}}</td>
+            <td class="text-right">{{ item?.subTotal | number:'1.2-2'}}</td>
           </tr>
         </ng-template>
       </p-table>
@@ -108,7 +108,7 @@
 
   <div class="grid">
     <div class="col-12 md:col-7 payment-detail">
-      <p-table [value]="item.paymentDetails" responsiveLayout="scroll" styleClass="p-datatable-gridlines">
+      <p-table [value]="item?.paymentDetails" responsiveLayout="scroll" styleClass="p-datatable-gridlines">
         <ng-template pTemplate="header">
           <tr>
             <th>#</th>
@@ -146,7 +146,7 @@
               <strong>Total</strong>
             </td>
             <td class="">
-              <span>{{ item.subTotal | number:'1.2-2'}}</span>
+              <span>{{ item?.subTotal | number:'1.2-2'}}</span>
             </td>
           </tr>
           <tr>
@@ -154,7 +154,7 @@
               <strong>Order Tax</strong>
             </td>
             <td class="">
-              <span>{{ item.taxAmount | number:'1.2-2'}}</span>
+              <span>{{ item?.taxAmount | number:'1.2-2'}}</span>
             </td>
           </tr>
           <tr>
@@ -162,7 +162,7 @@
               <strong>Order Discount</strong>
             </td>
             <td class="">
-              <span>{{ item.discountAmount | number:'1.2-2'}}</span>
+              <span>{{ item?.discountAmount | number:'1.2-2'}}</span>
             </td>
           </tr>
           <tr>
@@ -170,7 +170,7 @@
               <strong>Shipping Cost</strong>
             </td>
             <td class="">
-              <span>{{ item.shippingCost | number:'1.2-2'}}</span>
+              <span>{{ item?.shippingCost | number:'1.2-2'}}</span>
             </td>
           </tr>
           <tr>
@@ -178,7 +178,7 @@
               <strong>Grand Total</strong>
             </td>
             <td class="font-bold">
-              <span>{{ item.grandTotal | number:'1.2-2'}}</span>
+              <span>{{ item?.grandTotal | number:'1.2-2'}}</span>
             </td>
           </tr>
         </tbody>
